@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { db } from "./firebase";
+// ❌ Remover esta linha: import { db } from "./firebase";
 
 export default function App() {
     useEffect(() => {
-        console.log("🔥 Firebase conectado:", db);
+        console.log("🔥 Firebase conectado");
     }, []);
 
     return (
