@@ -1,16 +1,15 @@
-import reactLogo from './public/vite.svg'
+import { useEffect } from "react";
+import { db } from "./firebase";
 
 export default function App() {
+    useEffect(() => {
+        console.log("🔥 Firebase conectado:", db);
+    }, []);
+
     return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h1>🚀 Hub – ThePortfolioWebsite</h1>
-            <p>Teste de importação do logo React</p>
-            <img
-                src={reactLogo}
-                alt="React Logo"
-                style={{ width: '150px', marginTop: '20px' }}
-            />
-            <p>✅ O React está funcionando corretamente!</p>
+            <p>✅ Firebase configurado com sucesso</p>
         </div>
-    )
+    );
 }
