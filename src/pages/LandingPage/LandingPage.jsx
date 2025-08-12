@@ -1,10 +1,14 @@
+// Página inicial que renderiza a seção de destaque
+import React from 'react';
 import styles from './LandingPage.module.css';
 import HeroSection from './components/HeroSection';
 
-export default function LandingPage() {
+const LandingPage = () => {
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <HeroSection />
-    </main>
+    </div>
   );
-}
+};
+
+export default LandingPage;

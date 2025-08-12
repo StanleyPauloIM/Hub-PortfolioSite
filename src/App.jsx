@@ -1,11 +1,9 @@
-import Navbar from './pages/Navbar/Navbar';
+// Componente raiz que carrega as rotas da aplicação
+import React from 'react';
 import AppRoutes from './routes/AppRoutes';
 
-export default function App() {
-  return (
-    <>
-      <Navbar />
-      <AppRoutes />
-    </>
-  );
+function App() {
+  return <AppRoutes />;
 }
+
+export default App;
