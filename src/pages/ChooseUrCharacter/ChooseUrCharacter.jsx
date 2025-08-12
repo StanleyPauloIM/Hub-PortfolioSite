@@ -1,3 +1,5 @@
+// Página para escolher o personagem do utilizador
+import React from 'react';
 import styles from './ChooseUrCharacter.module.css';
 
 export default function ChooseUrCharacter() {

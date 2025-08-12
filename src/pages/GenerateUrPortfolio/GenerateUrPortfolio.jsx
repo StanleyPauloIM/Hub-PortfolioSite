@@ -1,3 +1,5 @@
+// Página para gerar um novo portfólio
+import React from 'react';
 import styles from './GenerateUrPortfolio.module.css';
 
 export default function GenerateUrPortfolio() {
