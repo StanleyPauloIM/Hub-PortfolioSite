@@ -1,0 +1,17 @@
+/* Estilos do Footer */
+.Footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  background-color: #ffffff;
+  color: #555555;
+  font-size: 0.875rem;
+}
+
+.copyright {
+  opacity: 0.85;
+}
+
+
