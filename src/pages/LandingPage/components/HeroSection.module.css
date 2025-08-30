@@ -149,19 +149,37 @@
   font-size: 1.1rem;
   font-weight: 600;
   background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid transparent;
+  border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) 1;
   color: var(--text);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Instrument Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.secondaryButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.secondaryButton:hover::before {
+  left: 100%;
 }
 
 .secondaryButton:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2)) 1;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 }
 
 /* Responsividade */
