@@ -2,6 +2,7 @@
 import React from 'react';
 import styles from './Navbar.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
+import accountIcon from '../../assets/account.png';
 
 export default function Navbar() {
   return (
@@ -21,7 +22,7 @@ export default function Navbar() {
         <li><a href="/signin" className={styles.navLink}>Entrar</a></li>
         <li>
           <div className={styles.profilePic}>
-            <img src={HubGlobe} alt="HubGlobe" />
+            <img src={accountIcon} alt="Account Icon" />
           </div>
         </li>
       </ul>
