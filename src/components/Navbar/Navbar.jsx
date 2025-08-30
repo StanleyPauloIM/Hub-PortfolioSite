@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './Navbar.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
-import accountIcon from '../../assets/account.png';
+import accountIcon from '../../assets/other_images/account_ex.jpg';
 
 export default function Navbar() {
   return (
