@@ -3,7 +3,7 @@ import styles from './Footer.module.css';
 import HubLogo from '../../assets/HUBlogo_t512.png';
 import GitHubLogo from '../../assets/other_images/Github-Logo.svg';
 import LinkedInLogo from '../../assets/other_images/Linkedin-Logo.svg';
-import XLogo from '../../assets/other_images/X-Logo.jpg';
+import XLogo from '../../assets/other_images/X-Logo.png';
 import InstagramLogo from '../../assets/other_images/Instagram-Logo.svg';
 
 /**
