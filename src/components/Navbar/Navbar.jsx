@@ -1,12 +1,24 @@
 // Barra de navegação do topo
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/other_images/account_ex.jpg';
 
 export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className={styles.nav}>
+    <nav className={`${styles.nav} ${isScrolled ? styles.scrolled : ''}`}>
       {/* Logo */}
       <div className={styles.logo}>
         <img src={HubGlobe} alt="Hub Globe" />
