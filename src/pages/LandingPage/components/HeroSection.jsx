@@ -12,7 +12,7 @@ const HeroSection = () => {
         />
         <div>
           <h1>Welcome to Hub – ThePortfolioWebsite</h1>
-          <p>Build your portfolio with style.</p>
+          <p>Build your portfolio with styleeee.</p>
         </div>
       </div>
     </section>
