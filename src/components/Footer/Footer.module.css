@@ -111,47 +111,15 @@
 
 .logoContainer {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.brandText {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary);
-  text-shadow: 0 0 10px var(--primary);
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 10px var(--primary);
-  }
-  to {
-    text-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary);
-  }
-}
-
-.logoGlow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-  opacity: 0.3;
-  animation: pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
+.hubLogo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
 }
 
 .tagline {
@@ -356,8 +324,9 @@
     gap: 1rem;
   }
   
-  .brandText {
-    font-size: 1.5rem;
+  .hubLogo {
+    width: 100px;
+    height: 100px;
   }
   
   .socialIcon {

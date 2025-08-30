@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Footer.module.css';
-import HubGlobe from '../../assets/HubGlobe.png';
+import HubLogo from '../../assets/HUBlogo_t512.png';
 
 /**
  * FOOTER INOVADOR - Hub Portfolio Website
@@ -50,8 +50,7 @@ export default function Footer() {
         {/* Seção do logo e descrição */}
         <div className={styles.brandSection}>
           <div className={styles.logoContainer}>
-            <span className={styles.brandText}>HUB</span>
-            <div className={styles.logoGlow}></div>
+            <img src={HubLogo} alt="Hub Logo" className={styles.hubLogo} />
           </div>
           <p className={styles.tagline}>
             Construindo portfólios extraordinários
