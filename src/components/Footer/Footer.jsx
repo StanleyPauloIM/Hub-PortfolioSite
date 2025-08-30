@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Footer.module.css';
+import HubGlobe from '../../assets/HubGlobe.png';
 
 /**
  * FOOTER INOVADOR - Hub Portfolio Website

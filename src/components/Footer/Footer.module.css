@@ -17,7 +17,6 @@
   padding: 3rem 2rem 1rem;
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  animation: gradientShift 8s ease-in-out infinite;
 }
 
 /* Animação do gradiente */

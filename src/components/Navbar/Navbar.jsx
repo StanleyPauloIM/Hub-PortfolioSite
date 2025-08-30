@@ -9,13 +9,16 @@ export default function Navbar() {
       {/* Logo */}
       <div className={styles.logo}>
         <img src={HubGlobe} alt="Hub Globe" />
-        <span className={styles.brand}>HUB</span>
+        <div className={styles.brandContainer}>
+          <span className={styles.brand}>HUB</span>
+          <div className={styles.brandGlow}></div>
+        </div>
       </div>
 
       {/* Links */}
       <ul className={styles.navLinks}>
-        <li><a href="/">Home</a></li>
-        <li><a href="/signin">Entrar</a></li>
+        <li><a href="/" className={styles.navLink}>Home</a></li>
+        <li><a href="/signin" className={styles.navLink}>Entrar</a></li>
         <li>
           <div className={styles.profilePic}>
             <img src={HubGlobe} alt="HubGlobe" />
