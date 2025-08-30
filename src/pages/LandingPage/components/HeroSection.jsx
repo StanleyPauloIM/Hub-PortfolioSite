@@ -1,18 +1,19 @@
 // Seção de herói que apresenta o produto
 import React from 'react';
+import styles from './HeroSection.module.css';
 
 const HeroSection = () => {
   return (
-    <section>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <section className={styles.heroSection}>
+      <div className={styles.heroContent}>
         <img
           src="/src/assets/HUBlogo_t512.png"
           alt="Hub Logo"
-          style={{ width: 128, height: 128 }}
+          className={styles.heroLogo}
         />
-        <div>
-          <h1>Welcome to Hub – ThePortfolioWebsite</h1>
-          <p>Build your portfolio with styleeee.</p>
+        <div className={styles.heroText}>
+          <h1 className={styles.heroTitle}>Welcome to Hub – ThePortfolioWebsite</h1>
+          <p className={styles.heroSubtitle}>Build your portfolio with styleeee.</p>
         </div>
       </div>
     </section>
