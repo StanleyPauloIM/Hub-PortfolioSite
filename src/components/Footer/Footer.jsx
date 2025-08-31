@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Footer.module.css';
 import HubLogo from '../../assets/HUBlogo_t512.png';
-import GitHubLogo from '../../assets/other_images/Github-Logo.svg';
+//import GitHubLogo from '../../assets/other_images/Github-Logo.svg';
 import LinkedInLogo from '../../assets/other_images/Linkedin-Logo.svg';
 import XLogo from '../../assets/other_images/X-Logo.png';
 import InstagramLogo from '../../assets/other_images/Instagram-Logo.svg';
@@ -90,7 +90,7 @@ export default function Footer() {
           <h4>Conecte-se</h4>
           <div className={styles.socialIcons}>
             <a href="#" className={styles.socialIcon} title="GitHub">
-              <img src={GitHubLogo} alt="GitHub Logo" />
+              {/*<img src={GitHubLogo} alt="GitHub Logo" />*/}
             </a>
             <a href="#" className={styles.socialIcon} title="LinkedIn">
               <img src={LinkedInLogo} alt="LinkedIn Logo" />
