@@ -21,7 +21,6 @@ const HeroSection = () => {
         ))}
       </div>
 
-      
 
       {/* Conteúdo principal */}
       <div className={styles.heroContent}>
