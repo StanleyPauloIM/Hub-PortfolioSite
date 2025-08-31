@@ -5,11 +5,23 @@ import styles from './HeroSection.module.css';
 const HeroSection = () => {
   return (
     <section className={styles.heroSection}>
-      {/* Elementos decorativos */}
-      <div className={styles.decorativeElements}>
-        <div className={styles.glowElement}></div>
-        <div className={styles.glowElement}></div>
+      {/* Partículas flutuantes de fundo */}
+      <div className={styles.particles}>
+        {[...Array(20)].map((_, i) => (
+          <div 
+            key={i} 
+            className={styles.particle}
+            style={{
+              '--delay': `${Math.random() * 5}s`,
+              '--size': `${Math.random() * 4 + 2}px`,
+              '--x': `${Math.random() * 100}%`,
+              '--y': `${Math.random() * 100}%`
+            }}
+          />
+        ))}
       </div>
+
+      
 
       {/* Conteúdo principal */}
       <div className={styles.heroContent}>
