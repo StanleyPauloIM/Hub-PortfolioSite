@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
-import accountIcon from '../../assets/other_images/account_ex.jpg';
+import accountIcon from '../../assets/images/account_ex.jpg';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
