@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './FeaturesSection.module.css';
-import Universe from '../../../assets/images/Universe.png';
-import Connect from '../../../assets/images/Connect.png';
-import Beauty from '../../../assets/images/Beauty.png';
+import Connection from '../../../../assets/images/Connection.png';
+import Universe from '../../../../assets/images/Universe.png';
+import Beauty from '../../../../assets/images/Beauty.png';
 
 const FeaturesSection = () => {
   return (
@@ -26,10 +26,12 @@ const FeaturesSection = () => {
         </div>
       </div>
 
+      {/* Linha separadora */}
+      <div className={styles.divider}></div>
+
       {/* Três cards com imagem + texto */}
       <div className={styles.cardsRow}>
         <div className={styles.card}>
-          {/* 👉 Coloca imagem aqui */}
           <div className={styles.imagePlaceholder}>
             <img src={Beauty} alt="Beauty" />
           </div>
@@ -37,7 +39,7 @@ const FeaturesSection = () => {
         </div>
         <div className={styles.card}>
           <div className={styles.imagePlaceholder}>
-            <img src={Connect} alt="Connect" />
+            <img src={Connection} alt="Connect" />
           </div>
           <p>Texto explicando esta parte da experiência.</p>
         </div>
