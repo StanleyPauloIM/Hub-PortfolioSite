@@ -3,6 +3,7 @@ import styles from './FeaturesSection.module.css';
 import Connection from '../../../../assets/images/Connection.png';
 import Universe from '../../../../assets/images/Universe.png';
 import Beauty from '../../../../assets/images/Beauty.png';
+import ProfilePic from '../../../../assets/images/profile.jpeg'; // 👉 mete a tua imagem aqui
 
 const FeaturesSection = () => {
   return (
@@ -50,6 +51,34 @@ const FeaturesSection = () => {
           <p>Informação adicional sobre a comunidade/universo.</p>
         </div>
       </div>
+
+      {/* Linha separadora 2*/}
+      <div className={styles.divider}></div>
+
+      {/* Perfil / Desenvolvido por */}
+      <div className={styles.profileSection}>
+        <div className={styles.profileImage}>
+          <img src={ProfilePic} alt="Profile" />
+        </div>
+        <div className={styles.profileInfo}>
+          <h3>Developed by</h3>
+          <h2>Stanley Maguass</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet nulla ut
+            libero faucibus tincidunt.
+          </p>
+          <div className={styles.contacts}>
+            <a href="tel:+244900000000" className={styles.Link}>
+              +244 900 000 000
+            </a>
+            <a href="mailto:example@email.com" className={styles.Link}>
+              example@email.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+
     </section>
   );
 };
