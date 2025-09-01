@@ -2,14 +2,14 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  justify-content: flex-start; /* 👈 encosta o conteúdo à esquerda */
+  padding: 2rem 6rem; /* espaço maior na esquerda/direita */
   background: 
     linear-gradient(
       rgba(10, 10, 10, 0.7), 
       rgba(0, 0, 0, 0.8)
     ),
-    url('/src/assets/Hub_Background.png');
+    url('/src/assets/Hub_Background2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -18,6 +18,54 @@
   position: relative;
   overflow: hidden;
 }
+
+/* Container em 2 colunas */
+.heroContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2; /* acima das partículas */
+}
+
+/* Coluna de texto (já tens heroContent, ajustei aqui no layout) */
+.heroContent {
+  flex: 1;
+}
+
+/* Coluna da imagem */
+.heroImageWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heroImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s ease;
+}
+
+.heroImage:hover {
+  transform: scale(1.05);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .heroContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+}
+
 
 /* Elementos decorativos */
 .decorativeElements {
@@ -64,18 +112,6 @@
 }
 
 /* Conteúdo principal */
-.heroContent {
-  text-align: center;
-  max-width: 800px;
-  position: relative;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 3rem;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .heroTitle {
   font-size: 4rem;
   font-weight: 700;
@@ -120,7 +156,7 @@
 .ctaButtons {
   display: flex;
   gap: 1.5rem;
-  justify-content: center;
+  justify-content: flex-start; /* 👈 encosta o conteúdo à esquerda */
   flex-wrap: wrap;
 }
 
@@ -132,7 +168,7 @@
   border: 2px solid transparent;
   border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4) 1;
   color: var(--text);
-  border-radius: 8px;
+  border-radius: 8px; /* Curvar as bordas*/
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Instrument Sans', sans-serif;
@@ -169,7 +205,7 @@
   border: 2px solid transparent;
   border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) 1;
   color: var(--text);
-  border-radius: 8px;
+  border-radius: 8px; /* Curvar as bordas*/
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Instrument Sans', sans-serif;
@@ -217,11 +253,12 @@
   .heroSubtitle {
     font-size: 1.1rem;
     margin-bottom: 2rem;
+    align-items: left;
   }
   
   .ctaButtons {
     flex-direction: column;
-    align-items: center;
+    align-items: left;  
   }
   
   .primaryButton,
