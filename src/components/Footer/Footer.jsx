@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Footer.module.css';
 import HubLogo from '../../assets/HUBlogo_t512.png';
-import GitHubLogo from '../../assets/images/Github-Logo.svg';
-import LinkedInLogo from '../../assets/images/Linkedin-Logo.svg';
+import GitHubLogo from '../../assets/images/Github-Logo.png';
+import LinkedInLogo from '../../assets/images/Linkedin-Logo.png';
 import XLogo from '../../assets/images/X-Logo.png';
-import InstagramLogo from '../../assets/images/Instagram-Logo.svg';
+import InstagramLogo from '../../assets/images/Instagram-Logo.png';
 
 /**
  * FOOTER INOVADOR - Hub Portfolio Website
