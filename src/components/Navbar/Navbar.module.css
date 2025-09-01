@@ -12,14 +12,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 2.5rem;
+  padding: 1rem 2rem;
   background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
   font-family: 'Instrument Sans', sans-serif;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   
   /* Estilo de ilha flutuante */
-  max-width: 900px;
-  width: 90%;
+  max-width: 860px;
+  width: 88%;
   margin: 1rem auto 0;
   border-radius: 20px;
   box-shadow: 
@@ -29,7 +29,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   position: fixed;
-  top: 1rem;
+  top: 0.75rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -67,8 +67,8 @@
 }
 
 .logo img {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
   filter: drop-shadow(0 0 8px rgba(30, 144, 255, 0.6));
   transition: all 0.3s ease;
@@ -86,7 +86,7 @@
 
 .brand {
   font-weight: 700;
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   color: var(--primary);
   text-shadow: 0 0 10px var(--primary);
   animation: glow 2s ease-in-out infinite alternate;
@@ -130,7 +130,7 @@
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   list-style: none;
   margin: 0;
   padding: 0;

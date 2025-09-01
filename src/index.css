@@ -39,6 +39,7 @@ body {
 
 html {
   background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+  font-size: 90%;
 }
 
 #root {
@@ -47,14 +48,14 @@ html {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.6em;
   line-height: 1.1;
 }
 
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.55em 1.1em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
