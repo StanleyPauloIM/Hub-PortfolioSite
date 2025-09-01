@@ -5,23 +5,52 @@ on:
     branches:
       - main  # muda se usas outra branch principal
 
+concurrency:
+  group: firebase-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Clonar repositório
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
       - name: Build do projeto
         run: npm run build
 
-      - name: Deploy para Firebase Hosting
-        uses: w9jds/firebase-action@v2.2.0
-        with:
-          args: deploy --only hosting
+      - name: Instalar Firebase CLI (se necessário)
+        run: |
+          if ! command -v firebase >/dev/null 2>&1; then
+            echo "Firebase CLI não encontrado. Instalando..."
+            npm i -g firebase-tools
+          else
+            echo "Firebase CLI já instalado."
+          fi
+
+      - name: Autenticar Firebase com token
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          if [ -z "$FIREBASE_TOKEN" ]; then
+            echo "FIREBASE_TOKEN não definido em Secrets."
+            exit 1
+          fi
+          firebase --version
+          firebase projects:list >/dev/null 2>&1 || true
+
+      - name: Deploy para Firebase Hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase deploy --only hosting --non-interactive
