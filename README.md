@@ -26,6 +26,11 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
   - Build do projeto (`npm run build`)
   - Deploy para Firebase Hosting usando `w9jds/firebase-action@v2.2.0`
 
+### 🌍 Website em produção (Firebase Hosting)
+
+- URL principal: https://hub-theportfoliowebsite.web.app/
+- URL alternativa: https://hub-theportfoliowebsite.firebaseapp.com/
+
 ### ⚙️ Configuração necessária
 - **Secret `FIREBASE_TOKEN`**: adicionar em Settings → Secrets and variables → Actions.
   - Gerar com `firebase login:ci` e colar o token.
