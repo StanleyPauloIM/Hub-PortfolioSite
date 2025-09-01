@@ -68,10 +68,10 @@ const FeaturesSection = () => {
             libero faucibus tincidunt.
           </p>
           <div className={styles.contacts}>
-            <a href="tel:+244900000000" className={styles.Link}>
+            <a href="tel:+244900000000" className={styles.link}>
               +244 900 000 000
             </a>
-            <a href="mailto:example@email.com" className={styles.Link}>
+            <a href="mailto:example@email.com" className={styles.link}>
               example@email.com
             </a>
           </div>

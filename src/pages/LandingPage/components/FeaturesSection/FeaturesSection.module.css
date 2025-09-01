@@ -182,7 +182,7 @@
 }
 
 .link {
-  color: var(--text);
+  color: blueviolet;
   text-decoration: none;
   transition: all 0.3s ease;
   position: relative;
