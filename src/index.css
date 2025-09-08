@@ -91,3 +91,33 @@ button:focus-visible {
     color: var(--text);
   }
 }
+
+/* Manual theme override via data-theme attribute */
+html[data-theme='light'] {
+  --text: #0d0113;
+  --background: #f6f2f8;
+  --primary: #52097b;
+  --secondary: #cdadc1;
+  --accent: #190245;
+}
+html[data-theme='dark'] {
+  --text: #ffffff;
+  --background: #0a0a0a;
+  --primary: #1e90ff;
+  --secondary: #b0b8c1;
+  --accent: #0a2e5c;
+}
+
+/* Ensure backgrounds respond to the chosen theme */
+html[data-theme='light'],
+html[data-theme='light'] body,
+html[data-theme='light'] #root {
+  background: radial-gradient(circle at center, #f6f2f8 0%, #e6e0f5 100%);
+  color: var(--text);
+}
+html[data-theme='dark'],
+html[data-theme='dark'] body,
+html[data-theme='dark'] #root {
+  background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+  color: var(--text);
+}

@@ -5,7 +5,7 @@ import Minimalist from '../../../assets/images/Minimalist.png'; // 👈 importa 
 
 const HeroSection = () => {
   return (
-    <section className={styles.heroSection}>
+    <section id="hero" className={styles.heroSection}>
       {/* Partículas flutuantes de fundo */}
       <div className={styles.particles}>
         {[...Array(20)].map((_, i) => (

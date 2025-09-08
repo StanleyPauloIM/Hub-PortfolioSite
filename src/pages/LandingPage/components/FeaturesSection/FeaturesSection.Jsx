@@ -7,12 +7,12 @@ import ProfilePic from '../../../../assets/images/profile.jpeg'; // 👉 mete a 
 
 const FeaturesSection = () => {
   return (
-    <section className={styles.featuresSection}>
+    <section id="features" className={styles.featuresSection}>
       {/* Título principal */}
       <h2 className={styles.sectionTitle}>A PLACE FOR</h2>
 
       {/* Três colunas de texto */}
-      <div className={styles.textColumns}>
+      <div id="missao" className={styles.textColumns}>
         <div className={styles.textBlock}>
           <h3>Beauty</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at nisl non magna suscipit viverra.</p>
@@ -56,7 +56,7 @@ const FeaturesSection = () => {
       <div className={styles.divider}></div>
 
       {/* Perfil / Desenvolvido por */}
-      <div className={styles.profileSection}>
+      <div id="sobre-nos" className={styles.profileSection}>
         <div className={styles.profileImage}>
           <img src={ProfilePic} alt="Profile" />
         </div>
@@ -67,7 +67,7 @@ const FeaturesSection = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet nulla ut
             libero faucibus tincidunt.
           </p>
-          <div className={styles.contacts}>
+          <div id="contato" className={styles.contacts}>
             <a href="tel:+258852642255" className={styles.link}>
               +258 85 264 2255
             </a>
