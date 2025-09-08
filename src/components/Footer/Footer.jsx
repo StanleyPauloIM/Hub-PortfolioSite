@@ -22,16 +22,29 @@ export default function Footer() {
       <div className={styles.container}>
         {/* Subscribe Section - Top */}
         <div className={styles.topSection}>
-          <div className={styles.subscribeArea}>
-            <h3 className={styles.subscribeTitle}>Subscreva-te</h3>
-            <p className={styles.subscribeDescription}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+          <div className={styles.subscribeCard}>
+            <div className={styles.subscribeArea}>
+              <h3 className={styles.subscribeTitle}>Subscreve-te às novidades</h3>
+              <p className={styles.subscribeDescription}>
+                Recebe por email as principais atualizações do HUB — novos recursos, melhorias e conteúdos úteis.
+                Sem spam. Podes cancelar quando quiseres.
+              </p>
+            </div>
+            <form className={styles.subscribeForm} onSubmit={(e) => e.preventDefault()}>
+              <div className={styles.inputGroup}>
+                <input
+                  type="email"
+                  placeholder="O teu email"
+                  aria-label="Email para receber novidades"
+                  className={styles.emailInput}
+                />
+                <button type="submit" className={styles.subscribeButton}>Subscrever</button>
+              </div>
+              <small className={styles.subscribeHint}>
+                Ao subscrever, concordas em receber emails ocasionais sobre novidades do site.
+              </small>
+            </form>
           </div>
-          <form className={styles.subscribeForm}>
-            <input type="email" placeholder="Digite seu email" className={styles.emailInput} />
-            <button type="submit" className={styles.subscribeButton}>📩</button>
-          </form>
         </div>
 
         {/* Main Content - Middle */}
@@ -48,17 +61,17 @@ export default function Footer() {
               Construindo portfólios extraordinários para profissionais e estudantes.
             </p>
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon}>
-                <img src={GitHubLogo} alt="GitHub" />
+              <a href="#" className={styles.socialIcon} aria-label="GitHub">
+                <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" />
               </a>
-              <a href="#" className={styles.socialIcon}>
-                <img src={LinkedInLogo} alt="LinkedIn" />
+              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
+                <img src="https://cdn.simpleicons.org/linkedin/ffffff" alt="LinkedIn" />
               </a>
-              <a href="#" className={styles.socialIcon}>
-                <img src={XLogo} alt="X" />
+              <a href="#" className={styles.socialIcon} aria-label="X (Twitter)">
+                <img src="https://cdn.simpleicons.org/x/ffffff" alt="X" />
               </a>
-              <a href="#" className={styles.socialIcon}>
-                <img src={InstagramLogo} alt="Instagram" />
+              <a href="#" className={styles.socialIcon} aria-label="Instagram">
+                <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram" />
               </a>
             </div>
           </div>

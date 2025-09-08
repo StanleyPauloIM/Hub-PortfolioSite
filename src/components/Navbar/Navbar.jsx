@@ -114,13 +114,22 @@ export default function Navbar() {
           </div>
           {accountOpen && (
             <div className={styles.accountMenu}>
-              <NavLink to="/theportfolio" className={styles.accountLink}>Perfil</NavLink>
-              <NavLink to="/generateurportfolio" className={styles.accountLink}>Criar Portfólio</NavLink>
+              <NavLink to="/theportfolio" className={styles.accountLink}>
+                <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
+                Perfil
+              </NavLink>
+              <NavLink to="/generateurportfolio" className={styles.accountLink}>
+                <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
+                Criar Portfólio
+              </NavLink>
               <hr className={styles.accountDivider} />
               <button className={styles.themeBtn} disabled={theme === 'dark'} onClick={() => setTheme('dark')}>Tema: Escuro</button>
               <button className={styles.themeBtn} disabled={theme === 'light'} onClick={() => setTheme('light')}>Tema: Claro</button>
               <hr className={styles.accountDivider} />
-              <button className={styles.accountLink} onClick={() => console.log('Sair')}>Sair</button>
+              <button className={styles.accountLink} onClick={() => console.log('Sair')}>
+                <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
+                Sair
+              </button>
             </div>
           )}
         </li>

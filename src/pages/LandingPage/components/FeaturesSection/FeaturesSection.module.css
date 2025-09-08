@@ -54,6 +54,69 @@
   margin: 3rem auto;
 }
 
+/************************************
+  How it works (above Developed by)
+*************************************/
+.howItWorks {
+  width: min(100%, 1100px);
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+.subSectionTitle {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  margin: 0 0 1.2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  /* mesmo estilo do título "A PLACE FOR" */
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.stepCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.stepIcon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 0.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(30,144,255,0.45), rgba(30,144,255,0.08));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(30,144,255,0.25);
+}
+.stepIcon img { width: 32px; height: 32px; object-fit: contain; filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+.stepTitle { margin: 0.4rem 0; font-size: 1.1rem; color: #fff; }
+.stepText { color: rgba(255,255,255,0.8); margin: 0 0 0.7rem 0; }
+.stepLink {
+  display: inline-block;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 800;
+  background: #ffffff;
+  color: #0a0a0a;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.85);
+}
+.stepLink:hover { transform: translateY(-1px); }
+
+@media (max-width: 900px) {
+  .stepsGrid { grid-template-columns: 1fr; }
+}
+
 /* Cluster de imagens em um único container */
 .imageCluster {
   display: flex;
@@ -99,18 +162,20 @@
 
 /* Profile Section (Developed by) */
 .profileSection {
-  width: min(100%, 1200px);
+  width: 100%;
+  max-width: 1100px; /* impede sair da tela mesmo com padding do pai */
   margin: 4rem auto 0;
-  padding: clamp(1.2rem, 3.5vw, 2.6rem);
+  padding: clamp(1.2rem, 3.2vw, 2.4rem);
+  box-sizing: border-box; /* padding incluso na largura */
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   box-shadow: 0 10px 28px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
 
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: clamp(110px, 12vw, 140px) 1fr; /* avatar escala um pouco */
   align-items: center;
-  gap: clamp(1.2rem, 3.5vw, 2.4rem);
+  gap: clamp(1.2rem, 3.2vw, 2.2rem);
   text-align: left;
 }
 
@@ -166,6 +231,13 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
+}
+
+.contactIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
 
 /* Responsivo */
