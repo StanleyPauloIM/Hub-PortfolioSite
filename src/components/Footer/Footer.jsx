@@ -21,7 +21,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       {/* Top Bar */}
       <div className={styles.topBar}>
-        <h3>Subscribe</h3>
+        <h3>Subscreva-te</h3>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
         </p>
