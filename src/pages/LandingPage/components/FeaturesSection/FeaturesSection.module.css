@@ -54,72 +54,64 @@
   margin: 3rem auto;
 }
 
-/* Cards */
-.cardsRow {
+/* Cluster de imagens em um único container */
+.imageCluster {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.card {
-  flex: 1;
-  min-width: 250px;
-  max-width: 350px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 16px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-}
-
-.imagePlaceholder {
-  width: 100%;
-  height: 338px; /* 👉 todas as imagens têm a mesma altura */
-  margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border: 1px groove rgba(255, 255, 255, 0.3);
+  flex-wrap: wrap; /* permite quebrar em telas menores */
+  gap: 8px; /* ainda mais juntinhas */
+  margin: 0 auto 2rem;
+  width: min(100%, 1000px);
+  padding: 6px;
+  border-radius: 16px;
 }
 
-.imagePlaceholder img {
+.clusterItem {
+  width: clamp(150px, 22vw, 280px);
+  height: clamp(120px, 18vw, 200px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.clusterItem img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* garante proporção */
-  border-radius: 12px;
+  object-fit: cover;
+  display: block;
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .textColumns {
     flex-direction: column;
     align-items: center;
   }
-
-  .cardsRow {
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
-/* Profile Section */
+@media (max-width: 768px) {
+  .imageCluster { gap: 6px; }
+  .clusterItem { width: clamp(110px, 34vw, 200px); height: clamp(100px, 26vw, 160px); }
+}
+
+/* Profile Section (Developed by) */
 .profileSection {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  margin-top: 4rem;
+  width: min(100%, 1100px);
+  margin: 4rem auto 0;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
   text-align: left;
-  padding: 2rem 14rem; /* espaço maior na esquerda/direita */
 }
 
 .profileImage {
@@ -128,7 +120,8 @@
   height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
 }
 
 .profileImage img {
@@ -138,48 +131,51 @@
 }
 
 .profileInfo h3 {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--secondary);
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .profileInfo h2 {
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
   color: #fff;
-  margin-bottom: 1rem;
+  margin: 0 0 0.6rem 0;
 }
 
 .profileInfo p {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  line-height: 1.65;
 }
 
 .contacts {
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .contacts a {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
 }
 
 /* Responsivo */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .profileSection {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
     text-align: center;
   }
-
-  .contacts {
-    align-items: center;
-  }
+  .profileImage { margin: 0 auto; }
+  .contacts { justify-content: center; }
 }
 
 .link {

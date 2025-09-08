@@ -30,25 +30,16 @@ const FeaturesSection = () => {
       {/* Linha separadora */}
       <div className={styles.divider}></div>
 
-      {/* Três cards com imagem + texto */}
-      <div className={styles.cardsRow}>
-        <div className={styles.card}>
-          <div className={styles.imagePlaceholder}>
-            <img src={Beauty} alt="Beauty" />
-          </div>
-          <p>Descrição curta sobre esta feature.</p>
+      {/* Cluster de imagens junto num único container */}
+      <div className={styles.imageCluster}>
+        <div className={styles.clusterItem}>
+          <img src={Beauty} alt="Beauty" />
         </div>
-        <div className={styles.card}>
-          <div className={styles.imagePlaceholder}>
-            <img src={Connection} alt="Connect" />
-          </div>
-          <p>Texto explicando esta parte da experiência.</p>
+        <div className={styles.clusterItem}>
+          <img src={Connection} alt="Connect" />
         </div>
-        <div className={styles.card}>
-          <div className={styles.imagePlaceholder}>
-            <img src={Universe} alt="Universe" />
-          </div>
-          <p>Informação adicional sobre a comunidade/universo.</p>
+        <div className={styles.clusterItem}>
+          <img src={Universe} alt="Universe" />
         </div>
       </div>
 
