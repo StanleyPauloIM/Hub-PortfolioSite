@@ -1,410 +1,418 @@
-/* 
- * FOOTER INOVADOR - CSS Styles
- * 
- * Este CSS inclui:
- * - Gradiente radial animado
- * - Partículas flutuantes
- * - Animações suaves
- * - Efeitos hover interativos
- * - Layout responsivo
- * - Variáveis CSS para fácil customização
- */
-
 .footer {
-  position: relative;
-  background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+  background: radial-gradient(circle at center, var(--background) 0%, #000000 100%);
   color: var(--text);
-  padding: 2.5rem 1.75rem 1rem;
-  overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+  font-family: 'Instrument Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  position: relative; /* para o brilho no topo */
 }
 
-/* Efeito de brilho sutil na parte superior */
+/* Brilho superior semelhante ao da navbar */
 .footer::before {
   content: '';
   position: absolute;
   top: -2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 90%;
   height: 4px;
   background: linear-gradient(90deg, transparent, rgba(30, 144, 255, 0.3), transparent);
   border-radius: 50%;
   filter: blur(2px);
 }
 
-/* Animação do gradiente */
-@keyframes gradientShift {
-  0%, 100% {
-    background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
-  }
-  50% {
-    background: radial-gradient(circle at center, #0a2e5c 0%, #0a0a0a 100%);
-  }
-}
-
-/* Partículas flutuantes */
-.particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--primary);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: float 6s ease-in-out infinite;
-  animation-delay: var(--delay);
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-    opacity: 0.6;
-  }
-  25% {
-    transform: translateY(-20px) translateX(10px);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(-40px) translateX(-5px);
-    opacity: 0.8;
-  }
-  75% {
-    transform: translateY(-20px) translateX(-15px);
-    opacity: 1;
-  }
-}
-
-.particle:nth-child(1) { top: 10%; left: 10%; }
-.particle:nth-child(2) { top: 20%; left: 80%; }
-.particle:nth-child(3) { top: 60%; left: 20%; }
-.particle:nth-child(4) { top: 80%; left: 70%; }
-.particle:nth-child(5) { top: 40%; left: 90%; }
-.particle:nth-child(6) { top: 70%; left: 5%; }
-
-/* Conteúdo principal */
-.footerContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.5rem;
-  max-width: 1100px;
+.container {
+  max-width: 1200px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  padding: 3rem 2rem 0;
 }
 
-/* Seção da marca */
+/* Top Section - Subscribe */
+.topSection {
+  margin-bottom: 2.25rem;
+}
+
+/* Card de subscrição com destaque sutil */
+.subscribeCard {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  align-items: center;
+  gap: 1.25rem 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(30,144,255,0.10), rgba(30,144,255,0.05));
+  border: 1px solid rgba(30,144,255,0.25);
+  box-shadow: 0 10px 26px rgba(30,144,255,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
+}
+
+.subscribeArea {
+  flex: 1;
+  max-width: 720px;
+}
+
+.subscribeTitle {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.6rem 0;
+}
+
+.subscribeDescription {
+  color: var(--secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.subscribeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.emailInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 0.95rem;
+  backdrop-filter: blur(6px);
+}
+
+.emailInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.subscribeHint {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+}
+
+
+
+/* Main Content */
+.mainContent {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1.3fr; /* Brand | About | Menu | Services | Contact | Map */
+  gap: 2rem 2.25rem;
+  margin-bottom: 2rem;
+  align-items: start;
+}
+
+/* Make inner links container flow into the parent grid so each column aligns like the mock */
+.linksGrid {
+  display: contents;
+}
+
+/* Brand Section */
 .brandSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
+  gap: 0.75rem; /* tighter grouping */
 }
 
-.logoContainer {
-  position: relative;
+/* Brand header: icon + HUB side-by-side */
+.brandHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brandIcon {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(30, 144, 255, 0.35));
+}
+
+/* Legacy hubLogo kept for backward compatibility (unused now) */
+.hubLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(30, 144, 255, 0.35));
+}
+
+.brandName {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0; /* remove extra space since we use the divider */
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(30, 144, 255, 0.3);
+}
+
+.brandSlogan {
+  color: var(--primary);
+  font-size: 1.05rem;
+  margin: 0.15rem 0 0.35rem 0; /* close to brand */
+  font-weight: 700;
+}
+
+.brandDivider {
+  height: 2px;
+  width: 78%;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 2px;
+  margin: 0.25rem 0 0.55rem 0;
+}
+
+.brandDescription {
+  color: var(--secondary);
+  line-height: 1.55;
+  margin: 0 0 1rem 0;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.socialIcon {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.hubLogo {
-  width: 128px;
-  height: 128px;
+.socialIcon img {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
+  filter: brightness(0) invert(1); /* garante branco para ícones pretos (ios-glyphs) */
 }
 
-.tagline {
-  font-size: 0.95rem;
-  color: var(--secondary);
-  font-style: italic;
-  animation: fadeInUp 1s ease-out;
+.socialIcon:hover {
+  background: rgba(30, 144, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(30, 144, 255, 0.25);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Links columns are injected into main grid via display: contents above */
 
-/* Links rápidos */
-.quickLinks h4,
-.stats h4,
-.socialLinks h4 {
-  color: var(--primary);
+.linkGroup h4 {
   margin-bottom: 1rem;
-  font-size: 1rem;
-  font-weight: 600;
+  color: var(--text);
+  font-size: 1.2rem;
+  font-weight: 800;
 }
 
-.quickLinks ul {
+.linkGroup ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.quickLinks li {
+.linkGroup li {
   margin-bottom: 0.5rem;
+  color: var(--secondary);
+  font-size: 0.95rem;
 }
 
 .footerLink {
   color: var(--text);
   text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  padding: 0.25rem 0;
-}
-
-.footerLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .footerLink:hover {
   color: var(--primary);
-  transform: translateX(5px);
-}
-
-.footerLink:hover::after {
-  width: 100%;
-}
-
-/* Estatísticas */
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.statItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.85rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.statItem:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
-}
-
-.statNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary);
-  animation: countUp 2s ease-out;
-}
-
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.statLabel {
-  font-size: 0.8rem;
-  color: var(--secondary);
-  margin-top: 0.25rem;
-}
-
-/* Redes sociais */
-.socialIcons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.socialIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 50%;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  font-size: 1.5rem;
-}
-
-.socialIcon img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  transition: all 0.3s ease;
-}
-
-.socialIcon:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 8px 25px rgba(30, 144, 255, 0.4);
-}
-
-/* Barra inferior */
-.bottomBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.82rem;
-  color: var(--secondary);
-}
-
-.copyright,
-.madeWith {
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.copyright:hover,
-.madeWith:hover {
-  opacity: 1;
-  color: var(--primary);
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .footer {
-    padding: 2rem 1rem 1rem;
-  }
-  
-  .footerContent {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    text-align: center;
-  }
-  
-  .brandSection {
-    align-items: center;
-  }
-  
-  .bottomBar {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-  
-  .socialIcons {
-    justify-content: center;
-  }
-  
-  .particle {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .footerContent {
-    gap: 1rem;
-  }
-  
-  .hubLogo {
-    width: 100px;
-    height: 100px;
-  }
-  
-
 }
 
 /* Contact Section */
-.contactSection {
+.contactSection h4 {
+  margin-bottom: 1rem;
+  color: var(--text);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.contactInfo {
+  margin-bottom: 1.5rem;
+}
+
+.contactInfo p {
+  margin-bottom: 0.3rem;
+  color: var(--secondary);
+  font-size: 0.95rem;
+}
+
+/* Compact contact list layout */
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contactRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.6rem;
+  align-items: baseline;
+}
+
+.contactLabel {
+  color: var(--text);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.contactValue {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* Highlighted visits badge */
+.visitsBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 144, 255, 0.35);
+  background: linear-gradient(180deg, rgba(30,144,255,0.18), rgba(30,144,255,0.08));
+  color: var(--text);
+  font-weight: 800;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 16px rgba(30,144,255,0.25), inset 0 0 12px rgba(30,144,255,0.08);
+}
+
+.visitsBadge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--primary);
+}
+
+.mapOnly {
+  align-self: start;
+}
+
+.mapContainer {
+  margin-top: 0.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+}
+
+/* Thank You Section */
+.thankYouSection {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.thankYouSection p {
+  color: var(--text);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Bottom Bar */
+.bottomBar {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 1.25rem 0;
+}
+
+.bottomContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
-.contactForm {
+.bottomLinks {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
+  align-items: center;
 }
 
-.contactInput {
-  flex: 1;
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-}
-
-.contactInput::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.contactButton {
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.8);
+.bottomLinks a {
   color: var(--text);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Instrument Sans', sans-serif;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
-/* Borda gradiente arredondada */
-.contactButton::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 2px; /* grossura da borda */
-  border-radius: 12px;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-
-  /* Máscara para recortar o centro */
-  -webkit-mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: destination-out; /* Chrome/Safari */
-
-  mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
-  mask-composite: exclude; /* Firefox */
-
-  z-index: -1;
+.bottomLinks a:hover {
+  color: var(--primary);
 }
 
-.contactButton:hover {
-  background: #1e90ff;  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+.bottomLinks span {
+  color: rgba(255, 255, 255, 0.35);
 }
 
+.copyright {
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .mainContent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .linksGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .container {
+    padding: 2rem 1rem 0;
+  }
+
+  .subscribeCard {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .inputGroup { flex-direction: column; }
+
+  .brandName {
+    font-size: 2rem;
+}
+
+  .linksGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .bottomContent {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .bottomLinks {
+    justify-content: center;
+  }
+}

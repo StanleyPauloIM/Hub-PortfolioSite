@@ -54,81 +54,130 @@
   margin: 3rem auto;
 }
 
-/* Cards */
-.cardsRow {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.card {
-  flex: 1;
-  min-width: 250px;
-  max-width: 350px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 16px;
+/************************************
+  How it works (above Developed by)
+*************************************/
+.howItWorks {
+  width: min(100%, 1100px);
+  margin: 0 auto 3rem;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.subSectionTitle {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  margin: 0 0 1.2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  /* mesmo estilo do título "A PLACE FOR" */
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.stepCard {
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.stepIcon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 0.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(30,144,255,0.45), rgba(30,144,255,0.08));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(30,144,255,0.25);
+}
+.stepIcon img { width: 32px; height: 32px; object-fit: contain; filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+.stepTitle { margin: 0.4rem 0; font-size: 1.1rem; color: #fff; }
+.stepText { color: rgba(255,255,255,0.8); margin: 0 0 0.7rem 0; }
+.stepLink {
+  margin-top: 0.3rem; /* deixa o espaçamento sem sobrescrever o estilo global .btn */
 }
 
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+@media (max-width: 900px) {
+  .stepsGrid { grid-template-columns: 1fr; }
 }
 
-.imagePlaceholder {
-  width: 100%;
-  height: 338px; /* 👉 todas as imagens têm a mesma altura */
-  margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+/* Cluster de imagens em um único container */
+.imageCluster {
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border: 1px groove rgba(255, 255, 255, 0.3);
+  align-items: center;
+  flex-wrap: wrap; /* permite quebrar em telas menores */
+  gap: 8px; /* ainda mais juntinhas */
+  margin: 0 auto 2rem;
+  width: min(100%, 1000px);
+  padding: 6px;
+  border-radius: 16px;
 }
 
-.imagePlaceholder img {
+.clusterItem {
+  width: clamp(150px, 22vw, 280px);
+  height: clamp(120px, 18vw, 200px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.clusterItem img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* garante proporção */
-  border-radius: 12px;
+  object-fit: cover;
+  display: block;
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .textColumns {
     flex-direction: column;
     align-items: center;
   }
-
-  .cardsRow {
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
-/* Profile Section */
+@media (max-width: 768px) {
+  .imageCluster { gap: 6px; }
+  .clusterItem { width: clamp(110px, 34vw, 200px); height: clamp(100px, 26vw, 160px); }
+}
+
+/* Profile Section (Developed by) */
 .profileSection {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  margin-top: 4rem;
+  width: 100%;
+  max-width: 1100px; /* impede sair da tela mesmo com padding do pai */
+  margin: 4rem auto 0;
+  padding: clamp(1.2rem, 3.2vw, 2.4rem);
+  box-sizing: border-box; /* padding incluso na largura */
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+
+  display: grid;
+  grid-template-columns: clamp(110px, 12vw, 140px) 1fr; /* avatar escala um pouco */
+  align-items: center;
+  gap: clamp(1.2rem, 3.2vw, 2.2rem);
   text-align: left;
-  padding: 2rem 14rem; /* espaço maior na esquerda/direita */
 }
 
 .profileImage {
   flex-shrink: 0;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
 }
 
 .profileImage img {
@@ -138,74 +187,75 @@
 }
 
 .profileInfo h3 {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--secondary);
+  margin: 0 0 0.35rem 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .profileInfo h2 {
-  font-size: 1.8rem;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
   color: #fff;
-  margin-bottom: 1rem;
+  margin: 0 0 0.7rem 0;
 }
 
 .profileInfo p {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  margin: 0 0 1.1rem 0;
+  line-height: 1.68;
 }
 
 .contacts {
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.7rem;
 }
 
 .contacts a {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   font-size: 1rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+
+.contactIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
 
 /* Responsivo */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .profileSection {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
     text-align: center;
   }
-
-  .contacts {
-    align-items: center;
-  }
+  .profileImage { margin: 0 auto; width: 120px; height: 120px; }
+  .contacts { justify-content: center; }
 }
 
 .link {
-  color: blueviolet;
+  color: var(--text);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   padding: 0.25rem 0;
 }
 
-.link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
+/* remove underline animation */
+.link::after { content: none; display: none; }
 
+/* keep text color stable on hover */
 .link:hover {
-  color: var(--primary);
-  transform: translateX(5px);
+  color: var(--text);
+  transform: none;
 }
 
-.link:hover::after {
-  width: 100%;
-}
+.link:hover::after { width: 0; }
