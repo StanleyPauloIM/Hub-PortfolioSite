@@ -168,7 +168,7 @@
   border: 2px solid transparent;
   border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4) 1;
   color: var(--text);
-  border-radius: 8px; /* Curvar as bordas*/
+  border-radius: 12px; /* Curvar as bordas*/
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Instrument Sans', sans-serif;
@@ -205,7 +205,7 @@
   border: 2px solid transparent;
   border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) 1;
   color: var(--text);
-  border-radius: 8px; /* Curvar as bordas*/
+  border-radius: 12px; /* Curvar as bordas*/
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Instrument Sans', sans-serif;

@@ -38,7 +38,7 @@ export default function Footer() {
                   aria-label="Email para receber novidades"
                   className={styles.emailInput}
                 />
-                <button type="submit" className={styles.subscribeButton}>Subscrever</button>
+                <button type="submit" className={`btn ${styles.subscribeButton}`}>Subscrever</button>
               </div>
               <small className={styles.subscribeHint}>
                 Ao subscrever, concordas em receber emails ocasionais sobre novidades do site.

@@ -56,7 +56,7 @@ const FeaturesSection = () => {
             </div>
             <h4 className={styles.stepTitle}>Escolhe o teu personagem</h4>
             <p className={styles.stepText}>Define a tua identidade visual inicial para personalizar a experiência.</p>
-            <a className={styles.stepLink} href="/chooseurcharacter">Começar</a>
+            <a className={`btn ${styles.stepLink}`} href="/chooseurcharacter">Começar</a>
           </div>
 
           <div className={styles.stepCard}>
@@ -65,7 +65,7 @@ const FeaturesSection = () => {
             </div>
             <h4 className={styles.stepTitle}>Gera o teu portfólio</h4>
             <p className={styles.stepText}>Escolhe estilos, adiciona conteúdo e vê a pré-visualização em tempo real.</p>
-            <a className={styles.stepLink} href="/generateurportfolio">Gerar</a>
+            <a className={`btn ${styles.stepLink}`} href="/generateurportfolio">Gerar</a>
           </div>
 
           <div className={styles.stepCard}>
@@ -74,7 +74,7 @@ const FeaturesSection = () => {
             </div>
             <h4 className={styles.stepTitle}>Partilha com o mundo</h4>
             <p className={styles.stepText}>Publica e envia o link para clientes, empresas e amigos — simples e rápido.</p>
-            <a className={styles.stepLink} href="/theportfolio">Ver exemplo</a>
+            <a className={`btn ${styles.stepLink}`} href="/theportfolio">Ver exemplo</a>
           </div>
         </div>
       </section>

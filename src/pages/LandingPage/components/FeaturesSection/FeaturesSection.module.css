@@ -101,17 +101,8 @@
 .stepTitle { margin: 0.4rem 0; font-size: 1.1rem; color: #fff; }
 .stepText { color: rgba(255,255,255,0.8); margin: 0 0 0.7rem 0; }
 .stepLink {
-  display: inline-block;
-  margin-top: 0.3rem;
-  padding: 0.5rem 0.9rem;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 800;
-  background: #ffffff;
-  color: #0a0a0a;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.85);
+  margin-top: 0.3rem; /* deixa o espaçamento sem sobrescrever o estilo global .btn */
 }
-.stepLink:hover { transform: translateY(-1px); }
 
 @media (max-width: 900px) {
   .stepsGrid { grid-template-columns: 1fr; }
@@ -251,29 +242,20 @@
 }
 
 .link {
-  color: blueviolet;
+  color: var(--text);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   padding: 0.25rem 0;
 }
 
-.link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
+/* remove underline animation */
+.link::after { content: none; display: none; }
 
+/* keep text color stable on hover */
 .link:hover {
-  color: var(--primary);
-  transform: translateX(5px);
+  color: var(--text);
+  transform: none;
 }
 
-.link:hover::after {
-  width: 100%;
-}
+.link:hover::after { width: 0; }

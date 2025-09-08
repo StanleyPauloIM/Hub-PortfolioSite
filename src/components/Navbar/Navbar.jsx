@@ -107,7 +107,7 @@ export default function Navbar() {
         </li>
 
         {/* Right actions */}
-        <li><NavLink to="/signin" className={styles.joinBtn}>Juntar‑se</NavLink></li>
+        <li><NavLink to="/signin" className={`btn ${styles.joinBtn}`}>Juntar‑se</NavLink></li>
         <li className={styles.accountWrap}>
           <div className={styles.profilePic} title="Conta" onClick={() => setAccountOpen((v) => !v)}>
             <img src={accountIcon} alt="Account Icon" />
@@ -123,8 +123,8 @@ export default function Navbar() {
                 Criar Portfólio
               </NavLink>
               <hr className={styles.accountDivider} />
-              <button className={styles.themeBtn} disabled={theme === 'dark'} onClick={() => setTheme('dark')}>Tema: Escuro</button>
-              <button className={styles.themeBtn} disabled={theme === 'light'} onClick={() => setTheme('light')}>Tema: Claro</button>
+              <button className={`btn btn--small btn--full ${styles.themeBtn}`} disabled={theme === 'dark'} onClick={() => setTheme('dark')}>Tema: Escuro</button>
+              <button className={`btn btn--small btn--full ${styles.themeBtn}`} disabled={theme === 'light'} onClick={() => setTheme('light')}>Tema: Claro</button>
               <hr className={styles.accountDivider} />
               <button className={styles.accountLink} onClick={() => console.log('Sair')}>
                 <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
