@@ -65,7 +65,7 @@ export default function Footer() {
                 <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" />
               </a>
               <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
-                <img src="https://cdn.simpleicons.org/linkedin/ffffff" alt="LinkedIn" />
+                <img src="https://img.icons8.com/ios-glyphs/24/linkedin.png" alt="LinkedIn" />
               </a>
               <a href="#" className={styles.socialIcon} aria-label="X (Twitter)">
                 <img src="https://cdn.simpleicons.org/x/ffffff" alt="X" />

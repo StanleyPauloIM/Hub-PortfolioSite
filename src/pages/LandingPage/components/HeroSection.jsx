@@ -27,6 +27,9 @@ const HeroSection = () => {
         
         {/* Coluna de texto */}
         <div className={styles.heroContent}>
+          {/* Badge/Eyebrow */}
+          <div className={styles.badge}>Novo • Construtor de Portfólios</div>
+
           <h1 className={styles.heroTitle}>
             <span className={styles.titleGradient}>Constrói o teu</span>
             <br />
@@ -39,13 +42,30 @@ const HeroSection = () => {
             com ferramentas avançadas e design moderno.
           </p>
 
+          {/* Chips com destaques */}
+          <ul className={styles.chipList}>
+            <li className={styles.chip}>Templates modernos</li>
+            <li className={styles.chip}>Edição em tempo real</li>
+            <li className={styles.chip}>Partilha instantânea</li>
+          </ul>
+
           <div className={styles.ctaButtons}>
             <button className={styles.primaryButton}>
               Começar Agora
             </button>
-            <button className={styles.secondaryButton}>
+            <button className="btn">
               Ver Exemplos
             </button>
+          </div>
+
+          {/* Trust bar */}
+          <div className={styles.trustBar}>
+            <span className={styles.trustText}>Usado por criativos e estudantes</span>
+            <div className={styles.trustLogos}>
+              <img src="https://cdn.simpleicons.org/behance/ffffff" alt="Behance" />
+              <img src="https://cdn.simpleicons.org/figma/ffffff" alt="Figma" />
+              <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" />
+            </div>
           </div>
         </div>
 
