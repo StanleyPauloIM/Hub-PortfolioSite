@@ -6,28 +6,6 @@ import LinkedInLogo from '../../assets/images/LinkedIn-Logo.png';
 import XLogo from '../../assets/images/X-Logo.png';
 import InstagramLogo from '../../assets/images/Instagram-Logo.png';
 
-/**
- * FOOTER INOVADOR - Hub Portfolio Website
- * 
- * Este footer foi criado com elementos inovadores:
- * - Gradiente radial animado que muda de cor
- * - Partículas flutuantes que se movem
- * - Links sociais com hover effects
- * - Contador de visitantes animado
- * - Efeito de "typing" no texto principal
- * - Responsivo para mobile
- * 
- * Tecnologias utilizadas:
- * - CSS animations e keyframes
- * - React hooks (useState, useEffect)
- * - CSS custom properties para cores
- * - Flexbox e Grid para layout
- * 
- * @author YDK_Nley56
- * @version 1.0.0
- * @date 2025
- */
-
 export default function Footer() {
   const [visitorCount, setVisitorCount] = useState(0);
   const [currentYear] = useState(new Date().getFullYear());
@@ -51,19 +29,15 @@ export default function Footer() {
 
       {/* Conteúdo principal */}
       <div className={styles.footerContent}>
-        {/* Seção do logo e descrição */}
+        {/* Logo + tagline */}
         <div className={styles.brandSection}>
-          <div className={styles.logoContainer}>
-            <img src={HubLogo} alt="Hub Logo" className={styles.hubLogo} />
-          </div>
-          <p className={styles.tagline}>
-            Construindo portfólios extraordinários
-          </p>
+          <img src={HubLogo} alt="Hub Logo" className={styles.hubLogo} />
+          <p className={styles.tagline}>Construindo portfólios extraordinários</p>
         </div>
 
         {/* Links rápidos */}
         <div className={styles.quickLinks}>
-          <h4>Links Rápidos</h4>
+          <h4>Links</h4>
           <ul>
             <li><a href="/" className={styles.footerLink}>Home</a></li>
             <li><a href="/signin" className={styles.footerLink}>Entrar</a></li>
@@ -72,47 +46,39 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Estatísticas */}
+        {/* Estatísticas + redes sociais */}
         <div className={styles.stats}>
-          <h4>Estatísticas</h4>
+          <h4>Visits</h4>
           <div className={styles.statItem}>
             <span className={styles.statNumber}>{visitorCount.toLocaleString()}</span>
             <span className={styles.statLabel}>Visitantes</span>
           </div>
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}>2025</span>
-            <span className={styles.statLabel}>Ano Atual</span>
+          <div className={styles.socialIcons}>
+            <a href="#" className={styles.socialIcon}><img src={GitHubLogo} alt="GitHub" /></a>
+            <a href="#" className={styles.socialIcon}><img src={LinkedInLogo} alt="LinkedIn" /></a>
+            <a href="#" className={styles.socialIcon}><img src={XLogo} alt="X" /></a>
+            <a href="#" className={styles.socialIcon}><img src={InstagramLogo} alt="Instagram" /></a>
           </div>
         </div>
 
-        {/* Redes sociais */}
-        <div className={styles.socialLinks}>
-          <h4>Conecte-se</h4>
-          <div className={styles.socialIcons}>
-            <a href="#" className={styles.socialIcon} title="GitHub">
-              <img src={GitHubLogo} alt="GitHub Logo" />
-            </a>
-            <a href="#" className={styles.socialIcon} title="LinkedIn">
-              <img src={LinkedInLogo} alt="LinkedIn Logo" />
-            </a>
-            <a href="#" className={styles.socialIcon} title="X">
-              <img src={XLogo} alt="X Logo" />
-            </a>
-            <a href="#" className={styles.socialIcon} title="Instagram">
-              <img src={InstagramLogo} alt="Instagram Logo" />  
-            </a>
-          </div>
+        {/* Contato */}
+        <div className={styles.contactSection}>
+          <h4>Contact</h4>
+          <form className={styles.contactForm}>
+            <input 
+              type="email" 
+              placeholder="Digite seu email" 
+              className={styles.contactInput} 
+            />
+            <button type="submit" className={styles.contactButton}>→</button>
+          </form>
         </div>
       </div>
 
       {/* Barra inferior */}
       <div className={styles.bottomBar}>
-        <span className={styles.copyright}>
-          © {currentYear} Hub - Todos os direitos reservados
-        </span>
-        <span className={styles.madeWith}>
-          Feito com ❤️ e React
-        </span>
+        <span>© {currentYear} Hub - Todos os direitos reservados</span>
+        <span>Feito com ❤️ e React</span>
       </div>
     </footer>
   );
