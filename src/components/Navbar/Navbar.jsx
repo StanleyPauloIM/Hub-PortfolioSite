@@ -11,10 +11,6 @@ export default function Navbar() {
   const [accountOpen, setAccountOpen] = useState(false);
   const location = useLocation();
 
-  // Esconde a Navbar global na página ChooseUrCharacter (sidebar própria)
-  if (location.pathname.toLowerCase().startsWith('/chooseurcharacter')) {
-    return null;
-  }
 
   // Theme management (light/dark)
   const getPreferredTheme = () => {

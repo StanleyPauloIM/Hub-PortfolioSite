@@ -105,7 +105,7 @@
 /* Search row on top */
 .searchBar { display: grid; grid-template-columns: 1fr; gap: 8px; }
 /* Combined input + button */
-.searchBox { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; padding: 11px 11px 11px 14px; min-height: 48px; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(12,12,12,0.6); }
+.searchBox { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 8px; padding: 10px 10px 10px 12px; min-height: 44px; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; background: rgba(12,12,12,0.55); }
 .searchBox > svg { width: 18px; height: 18px; color: var(--secondary); justify-self: center; }
 
 /* Filters grid */
@@ -128,8 +128,8 @@
 .selectWrap::after { content: '▾'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--secondary); pointer-events: none; }
 
 .submitCol { display: flex; align-items: end; }
-.searchBtn { padding: 0 !important; width: 40px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
-.searchBtnInline { width: 44px; height: 38px; margin-left: 4px; }
+.searchBtn { padding: 0 !important; width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
+.searchBtnInline { width: 40px; height: 40px; margin-left: 6px; }
 
 .helper { color: var(--secondary); margin: 8px 2px 0; font-size: 0.9rem; }
 

@@ -10,8 +10,9 @@ import styles from './GlowButton.module.css';
  *   <GlowButton onClick={...}>Action</GlowButton>
  *   <GlowButton as="a" href="/path">Go</GlowButton>
  */
-export default function GlowButton({ as = 'button', children, className = '', ...rest }) {
-  const classes = [styles.glowBtn, className].filter(Boolean).join(' ');
+export default function GlowButton({ as = 'button', variant = 'default', children, className = '', ...rest }) {
+  const variantClass = variant === 'icon' ? styles.iconVariant : '';
+  const classes = [styles.glowBtn, variantClass, className].filter(Boolean).join(' ');
 
   if (as === 'a') {
     const { href, ...other } = rest;

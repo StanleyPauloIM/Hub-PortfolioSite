@@ -60,3 +60,12 @@
   100% { filter: hue-rotate(360deg); }
 }
 
+/* Compact icon variant: good for tight spaces like search bars */
+.iconVariant {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 10px;
+}
+.iconVariant::before { padding: 1px; border-radius: 10px; }
+.iconVariant::after { display: none; }
