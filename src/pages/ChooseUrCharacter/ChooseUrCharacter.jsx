@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
+import accountIcon from '../../assets/images/account_ex.jpg';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -53,9 +54,19 @@ const Icon = {
   ),
 };
 
+// BACKEND: exemplo de dados de perfis; substituir por dados vindos da API
+const mockProfiles = [
+  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['Figma', 'UX', 'UI'] },
+  { id: '2', name: 'João Santos', title: 'Frontend Engineer', city: 'Porto', area: 'frontend', exp: 'mid', gender: 'male', avatar: accountIcon, tags: ['React', 'Vite', 'TypeScript'] },
+  { id: '3', name: 'Marta Lima', title: 'Data Analyst', city: 'Luanda', area: 'data', exp: 'junior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'PowerBI', 'Python'] },
+];
+
 export default function ChooseUrCharacter() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  // BACKEND: estado dos perfis – substituir por dados de resposta do servidor
+  const [profiles, setProfiles] = useState(mockProfiles);
 
   const NavSection = ({ title, children }) => (
     <div className={styles.section}>
@@ -131,6 +142,27 @@ export default function ChooseUrCharacter() {
             <h1 className={styles.title}>Choose Your Character</h1>
             <div className={styles.badge}>beta</div>
           </div>
+          <div className={styles.topActions}>
+            {/* BACKEND: abrir dropdown com notificações reais do utilizador */}
+            <div className={styles.bellWrap}>
+              <button type="button" className={styles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
+                <Icon.bell />
+              </button>
+              <span className={styles.bellDot} />
+              {notifOpen && (
+                <div className={styles.notifDropdown} role="menu">
+                  {/* BACKEND: mapear lista de notificações; exemplo abaixo */}
+                  <div className={styles.notifItem} role="menuitem">
+                    <div className={styles.notifTitle}>Novo portfólio publicado</div>
+                    <div className={styles.notifMeta}>por @ana.silva • há 2h</div>
+                  </div>
+                  <div className={styles.notifFooter}>Ver todas</div>
+                </div>
+              )}
+            </div>
+            <button type="button" className={styles.iconBtn} aria-label="Definições"><Icon.settings /></button>
+            <div className={styles.avatar}><img src={accountIcon} alt="Perfil" /></div>
+          </div>
         </div>
 
         {/* Cartão de introdução + filtros, inspirado no anexo */}
@@ -141,7 +173,25 @@ export default function ChooseUrCharacter() {
           </div>
 
           {/* Barra de filtros */}
-          <form className={styles.filtersBar} onSubmit={(e)=>{e.preventDefault(); console.log('Filter search submit');}}>
+          {/* BACKEND: no submit, chamar a API com os parâmetros; aqui filtramos os mocks */}
+          <form className={styles.filtersBar} onSubmit={(e)=>{
+            e.preventDefault();
+            const form = new FormData(e.currentTarget);
+            const q = String(form.get('q') || '').toLowerCase();
+            const area = form.get('area');
+            const city = form.get('city');
+            const exp = form.get('exp');
+            const gender = form.get('gender');
+            const filtered = mockProfiles.filter(p => {
+              const matchQ = !q || [p.name, p.title, p.city, p.tags.join(' ')].join(' ').toLowerCase().includes(q);
+              const matchArea = area === 'all' || p.area === area;
+              const matchCity = city === 'all' || p.city.toLowerCase() === String(city).toLowerCase();
+              const matchExp = exp === 'all' || p.exp === exp;
+              const matchGender = gender === 'all' || p.gender === gender;
+              return matchQ && matchArea && matchCity && matchExp && matchGender;
+            });
+            setProfiles(filtered);
+          }}>
             {/* Palavra‑chave */}
             <div className={styles.field}>
               <label className={styles.srOnly} htmlFor="q">Pesquisa</label>
@@ -213,11 +263,34 @@ export default function ChooseUrCharacter() {
           </form>
         </section>
 
-        {/* Placeholder de resultados */}
-        <section className={styles.resultsEmpty}>
-          <Icon.person />
-          <p>Começa uma pesquisa para encontrar portfólios publicados pelos utilizadores.</p>
-        </section>
+        {/* Resultados: cards de perfis */}
+        {profiles.length === 0 ? (
+          <section className={styles.resultsEmpty}>
+            <Icon.person />
+            <p>Sem resultados. Tenta ajustar os filtros.</p>
+          </section>
+        ) : (
+          <section className={styles.resultsGrid}>
+            {profiles.map((p) => (
+              <article key={p.id} className={styles.card}>
+                <header className={styles.cardHeader}>
+                  <img className={styles.cardAvatar} src={p.avatar} alt="avatar" />
+                  <div className={styles.cardHeadText}>
+                    <div className={styles.cardName}>{p.name}</div>
+                    <div className={styles.cardMeta}>{p.title} • {p.city}</div>
+                  </div>
+                </header>
+                <div className={styles.cardTags}>
+                  {p.tags.map(tag => (<span key={tag} className={styles.tag}>#{tag}</span>))}
+                </div>
+                <footer className={styles.cardFooter}>
+                  {/* BACKEND: ligar ao portfólio do utilizador */}
+                  <a className={`btn ${styles.viewBtn}`} href={`/theportfolio?user=${encodeURIComponent(p.name)}`}>Ver Portfólio</a>
+                </footer>
+              </article>
+            ))}
+          </section>
+        )}
       </main>
 
       {/* backdrop para mobile */}
