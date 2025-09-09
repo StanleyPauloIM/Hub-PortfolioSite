@@ -1,12 +1,208 @@
-/* Estilos para a página de autenticação */
-.container {
+/* Autenticação com estilo do site (vidro + variáveis) */
+.wrapper {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+  display: grid;
+  place-items: center;
+  padding: 10rem 1rem 3rem; /* respiro maior para a navbar fixa */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 10%, rgba(30,144,255,0.15), transparent 35%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05), transparent 45%),
+              rgba(0,0,0,0.35);
+}
+
+.shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+width: min(820px, 92vw);
+  z-index: 0;
+  box-sizing: border-box;
+}
+
+/* Sign in card */
+.card {
+  background: rgba(20,20,20,0.85);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--text);
-  padding: 2rem;
+  font-size: 0.95rem;
+  padding: 1.4rem;
+  z-index: 1;
+  overflow: hidden; /* impede overflow do conteúdo */
+  box-sizing: border-box;
+}
+
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem; }
+.logo { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(30,144,255,0.6)); }
+.title { font-size: 1.25rem; margin: 0; }
+.subtitle { color: var(--secondary); margin: 0.15rem 0 0; font-size: 0.95rem; }
+
+.form { display: grid; gap: 10px; box-sizing: border-box; }
+.label { font-weight: 600; font-size: 0.9rem; max-width: 100%; word-break: break-word; display: inline-block; margin-bottom: 4px; overflow-wrap: anywhere; }
+.input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.input::placeholder { color: rgba(255,255,255,0.55); }
+
+/* Date input: fundo transparente e ícone adaptado ao tema */
+.inputDate {
+  background: transparent;
+  /* Reativa o visual nativo apenas para o date, senão o ícone some */
+  appearance: auto;
+  -webkit-appearance: auto;
+  /* espaço para o ícone do calendário */
+  padding-right: 2.25rem;
+  /* sugere controles claros em temas escuros (melhora contraste do ícone nativo) */
+  color-scheme: dark;
+}
+.inputDate::-webkit-calendar-picker-indicator {
+  opacity: 1 !important;
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-inline-end: 0.2rem;
+  background-color: transparent;
+  /* Ícone SVG branco para garantir visibilidade em fundo escuro */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1.1rem 1.1rem;
+  filter: none;
+  cursor: pointer;
+}
+/***** Firefox: usa botão de calendário do sistema; nada a customizar além do espaço *****/
+.inputDate::-moz-focus-inner { border: 0; padding: 0; }
+
+.inputDate::-webkit-datetime-edit-fields-wrapper { background: transparent; }
+.inputDate::-webkit-datetime-edit, 
+.inputDate::-webkit-datetime-edit-text, 
+.inputDate::-webkit-datetime-edit-day-field,
+.inputDate::-webkit-datetime-edit-month-field,
+.inputDate::-webkit-datetime-edit-year-field {
+  color: var(--text);
+}
+.inputDate::-ms-expand { display: none; }
+.rowBetween { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; gap: 12px; flex-wrap: wrap; }
+.checkboxLabel { display: inline-flex; align-items: center; gap: 8px; color: var(--secondary); }
+.mutedLink { color: var(--secondary); text-decoration: none; }
+.mutedLink:hover { color: var(--primary); }
+
+.primaryBtn {
+  width: 100%;
+  margin-top: 4px;
+  border: 0 !important; /* sobrepõe .btn */
+  background: rgba(12,12,12,0.9);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Anel de borda em gradiente usando máscara (não depende de background-clip) */
+.primaryBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px; /* espessura da borda */
+  border-radius: 12px;
+  background: linear-gradient(120deg, var(--primary), #7b68ee, #00d1ff, var(--primary));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: borderShift 6s ease infinite;
+  pointer-events: none;
+}
+.primaryBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 34px rgba(30,144,255,0.4);
+}
+/* brilho suave */
+.primaryBtn::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: radial-gradient(120px 40px at 20% 0%, rgba(30,144,255,0.45), transparent 70%),
+              radial-gradient(120px 40px at 80% 100%, rgba(138,43,226,0.35), transparent 70%);
+  pointer-events: none;
+  filter: blur(16px);
+  opacity: 0.35;
+}
+
+@keyframes borderShift {
+  0% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(180deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.orSeparator { position: relative; text-align: center; margin: 10px 0; color: var(--secondary); }
+.orSeparator::before,
+.orSeparator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+}
+.orSeparator::before { left: 0; }
+.orSeparator::after { right: 0; }
+
+.socialRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.switchText { text-align: center; color: var(--secondary); margin-top: 6px; }
+.linkButton { background: transparent; color: var(--primary); border: none; cursor: pointer; font-weight: 700; }
+.inlineLink { color: var(--primary); }
+
+/* Signup panel that appears to the right on desktop */
+.signupPanel {
+  background: linear-gradient(rgba(20,20,20,0.42), rgba(0,0,0,0.42)); /* estilo hero, semi-transparente */
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  padding: 1.2rem 1.2rem 1rem;
+}
+.panelHeader { margin-bottom: 0.5rem; }
+.panelTitle { margin: 0; font-size: 1.1rem; }
+.panelSubtitle { margin: 0.15rem 0 0; color: var(--secondary); font-size: 0.95rem; }
+.panelForm { display: grid; gap: 10px; }
+.grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+/* Fade stack views */
+.view { transition: opacity 300ms ease, transform 300ms ease, max-height 300ms ease, margin 300ms ease; }
+.visible { opacity: 1; transform: translateY(0); max-height: 5000px; margin-top: 0; }
+.hidden { opacity: 0; transform: translateY(8px); max-height: 0; pointer-events: none; overflow: hidden; margin-top: 0; }
+
+/* Desktop layout (mantém uma coluna; alternamos via fade) */
+@media (min-width: 700px) {
+  .socialRow { grid-template-columns: 1fr 1fr; }
+  .grid2 { grid-template-columns: 1fr 1fr; gap: 12px; }
 }
