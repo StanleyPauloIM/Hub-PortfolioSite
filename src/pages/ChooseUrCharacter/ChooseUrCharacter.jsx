@@ -133,14 +133,84 @@ export default function ChooseUrCharacter() {
           </div>
         </div>
 
-        {/* Área de pesquisa (placeholder) */}
-        <section className={styles.searchCard}>
-          <div className={styles.searchRow}>
-            <Icon.search />
-            <input className={styles.searchInput} placeholder="Pesquisar utilizadores, perfis ou áreas..." />
-            <button className={`btn ${styles.searchBtn}`}>Pesquisar</button>
+        {/* Cartão de introdução + filtros, inspirado no anexo */}
+        <section className={styles.introCard}>
+          <div className={styles.introText}>
+            <h2 className={styles.introTitle}>Bem‑vindo!</h2>
+            <p className={styles.introSub}>Encontre pessoas e portfólios publicados. Use a pesquisa e os filtros para refinar os resultados.</p>
           </div>
-          <p className={styles.helper}>Dica: utiliza palavras‑chave como tecnologia, design, localização, ou nome de utilizador.</p>
+
+          {/* Barra de filtros */}
+          <form className={styles.filtersBar} onSubmit={(e)=>{e.preventDefault(); console.log('Filter search submit');}}>
+            {/* Palavra‑chave */}
+            <div className={styles.field}>
+              <label className={styles.srOnly} htmlFor="q">Pesquisa</label>
+              <div className={styles.inputWrap}>
+                <Icon.search />
+                <input id="q" name="q" className={styles.searchInput} placeholder="Palavra‑chave (ex.: React, UX, Lisboa, @utilizador)" />
+              </div>
+            </div>
+            {/* Área */}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="area">Área</label>
+              <div className={styles.selectWrap}>
+                <select id="area" name="area" className={styles.select} defaultValue="all">
+                  <option value="all">Todas</option>
+                  <option value="design">Design</option>
+                  <option value="frontend">Frontend</option>
+                  <option value="backend">Backend</option>
+                  <option value="data">Data</option>
+                  <option value="marketing">Marketing</option>
+                </select>
+              </div>
+            </div>
+            {/* Cidade */}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="city">Cidade</label>
+              <div className={styles.selectWrap}>
+                <select id="city" name="city" className={styles.select} defaultValue="all">
+                  <option value="all">Todas</option>
+                  <option value="lisboa">Lisboa</option>
+                  <option value="porto">Porto</option>
+                  <option value="maputo">Maputo</option>
+                  <option value="luanda">Luanda</option>
+                  <option value="remote">Remoto</option>
+                </select>
+              </div>
+            </div>
+            {/* Experiência */}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="exp">Experiência</label>
+              <div className={styles.selectWrap}>
+                <select id="exp" name="exp" className={styles.select} defaultValue="all">
+                  <option value="all">Qualquer</option>
+                  <option value="junior">Júnior</option>
+                  <option value="mid">Pleno</option>
+                  <option value="senior">Sénior</option>
+                  <option value=">5">5+ anos</option>
+                </select>
+              </div>
+            </div>
+            {/* Género (opcional) */}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="gender">Género</label>
+              <div className={styles.selectWrap}>
+                <select id="gender" name="gender" className={styles.select} defaultValue="all">
+                  <option value="all">Todos</option>
+                  <option value="female">Feminino</option>
+                  <option value="male">Masculino</option>
+                  <option value="other">Outro / Prefiro não dizer</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Botão de pesquisa */}
+            <div className={`${styles.field} ${styles.submitCol}`}>
+              <button className={`btn ${styles.searchBtn}`} type="submit" aria-label="Pesquisar">
+                <Icon.search />
+              </button>
+            </div>
+          </form>
         </section>
 
         {/* Placeholder de resultados */}
