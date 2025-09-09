@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
+import GlowButton from '../../components/ui/GlowButton/GlowButton';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -41,6 +42,15 @@ const Icon = {
   bell: (props) => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+  ),
+  sliders: (props) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+      <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+      <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
+      <line x1="17" y1="16" x2="23" y2="16"/>
     </svg>
   ),
   info: (props) => (
@@ -255,16 +265,30 @@ export default function ChooseUrCharacter() {
               </div>
             </div>
 
-            {/* Botão de pesquisa */}
-            <div className={`${styles.field} ${styles.submitCol}`}>
-              <button className={`btn ${styles.searchBtn}`} type="submit" aria-label="Pesquisar">
-                <Icon.search />
+            {/* Mais filtros (placeholder) */}
+            <div className={`${styles.field} ${styles.actionsCol}`}>
+              {/* BACKEND: abrir painel lateral com filtros avançados */}
+              <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
+                <Icon.sliders />
               </button>
+            </div>
+
+            {/* Botão de pesquisa com borda gradiente */}
+            <div className={`${styles.field} ${styles.submitCol}`}>
+              <GlowButton className={styles.searchBtn} type="submit" aria-label="Pesquisar">
+                <Icon.search />
+              </GlowButton>
             </div>
           </form>
         </section>
 
         {/* Resultados: cards de perfis */}
+        {/* Cabeçalho da lista de resultados */}
+        <div className={styles.resultsHeader}>
+          <h3 className={styles.resultsTitle}>Found Characters</h3>
+          <span className={styles.resultsCount}>{profiles.length}</span>
+        </div>
+
         {profiles.length === 0 ? (
           <section className={styles.resultsEmpty}>
             <Icon.person />
