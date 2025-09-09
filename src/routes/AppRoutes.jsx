@@ -6,6 +6,7 @@ import SignInUp from '../pages/SignInUp/SignInUp';
 import ChooseUrCharacter from '../pages/ChooseUrCharacter/ChooseUrCharacter';
 import GenerateUrPortfolio from '../pages/GenerateUrPortfolio/GenerateUrPortfolio';
 import ThePortfolio from '../pages/ThePortfolio/ThePortfolio';
+import Terms from '../pages/Terms/Terms';
 
 const AppRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const AppRoutes = () => {
       <Route path="/chooseurcharacter" element={<ChooseUrCharacter />} />
       <Route path="/generateurportfolio" element={<GenerateUrPortfolio />} />
       <Route path="/theportfolio" element={<ThePortfolio />} />
+      <Route path="/terms" element={<Terms />} />
     </Routes>
   );
 };
