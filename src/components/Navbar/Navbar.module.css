@@ -347,6 +347,12 @@
   .navLinks { display: none; } /* impede que a nav ocupe 100% */
 }
 
+/* Theme-aware overrides */
+html[data-theme='light'] .nav { background: rgba(255,255,255,0.85); border-color: var(--border-soft); box-shadow: 0 8px 24px var(--shadow), 0 4px 16px rgba(82, 9, 123, 0.08), inset 0 1px 0 rgba(0,0,0,0.06); }
+html[data-theme='light'] .nav.scrolled { background: rgba(255,255,255,0.95); box-shadow: 0 6px 18px var(--shadow); }
+html[data-theme='light'] .dropdownMenu, html[data-theme='light'] .accountMenu { background: var(--surface-1); border: 1px solid var(--border-soft); box-shadow: 0 8px 24px var(--shadow); }
+html[data-theme='light'] .accountDivider { background: var(--border-soft); }
+
 /* Acessibilidade: foco visível em controles clicáveis */
 .accountLink:focus-visible,
 .themeBtn:focus-visible,
@@ -372,10 +378,10 @@
   .mobileSection {
     margin: 0 auto;
     width: 96%;
-    background: rgba(20,20,20,0.98);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
     border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    box-shadow: 0 10px 30px var(--shadow);
     padding: 12px 12px;
     max-height: 70vh;
     overflow: auto;

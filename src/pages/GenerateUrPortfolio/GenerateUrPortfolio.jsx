@@ -98,6 +98,13 @@ export default function GenerateUrPortfolio() {
   const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {} });
   const navigate = useNavigate();
 
+  // Apply saved theme on mount (since global navbar is hidden here)
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    const theme = (saved === 'light' || saved === 'dark') ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+  }, []);
+
   // Persist draft on each change (debounced)
   useEffect(() => {
     const t = setTimeout(() => {

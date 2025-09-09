@@ -6,6 +6,14 @@
   position: relative; /* para o brilho no topo */
 }
 
+/* Light theme override: gradiente suave e claro */
+html[data-theme='light'] .footer {
+  background: 
+    radial-gradient(1200px 600px at 30% -10%, rgba(82,9,123,0.08), transparent 40%),
+    radial-gradient(1200px 600px at 100% 120%, rgba(0,209,255,0.10), transparent 40%),
+    linear-gradient(180deg, #f7f4fb 0%, #ece6fb 100%);
+}
+
 /* Brilho superior semelhante ao da navbar */
 .footer::before {
   content: '';
@@ -43,6 +51,11 @@
   border: 1px solid rgba(30,144,255,0.25);
   box-shadow: 0 10px 26px rgba(30,144,255,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
   backdrop-filter: blur(6px);
+}
+html[data-theme='light'] .subscribeCard {
+  background: linear-gradient(180deg, rgba(82,9,123,0.10), rgba(82,9,123,0.05));
+  border: 1px solid rgba(82,9,123,0.25);
+  box-shadow: 0 10px 26px rgba(82,9,123,0.15), inset 0 1px 0 rgba(0,0,0,0.06);
 }
 
 .subscribeArea {
@@ -85,6 +98,10 @@
   color: var(--text);
   font-size: 0.95rem;
   backdrop-filter: blur(6px);
+}
+html[data-theme='light'] .emailInput {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.85);
 }
 
 .emailInput::placeholder {
@@ -324,6 +341,11 @@
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
+html[data-theme='light'] .thankYouSection {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 8px 24px var(--shadow);
+}
 
 .thankYouSection p {
   color: var(--text);
@@ -335,6 +357,10 @@
 .bottomBar {
   background: rgba(0, 0, 0, 0.35);
   padding: 1.25rem 0;
+}
+html[data-theme='light'] .bottomBar {
+  background: rgba(255,255,255,0.65);
+  border-top: 1px solid var(--border-soft);
 }
 
 .bottomContent {
@@ -368,6 +394,7 @@
 .bottomLinks span {
   color: rgba(255, 255, 255, 0.35);
 }
+html[data-theme='light'] .bottomLinks span { color: rgba(0,0,0,0.35); }
 
 .copyright {
   color: var(--secondary);
