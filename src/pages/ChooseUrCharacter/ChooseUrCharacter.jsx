@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
 import accountIcon from '../../assets/images/account_ex.jpg';
+import HubGlobe from '../../assets/HubGlobe.png';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -99,12 +100,12 @@ export default function ChooseUrCharacter() {
   );
 
   return (
-    <div className={styles.layoutWrapper}>
+    <div className={[styles.layoutWrapper, collapsed ? styles.layoutCollapsed : ''].join(' ')}>
       {/* Sidebar */}
       <aside className={[styles.sidebar, collapsed ? styles.collapsed : '', mobileOpen ? styles.mobileOpen : ''].join(' ')}>
         <div className={styles.sidebarHeader}>
           <div className={styles.brandRow}>
-            <div className={styles.brandDot} />
+            <img className={styles.brandLogo} src={HubGlobe} alt="HUB logo" />
             {!collapsed && <div className={styles.brandText}>HUB</div>}
           </div>
           <button className={styles.collapseBtn} onClick={() => setCollapsed(v => !v)} aria-label="Alternar barra">
