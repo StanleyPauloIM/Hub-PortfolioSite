@@ -206,13 +206,13 @@ export default function ChooseUrCharacter() {
             {/* Linha 1: barra de pesquisa */}
             <div className={styles.searchBar}>
               <label className={styles.srOnly} htmlFor="q">Pesquisa</label>
-              <div className={styles.inputWrap}>
+              <div className={styles.searchBox}>
                 <Icon.search />
                 <input id="q" name="q" className={styles.searchInput} placeholder="Palavra‑chave (ex.: React, UX, Lisboa, @utilizador)" />
+                <GlowButton className={`${styles.searchBtn} ${styles.searchBtnInline}`} type="submit" aria-label="Pesquisar">
+                  <Icon.search />
+                </GlowButton>
               </div>
-              <GlowButton className={styles.searchBtn} type="submit" aria-label="Pesquisar">
-                <Icon.search />
-              </GlowButton>
             </div>
 
             {/* Linha 2: filtros */}
