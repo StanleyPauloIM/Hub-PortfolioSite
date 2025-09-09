@@ -1,12 +1,14 @@
 // Define as rotas principais da aplicação
-import React from 'react';
+import React, { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LandingPage from '../pages/LandingPage/LandingPage';
-import SignInUp from '../pages/SignInUp/SignInUp';
-import ChooseUrCharacter from '../pages/ChooseUrCharacter/ChooseUrCharacter';
-import GenerateUrPortfolio from '../pages/GenerateUrPortfolio/GenerateUrPortfolio';
-import ThePortfolio from '../pages/ThePortfolio/ThePortfolio';
-import Terms from '../pages/Terms/Terms';
+
+// Code‑splitting das páginas para permitir fallback do loader
+const LandingPage = lazy(() => import('../pages/LandingPage/LandingPage'));
+const SignInUp = lazy(() => import('../pages/SignInUp/SignInUp'));
+const ChooseUrCharacter = lazy(() => import('../pages/ChooseUrCharacter/ChooseUrCharacter'));
+const GenerateUrPortfolio = lazy(() => import('../pages/GenerateUrPortfolio/GenerateUrPortfolio'));
+const ThePortfolio = lazy(() => import('../pages/ThePortfolio/ThePortfolio'));
+const Terms = lazy(() => import('../pages/Terms/Terms'));
 
 const AppRoutes = () => {
   return (

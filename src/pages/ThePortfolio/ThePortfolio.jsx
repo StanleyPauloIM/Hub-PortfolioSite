@@ -1,11 +1,171 @@
-// Página que exibe o portfólio do utilizador
-import React from 'react';
+// Página que exibe o portfólio do utilizador (versão não editável)
+import React, { useMemo, useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './ThePortfolio.module.css';
+import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
+import HubGlobe from '../../assets/HubGlobe.png';
+import accountIcon from '../../assets/images/account_ex.jpg';
+import ClassicPortfolio from './components/ClassicPortfolio';
+
+const Icon = {
+  home: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 11l9-8 9 8"/><path d="M9 22V12h6v10"/>
+    </svg>
+  ),
+  search: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+    </svg>
+  ),
+  portfolio: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+    </svg>
+  ),
+  wand: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 6l12 12"/><path d="M14 6l4-4"/><path d="M4 14l-4 4"/>
+    </svg>
+  ),
+  settings: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8.6 4.6a1.65 1.65 0 0 0 1-.33V4a2 2 0 1 1 4 0v.09c.36.14.69.34 1 .59.3.25.55.56.74.9.18.34.29.73.33 1.12.04.39 0 .78-.12 1.16"/>
+    </svg>
+  ),
+  bell: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+  ),
+  arrow: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  ),
+};
+
+const STORAGE_DRAFT = 'hub_portfolio_draft';
+const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function ThePortfolio() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    try {
+      const rawPub = localStorage.getItem(STORAGE_PUBLISHED);
+      const rawDraft = localStorage.getItem(STORAGE_DRAFT);
+      const parsed = rawPub ? JSON.parse(rawPub) : (rawDraft ? JSON.parse(rawDraft) : null);
+      setData(parsed);
+    } catch {
+      setData(null);
+    }
+  }, []);
+
+  const cssPreviewVars = useMemo(() => ({
+    '--c-primary': data?.theme?.primary || '#1e90ff',
+    '--c-secondary': data?.theme?.secondary || '#b0b8c1',
+    '--c-bg': data?.theme?.background || '#0b0b0b',
+    '--c-text': data?.theme?.text || '#ffffff',
+  }), [data]);
+
+  const pages = [
+    { label: 'Início', path: '/' },
+    { label: 'ChooseUrCharacter', path: '/chooseurcharacter' },
+    { label: 'GenerateUrPortfolio', path: '/generateurportfolio' },
+    { label: 'ThePortfolio', path: '/theportfolio' },
+  ];
+
   return (
-    <div className={styles.container}>
-      <h2>O Portfólio</h2>
+    <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
+      {/* Sidebar */}
+      <aside className={[layoutStyles.sidebar, collapsed ? layoutStyles.collapsed : '', mobileOpen ? layoutStyles.mobileOpen : ''].join(' ')}>
+        <div className={layoutStyles.sidebarHeader}>
+          <div className={layoutStyles.brandRow}>
+            <img className={layoutStyles.brandLogo} src={HubGlobe} alt="HUB logo" />
+            {!collapsed && <div className={layoutStyles.brandText}>HUB</div>}
+          </div>
+          <button className={layoutStyles.collapseBtn} onClick={() => setCollapsed(v => !v)} aria-label="Alternar barra">
+            <Icon.arrow />
+          </button>
+          <button className={layoutStyles.mobileClose} onClick={() => setMobileOpen(false)} aria-label="Fechar menu">×</button>
+        </div>
+
+        <nav>
+          <div className={layoutStyles.section}>
+            <div className={layoutStyles.sectionTitle}>Páginas</div>
+            <ul className={layoutStyles.sectionList}>
+              {pages.map(p => (
+                <li key={p.path}>
+                  <NavLink to={p.path} className={layoutStyles.itemLink} title={collapsed ? p.label : undefined}>
+<span className={layoutStyles.itemIcon}>{p.label.includes('Generate') ? <Icon.wand /> : p.label.includes('Choose') ? <Icon.search /> : p.label.includes('Portfolio') ? <Icon.portfolio /> : <Icon.home />}</span>
+                    {!collapsed && <span className={layoutStyles.itemLabel}>{p.label}</span>}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={layoutStyles.section}>
+            <div className={layoutStyles.sectionTitle}>Conta</div>
+            <ul className={layoutStyles.sectionList}>
+              <li><button type="button" className={layoutStyles.itemLink} title={collapsed ? 'Notificações' : undefined}><span className={layoutStyles.itemIcon}><Icon.bell /></span>{!collapsed && <span className={layoutStyles.itemLabel}>Notificações</span>}</button></li>
+              <li><button type="button" className={layoutStyles.itemLink} title={collapsed ? 'Definições' : undefined}><span className={layoutStyles.itemIcon}><Icon.settings /></span>{!collapsed && <span className={layoutStyles.itemLabel}>Definições</span>}</button></li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      {/* Conteúdo */}
+      <main className={layoutStyles.content}>
+        {/* Top bar */}
+        <div className={layoutStyles.topBar}>
+          <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
+            <span className={layoutStyles.hamburger} />
+          </button>
+          <div className={layoutStyles.pageTitleRow}>
+            <h1 className={layoutStyles.title}>The Portfolio</h1>
+            <div className={layoutStyles.badge}>read‑only</div>
+          </div>
+          <div className={layoutStyles.topActions}>
+            <div className={layoutStyles.bellWrap}>
+              <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
+                <Icon.bell />
+              </button>
+              <span className={layoutStyles.bellDot} />
+              {notifOpen && (
+                <div className={layoutStyles.notifDropdown} role="menu">
+                  <div className={layoutStyles.notifItem} role="menuitem">
+                    <div className={layoutStyles.notifTitle}>Publicação</div>
+                    <div className={layoutStyles.notifMeta}>Esta é a versão não editável</div>
+                  </div>
+                  <div className={layoutStyles.notifFooter}>Ver todas</div>
+                </div>
+              )}
+            </div>
+            <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
+            <div className={layoutStyles.avatar}><img src={accountIcon} alt="Perfil" /></div>
+          </div>
+        </div>
+
+        {!data ? (
+          <div className={styles.empty}>
+            <p>Nenhum portfólio publicado ainda.</p>
+            <NavLink to="/generateurportfolio" className={`btn ${styles.link}`}>Criar agora</NavLink>
+          </div>
+        ) : (
+          <div className={styles.viewWrap} style={cssPreviewVars}>
+            <ClassicPortfolio data={data} />
+          </div>
+        )}
+      </main>
+
+      {/* backdrop para mobile */}
+      {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
     </div>
   );
 }

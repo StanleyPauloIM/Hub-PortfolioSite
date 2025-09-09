@@ -11,6 +11,7 @@ export default function Navbar() {
   const [accountOpen, setAccountOpen] = useState(false);
   const location = useLocation();
 
+
   // Theme management (light/dark)
   const getPreferredTheme = () => {
     const saved = localStorage.getItem('theme');
