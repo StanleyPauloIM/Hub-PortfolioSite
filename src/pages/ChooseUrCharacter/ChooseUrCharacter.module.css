@@ -95,10 +95,10 @@
 .introSub { margin: 0; color: var(--secondary); }
 
 /* Filters bar */
-.filtersBar { margin-top: 10px; display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px; }
-.field { display: grid; gap: 6px; min-width: 0; }
+.filtersBar { margin-top: 10px; display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: start; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-.fieldLabel { color: var(--secondary); font-size: 12px; font-weight: 700; }
+.fieldLabel { color: var(--secondary); font-size: 12px; font-weight: 700; margin-left: 2px; line-height: 1.2; }
 
 .inputWrap { display: grid; grid-template-columns: 24px 1fr; align-items: center; gap: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; background: rgba(12,12,12,0.6); }
 .searchInput { background: transparent; border: none; color: var(--text); padding: 6px 4px; outline: none; }
