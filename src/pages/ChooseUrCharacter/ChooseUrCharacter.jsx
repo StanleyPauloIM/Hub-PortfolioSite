@@ -1,11 +1,157 @@
 // Página para escolher o personagem do utilizador
-import React from 'react';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
 
+// Ícones inline (SVG) – leves e consistentes com o tema
+const Icon = {
+  home: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 11l9-8 9 8"/><path d="M9 22V12h6v10"/>
+    </svg>
+  ),
+  search: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+    </svg>
+  ),
+  person: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+  ),
+  portfolio: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+    </svg>
+  ),
+  wand: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 6l12 12"/><path d="M14 6l4-4"/><path d="M4 14l-4 4"/>
+    </svg>
+  ),
+  settings: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8.6 4.6a1.65 1.65 0 0 0 1-.33V4a2 2 0 1 1 4 0v.09c.36.14.69.34 1 .59.3.25.55.56.74.9.18.34.29.73.33 1.12.04.39 0 .78-.12 1.16"/>
+    </svg>
+  ),
+  bell: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+  ),
+  info: (props) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+    </svg>
+  ),
+  arrow: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  ),
+};
+
 export default function ChooseUrCharacter() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const NavSection = ({ title, children }) => (
+    <div className={styles.section}>
+      <div className={styles.sectionTitle}>{title}</div>
+      <ul className={styles.sectionList}>{children}</ul>
+    </div>
+  );
+
+  const PageLink = ({ to, icon, label, exact }) => (
+    <li>
+      <NavLink
+        to={to}
+        end={exact}
+        className={({ isActive }) => [styles.itemLink, isActive ? styles.active : ''].join(' ')}
+        title={collapsed ? label : undefined}
+      >
+        <span className={styles.itemIcon}>{icon}</span>
+        {!collapsed && <span className={styles.itemLabel}>{label}</span>}
+      </NavLink>
+    </li>
+  );
+
+  const ButtonItem = ({ onClick, icon, label }) => (
+    <li>
+      <button type="button" onClick={onClick} className={styles.itemLink} title={collapsed ? label : undefined}>
+        <span className={styles.itemIcon}>{icon}</span>
+        {!collapsed && <span className={styles.itemLabel}>{label}</span>}
+      </button>
+    </li>
+  );
+
   return (
-    <div className={styles.container}>
-      <h2>Escolhe o teu personagem</h2>
+    <div className={styles.layoutWrapper}>
+      {/* Sidebar */}
+      <aside className={[styles.sidebar, collapsed ? styles.collapsed : '', mobileOpen ? styles.mobileOpen : ''].join(' ')}>
+        <div className={styles.sidebarHeader}>
+          <div className={styles.brandRow}>
+            <div className={styles.brandDot} />
+            {!collapsed && <div className={styles.brandText}>HUB</div>}
+          </div>
+          <button className={styles.collapseBtn} onClick={() => setCollapsed(v => !v)} aria-label="Alternar barra">
+            <Icon.arrow />
+          </button>
+          <button className={styles.mobileClose} onClick={() => setMobileOpen(false)} aria-label="Fechar menu">×</button>
+        </div>
+
+        <nav>
+          <NavSection title="Páginas">
+            <PageLink to="/" icon={<Icon.home />} label="Início" exact />
+            <PageLink to="/chooseurcharacter" icon={<Icon.search />} label="ChooseUrCharacter" />
+            <PageLink to="/generateurportfolio" icon={<Icon.wand />} label="GenerateUrPortfolio" />
+            <PageLink to="/theportfolio" icon={<Icon.portfolio />} label="ThePortfolio" />
+          </NavSection>
+
+          <NavSection title="Conta">
+            <ButtonItem onClick={() => alert('Notificações')} icon={<Icon.bell />} label="Notificações" />
+            <ButtonItem onClick={() => alert('Definições')} icon={<Icon.settings />} label="Definições" />
+          </NavSection>
+
+          <NavSection title="Ajuda">
+            <ButtonItem onClick={() => alert('Ajuda e Suporte')} icon={<Icon.info />} label="Ajuda e Suporte" />
+          </NavSection>
+        </nav>
+      </aside>
+
+      {/* Conteúdo principal */}
+      <main className={styles.content}>
+        <div className={styles.topBar}>
+          <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
+            <span className={styles.hamburger} />
+          </button>
+          <div className={styles.pageTitleRow}>
+            <h1 className={styles.title}>Choose Your Character</h1>
+            <div className={styles.badge}>beta</div>
+          </div>
+        </div>
+
+        {/* Área de pesquisa (placeholder) */}
+        <section className={styles.searchCard}>
+          <div className={styles.searchRow}>
+            <Icon.search />
+            <input className={styles.searchInput} placeholder="Pesquisar utilizadores, perfis ou áreas..." />
+            <button className={`btn ${styles.searchBtn}`}>Pesquisar</button>
+          </div>
+          <p className={styles.helper}>Dica: utiliza palavras‑chave como tecnologia, design, localização, ou nome de utilizador.</p>
+        </section>
+
+        {/* Placeholder de resultados */}
+        <section className={styles.resultsEmpty}>
+          <Icon.person />
+          <p>Começa uma pesquisa para encontrar portfólios publicados pelos utilizadores.</p>
+        </section>
+      </main>
+
+      {/* backdrop para mobile */}
+      {mobileOpen && <div className={styles.backdrop} onClick={() => setMobileOpen(false)} />}
     </div>
   );
 }
