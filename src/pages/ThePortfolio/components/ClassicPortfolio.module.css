@@ -37,6 +37,11 @@
 .socialLink { color: var(--c-text); text-decoration: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 999px; font-size: 12px; }
 .socialLink:hover { color: var(--c-primary); border-color: rgba(30,144,255,0.5); }
 
+/* Stats row */
+.statsRow { display: inline-flex; align-items: center; gap: 10px; margin: 6px 0; }
+.stat { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 999px; font-weight: 700; color: var(--c-text); }
+.statIcon { width: 16px; height: 16px; color: #cfe8ff; }
+
 .section { margin-top: 12px; }
 .sectionTitle { margin: 0 0 6px; font-size: 1.05rem; color: var(--c-text); }
 .about { color: var(--c-text); opacity: 0.95; }

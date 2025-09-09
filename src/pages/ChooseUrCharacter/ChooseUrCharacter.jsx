@@ -44,6 +44,17 @@ const Icon = {
       <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
     </svg>
   ),
+  heart: (props) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  ),
+  eye: (props) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ),
   sliders: (props) => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
@@ -67,17 +78,68 @@ const Icon = {
 
 // BACKEND: exemplo de dados de perfis; substituir por dados vindos da API
 const mockProfiles = [
-  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['Figma', 'UX', 'UI'] },
-  { id: '2', name: 'João Santos', title: 'Frontend Engineer', city: 'Porto', area: 'frontend', exp: 'mid', gender: 'male', avatar: accountIcon, tags: ['React', 'Vite', 'TypeScript'] },
-  { id: '3', name: 'Marta Lima', title: 'Data Analyst', city: 'Luanda', area: 'data', exp: 'junior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'PowerBI', 'Python'] },
+  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['Figma', 'UX', 'UI'], likes: 1540, views: 23890 },
+  { id: '2', name: 'João Santos', title: 'Frontend Engineer', city: 'Porto', area: 'frontend', exp: 'mid', gender: 'male', avatar: accountIcon, tags: ['React', 'Vite', 'TypeScript'], likes: 870, views: 125000 },
+  { id: '3', name: 'Marta Lima', title: 'Data Analyst', city: 'Luanda', area: 'data', exp: 'junior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'PowerBI', 'Python'], likes: 112, views: 4820 },
 ];
+
+// Formata contagens para 'K' quando >= 1000 (arredonda para inteiro)
+const formatCount = (n) => {
+  const value = Math.max(0, Number(n) || 0);
+  if (value < 1000) return String(value);
+  const k = Math.round(value / 1000);
+  return `${k}K`;
+};
+
+const STORAGE_PUBLISHED = 'hub_portfolio_published';
+
+const readPublishedAsProfile = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_PUBLISHED);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    const name = d?.profile?.name?.trim();
+    if (!name) return null;
+    const skills = Array.isArray(d?.skills) ? d.skills : [];
+    return {
+      id: 'published-local',
+      name,
+      title: d?.profile?.title || 'Creator',
+      city: d?.profile?.location || 'Remoto',
+      area: 'portfolio',
+      exp: 'mid',
+      gender: 'other',
+      avatar: d?.profile?.avatarUrl || accountIcon,
+      tags: skills.slice(0, 3),
+      likes: Number(d?.stats?.likes) || 0,
+      views: Number(d?.stats?.views) || 0,
+    };
+  } catch { return null; }
+};
 
 export default function ChooseUrCharacter() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   // BACKEND: estado dos perfis – substituir por dados de resposta do servidor
-  const [profiles, setProfiles] = useState(mockProfiles);
+  const [allProfiles, setAllProfiles] = useState(() => {
+    const pub = readPublishedAsProfile();
+    return pub ? [...mockProfiles, pub] : [...mockProfiles];
+  });
+  const [profiles, setProfiles] = useState(() => allProfiles);
+
+  // Atualiza quando houver publicação/atualização no localStorage
+  React.useEffect(() => {
+    const refresh = () => {
+      const pub = readPublishedAsProfile();
+      const base = pub ? [...mockProfiles, pub] : [...mockProfiles];
+      setAllProfiles(base);
+      setProfiles(base);
+    };
+    window.addEventListener('storage', refresh);
+    refresh();
+    return () => window.removeEventListener('storage', refresh);
+  }, []);
 
   const NavSection = ({ title, children }) => (
     <div className={styles.section}>
@@ -193,7 +255,7 @@ export default function ChooseUrCharacter() {
             const city = form.get('city');
             const exp = form.get('exp');
             const gender = form.get('gender');
-            const filtered = mockProfiles.filter(p => {
+            const filtered = allProfiles.filter(p => {
               const matchQ = !q || [p.name, p.title, p.city, p.tags.join(' ')].join(' ').toLowerCase().includes(q);
               const matchArea = area === 'all' || p.area === area;
               const matchCity = city === 'all' || p.city.toLowerCase() === String(city).toLowerCase();
@@ -309,6 +371,10 @@ export default function ChooseUrCharacter() {
                   {p.tags.map(tag => (<span key={tag} className={styles.tag}>#{tag}</span>))}
                 </div>
                 <footer className={styles.cardFooter}>
+                  <div className={styles.cardStats}>
+                    <span className={styles.stat}><Icon.heart />{formatCount(p.likes)}</span>
+                    <span className={styles.stat}><Icon.eye />{formatCount(p.views)}</span>
+                  </div>
                   {/* BACKEND: ligar ao portfólio do utilizador */}
                   <a className={`btn ${styles.viewBtn}`} href={`/theportfolio?user=${encodeURIComponent(p.name)}`}>Ver Portfólio</a>
                 </footer>

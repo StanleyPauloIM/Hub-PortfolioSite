@@ -6,6 +6,7 @@ import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import ClassicPortfolio from './components/ClassicPortfolio';
+import GlowButton from '../../components/ui/GlowButton/GlowButton';
 
 const Icon = {
   home: (props) => (
@@ -53,6 +54,7 @@ export default function ThePortfolio() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -72,6 +74,17 @@ export default function ThePortfolio() {
     '--c-bg': data?.theme?.background || '#0b0b0b',
     '--c-text': data?.theme?.text || '#ffffff',
   }), [data]);
+
+  // URL para partilha
+  const shareUrl = useMemo(() => {
+    try {
+      const u = new URL(window.location.href);
+      u.pathname = '/theportfolio';
+      u.search = '';
+      u.hash = '';
+      return u.toString();
+    } catch { return window.location.origin + '/theportfolio'; }
+  }, []);
 
   const pages = [
     { label: 'Início', path: '/' },
@@ -132,6 +145,20 @@ export default function ThePortfolio() {
             <div className={layoutStyles.badge}>read‑only</div>
           </div>
           <div className={layoutStyles.topActions}>
+            {/* Partilhar */}
+            <div className={layoutStyles.shareWrap}>
+              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar">Partilhar</GlowButton>
+              {shareOpen && (
+                <div className={layoutStyles.shareDropdown} role="menu">
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">WhatsApp</a>
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">Facebook</a>
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent('Meu portfólio no HUB')}`} target="_blank" rel="noreferrer">X (Twitter)</a>
+                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} window.open('https://www.instagram.com/', '_blank'); }}>Instagram</button>
+                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} setShareOpen(false); }}>Copiar link</button>
+                </div>
+              )}
+            </div>
+
             <div className={layoutStyles.bellWrap}>
               <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
                 <Icon.bell />

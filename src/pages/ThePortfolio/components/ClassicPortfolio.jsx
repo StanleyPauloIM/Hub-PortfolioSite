@@ -12,6 +12,13 @@ function Section({ title, children }) {
   );
 }
 
+// Helper: format as 'K' when >= 1000
+const fmtK = (n) => {
+  const v = Math.max(0, Number(n) || 0);
+  if (v < 1000) return String(v);
+  return `${Math.round(v / 1000)}K`;
+};
+
 export default function ClassicPortfolio({ data }) {
   if (!data) return null;
   const {
@@ -58,6 +65,17 @@ export default function ClassicPortfolio({ data }) {
                 {contact.email && <span className={styles.metaItem}>✉️ {contact.email}</span>}
               </div>
             )}
+            {/* Stats: likes & views */}
+            <div className={styles.statsRow}>
+              <span className={styles.stat} title="Likes">
+                <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                {fmtK(data?.stats?.likes ?? 0)}
+              </span>
+              <span className={styles.stat} title="Views">
+                <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                {fmtK(data?.stats?.views ?? 0)}
+              </span>
+            </div>
             <div className={styles.socialRow}>
               {socials.github && (
                 <a href={socials.github} className={styles.socialLink} target="_blank" rel="noreferrer">GitHub</a>

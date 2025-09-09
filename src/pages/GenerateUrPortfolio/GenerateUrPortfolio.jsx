@@ -65,6 +65,7 @@ const defaultData = {
     location: '',
     avatarUrl: '',
   },
+  stats: { likes: 0, views: 0 },
   about: { summary: '' },
   contact: { email: '', phone: '', website: '' },
   socials: { github: '', linkedin: '', twitter: '', instagram: '' },
@@ -195,8 +196,11 @@ export default function GenerateUrPortfolio() {
 
   const onPublish = () => {
     try {
-      const serialized = JSON.stringify(data, (k, v) => (typeof v === 'string' && /^blob:/.test(v) ? '' : v));
+      // Guardar exatamente o que está no estado para testes (permite blob: em navegação imediata)
+      const serialized = JSON.stringify(data);
       localStorage.setItem(STORAGE_PUBLISHED, serialized);
+      // dispara evento manual para outras abas/componentes (fallback em single‑page)
+      try { window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_PUBLISHED, newValue: serialized })); } catch {}
       setMessage('Publicado!');
       setTimeout(() => setMessage(''), 800);
       navigate('/theportfolio');
