@@ -1,4 +1,4 @@
 /* Estilos da página de visualização de portfólio */
 .viewWrap { padding: 0; }
-.empty { color: var(--secondary); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; display: grid; gap: 8px; place-items: start; }
+.empty { color: var(--secondary); background: var(--surface-3); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: grid; gap: 8px; place-items: start; }
 .empty .link { width: auto; }

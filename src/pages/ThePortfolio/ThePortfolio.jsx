@@ -58,6 +58,11 @@ export default function ThePortfolio() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    // Theme apply on mount (navbar global oculto)
+    const saved = localStorage.getItem('theme');
+    const theme = (saved === 'light' || saved === 'dark') ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+
     try {
       const rawPub = localStorage.getItem(STORAGE_PUBLISHED);
       const rawDraft = localStorage.getItem(STORAGE_DRAFT);

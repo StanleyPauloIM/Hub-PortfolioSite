@@ -16,8 +16,19 @@
   background-attachment: fixed;
   color: var(--text);
   position: relative;
-  overflow: hidden;
+overflow: hidden;
 }
+
+/* Light theme: lighter background image + bright overlay */
+html[data-theme='light'] .heroSection {
+  background:
+    linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.88)),
+    url('/src/assets/Hub_Background2_light.jpg');
+}
+
+html[data-theme='light'] .heroTitle { text-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+html[data-theme='light'] .heroSubtitle { color: rgba(0,0,0,0.75); text-shadow: none; }
+html[data-theme='light'] .chip { background: rgba(0,0,0,0.06); border: 1px solid var(--border); color: var(--text); }
 
 /* Container em 2 colunas */
 .heroContainer {

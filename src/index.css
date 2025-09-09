@@ -6,6 +6,14 @@
   --primary: #1e90ff;
   --secondary: #b0b8c1;
   --accent: #0a2e5c;
+  --icon: #1e90ff;
+  /* Theme surfaces (dark defaults) */
+  --surface-1: rgba(20,20,20,0.98);
+  --surface-2: rgba(12,12,12,0.60);
+  --surface-3: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.12);
+  --border-soft: rgba(255,255,255,0.08);
+  --shadow: rgba(0,0,0,0.35);
 
   font-family: 'Instrument Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -99,19 +107,20 @@ button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
     --text: #0d0113;
     --background: #f6f2f8;
     --primary: #52097b;
-    --secondary: #cdadc1;
+    --secondary: #7a6f89; /* darker secondary for light */
     --accent: #190245;
+    /* Light surfaces */
+    --surface-1: rgba(255,255,255,0.98);
+    --surface-2: rgba(255,255,255,0.75);
+    --surface-3: rgba(0,0,0,0.04);
+    --border: rgba(0,0,0,0.14);
+    --border-soft: rgba(0,0,0,0.08);
+    --shadow: rgba(0,0,0,0.15);
 
     color: var(--text);
     background: radial-gradient(circle at center, #f6f2f8 0%, #e6e0f5 100%);
   }
-  a:hover {
-    color: var(--primary);
-  }
-  button {
-    background-color: var(--primary);
-    color: var(--text);
-  }
+  a:hover { color: var(--primary); }
 }
 
 /* Manual theme override via data-theme attribute */
@@ -119,8 +128,15 @@ html[data-theme='light'] {
   --text: #0d0113;
   --background: #f6f2f8;
   --primary: #52097b;
-  --secondary: #cdadc1;
+  --secondary: #7a6f89;
   --accent: #190245;
+  --icon: #1e90ff;
+  --surface-1: rgba(255,255,255,0.98);
+  --surface-2: rgba(255,255,255,0.75);
+  --surface-3: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.14);
+  --border-soft: rgba(0,0,0,0.08);
+  --shadow: rgba(0,0,0,0.15);
 }
 html[data-theme='dark'] {
   --text: #ffffff;
@@ -128,6 +144,13 @@ html[data-theme='dark'] {
   --primary: #1e90ff;
   --secondary: #b0b8c1;
   --accent: #0a2e5c;
+  --icon: #1e90ff;
+  --surface-1: rgba(20,20,20,0.98);
+  --surface-2: rgba(12,12,12,0.60);
+  --surface-3: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.12);
+  --border-soft: rgba(255,255,255,0.08);
+  --shadow: rgba(0,0,0,0.35);
 }
 
 /* Ensure backgrounds respond to the chosen theme */
@@ -143,3 +166,16 @@ html[data-theme='dark'] #root {
   background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
   color: var(--text);
 }
+
+/* Light theme buttons: white -> light blue gradient with subtle shadow */
+html[data-theme='light'] .btn {
+  background: linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+html[data-theme='light'] .btn:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #eaf2ff 100%);
+  border-color: rgba(0,0,0,0.22);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+html[data-theme='light'] .btn:active { box-shadow: 0 3px 10px rgba(0,0,0,0.10); }
