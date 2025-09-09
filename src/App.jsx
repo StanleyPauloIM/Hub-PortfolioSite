@@ -21,7 +21,8 @@ function AppInner() {
     }
   }, [location.pathname]);
 
-  const hideGlobalNav = location.pathname.toLowerCase().startsWith('/chooseurcharacter');
+  const currentPath = location.pathname.toLowerCase();
+  const hideGlobalNav = ['/chooseurcharacter', '/generateurportfolio', '/theportfolio'].some(p => currentPath.startsWith(p));
 
   return (
     <>
