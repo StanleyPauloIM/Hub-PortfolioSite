@@ -96,12 +96,18 @@
 .introTitle { margin: 0 0 4px; font-size: 1.25rem; }
 .introSub { margin: 0; color: var(--secondary); }
 
-/* Filters bar */
-.filtersBar { margin-top: 10px; display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr 0.9fr auto auto; gap: 6px; align-items: start; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px; }
+/* Filters form (stacked) */
+.filtersForm { margin-top: 10px; display: grid; gap: 8px; }
+/* Search row on top */
+.searchBar { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+
+/* Filters grid */
+.filtersGrid { display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr auto; gap: 6px; align-items: start; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px; }
 .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .actionsCol { align-self: end; }
 .iconSquareBtn { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(12,12,12,0.6); border: 1px solid rgba(255,255,255,0.14); color: var(--text); cursor: pointer; }
 .iconSquareBtn:hover { background: rgba(255,255,255,0.1); }
+.iconSquareBtn svg { width: 18px; height: 18px; color: var(--secondary); }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 .fieldLabel { color: var(--secondary); font-size: 11px; font-weight: 600; margin-left: 2px; line-height: 1.15; }
 
@@ -147,8 +153,7 @@
 .hamburger::after { top: 6px; }
 
 @media (max-width: 1100px) {
-  .filtersBar { grid-template-columns: 1fr 0.9fr 0.9fr 0.9fr auto auto; }
-  .field:first-child { grid-column: 1 / -1; }
+  .filtersGrid { grid-template-columns: 1fr 0.9fr 0.9fr 0.9fr auto; }
 }
 @media (max-width: 900px) {
   .layoutWrapper { grid-template-columns: 1fr; }
@@ -157,9 +162,8 @@
   .mobileClose { display: inline-block; }
   .content { padding: 16px; }
   .mobileMenuBtn { display: inline-flex; align-items: center; justify-content: center; }
-  .filtersBar { grid-template-columns: 1fr 1fr; }
+  .filtersGrid { grid-template-columns: 1fr 1fr; }
   .actionsCol { grid-column: 1 / 2; }
-  .submitCol { grid-column: 2 / 3; }
 }
 
 .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1100; }

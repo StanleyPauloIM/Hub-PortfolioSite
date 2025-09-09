@@ -183,9 +183,9 @@ export default function ChooseUrCharacter() {
             <p className={styles.introSub}>Encontre pessoas e portfólios publicados. Use a pesquisa e os filtros para refinar os resultados.</p>
           </div>
 
-          {/* Barra de filtros */}
+          {/* Barra de pesquisa + filtros */}
           {/* BACKEND: no submit, chamar a API com os parâmetros; aqui filtramos os mocks */}
-          <form className={styles.filtersBar} onSubmit={(e)=>{
+          <form className={styles.filtersForm} onSubmit={(e)=>{
             e.preventDefault();
             const form = new FormData(e.currentTarget);
             const q = String(form.get('q') || '').toLowerCase();
@@ -203,81 +203,81 @@ export default function ChooseUrCharacter() {
             });
             setProfiles(filtered);
           }}>
-            {/* Palavra‑chave */}
-            <div className={styles.field}>
+            {/* Linha 1: barra de pesquisa */}
+            <div className={styles.searchBar}>
               <label className={styles.srOnly} htmlFor="q">Pesquisa</label>
               <div className={styles.inputWrap}>
                 <Icon.search />
                 <input id="q" name="q" className={styles.searchInput} placeholder="Palavra‑chave (ex.: React, UX, Lisboa, @utilizador)" />
               </div>
-            </div>
-            {/* Área */}
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="area">Área</label>
-              <div className={styles.selectWrap}>
-                <select id="area" name="area" className={styles.select} defaultValue="all">
-                  <option value="all">Todas</option>
-                  <option value="design">Design</option>
-                  <option value="frontend">Frontend</option>
-                  <option value="backend">Backend</option>
-                  <option value="data">Data</option>
-                  <option value="marketing">Marketing</option>
-                </select>
-              </div>
-            </div>
-            {/* Cidade */}
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="city">Cidade</label>
-              <div className={styles.selectWrap}>
-                <select id="city" name="city" className={styles.select} defaultValue="all">
-                  <option value="all">Todas</option>
-                  <option value="lisboa">Lisboa</option>
-                  <option value="porto">Porto</option>
-                  <option value="maputo">Maputo</option>
-                  <option value="luanda">Luanda</option>
-                  <option value="remote">Remoto</option>
-                </select>
-              </div>
-            </div>
-            {/* Experiência */}
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="exp">Experiência</label>
-              <div className={styles.selectWrap}>
-                <select id="exp" name="exp" className={styles.select} defaultValue="all">
-                  <option value="all">Qualquer</option>
-                  <option value="junior">Júnior</option>
-                  <option value="mid">Pleno</option>
-                  <option value="senior">Sénior</option>
-                  <option value=">5">5+ anos</option>
-                </select>
-              </div>
-            </div>
-            {/* Género (opcional) */}
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="gender">Género</label>
-              <div className={styles.selectWrap}>
-                <select id="gender" name="gender" className={styles.select} defaultValue="all">
-                  <option value="all">Todos</option>
-                  <option value="female">Feminino</option>
-                  <option value="male">Masculino</option>
-                  <option value="other">Outro / Prefiro não dizer</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Mais filtros (placeholder) */}
-            <div className={`${styles.field} ${styles.actionsCol}`}>
-              {/* BACKEND: abrir painel lateral com filtros avançados */}
-              <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
-                <Icon.sliders />
-              </button>
-            </div>
-
-            {/* Botão de pesquisa com borda gradiente */}
-            <div className={`${styles.field} ${styles.submitCol}`}>
               <GlowButton className={styles.searchBtn} type="submit" aria-label="Pesquisar">
                 <Icon.search />
               </GlowButton>
+            </div>
+
+            {/* Linha 2: filtros */}
+            <div className={styles.filtersGrid}>
+              {/* Área */}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="area">Área</label>
+                <div className={styles.selectWrap}>
+                  <select id="area" name="area" className={styles.select} defaultValue="all">
+                    <option value="all">Todas</option>
+                    <option value="design">Design</option>
+                    <option value="frontend">Frontend</option>
+                    <option value="backend">Backend</option>
+                    <option value="data">Data</option>
+                    <option value="marketing">Marketing</option>
+                  </select>
+                </div>
+              </div>
+              {/* Cidade */}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="city">Cidade</label>
+                <div className={styles.selectWrap}>
+                  <select id="city" name="city" className={styles.select} defaultValue="all">
+                    <option value="all">Todas</option>
+                    <option value="lisboa">Lisboa</option>
+                    <option value="porto">Porto</option>
+                    <option value="maputo">Maputo</option>
+                    <option value="luanda">Luanda</option>
+                    <option value="remote">Remoto</option>
+                  </select>
+                </div>
+              </div>
+              {/* Experiência */}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="exp">Experiência</label>
+                <div className={styles.selectWrap}>
+                  <select id="exp" name="exp" className={styles.select} defaultValue="all">
+                    <option value="all">Qualquer</option>
+                    <option value="junior">Júnior</option>
+                    <option value="mid">Pleno</option>
+                    <option value="senior">Sénior</option>
+                    <option value=">5">5+ anos</option>
+                  </select>
+                </div>
+              </div>
+              {/* Género (opcional) */}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="gender">Género</label>
+                <div className={styles.selectWrap}>
+                  <select id="gender" name="gender" className={styles.select} defaultValue="all">
+                    <option value="all">Todos</option>
+                    <option value="female">Feminino</option>
+                    <option value="male">Masculino</option>
+                    <option value="other">Outro / Prefiro não dizer</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Mais filtros (placeholder) */}
+              <div className={`${styles.field} ${styles.actionsCol}`}>
+                {/* BACKEND: abrir painel lateral com filtros avançados */}
+                <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
+                  <Icon.sliders />
+                </button>
+              </div>
             </div>
           </form>
         </section>
