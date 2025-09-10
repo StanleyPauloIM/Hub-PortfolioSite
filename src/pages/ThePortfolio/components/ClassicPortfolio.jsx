@@ -76,23 +76,38 @@ export default function ClassicPortfolio({ data }) {
                 {fmtK(data?.stats?.views ?? 0)}
               </span>
             </div>
-            <div className={styles.socialRow}>
-              {socials.github && (
-                <a href={socials.github} className={styles.socialLink} target="_blank" rel="noreferrer">GitHub</a>
-              )}
-              {socials.linkedin && (
-                <a href={socials.linkedin} className={styles.socialLink} target="_blank" rel="noreferrer">LinkedIn</a>
-              )}
-              {socials.twitter && (
-                <a href={socials.twitter} className={styles.socialLink} target="_blank" rel="noreferrer">X/Twitter</a>
-              )}
-              {socials.instagram && (
-                <a href={socials.instagram} className={styles.socialLink} target="_blank" rel="noreferrer">Instagram</a>
-              )}
-              {contact.website && (
-                <a href={contact.website} className={styles.socialLink} target="_blank" rel="noreferrer">Website</a>
-              )}
-            </div>
+      <div className={styles.socialRow}>
+        {socials.github && (
+          <a href={socials.github} className={styles.socialLink} target="_blank" rel="noreferrer">
+            <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3"/><path d="M15 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 18 3.77 5.07 5.07 0 0 0 17.91 1S16.73.65 13 2.48a13.38 13.38 0 0 0-8 0C1.27.65.09 1 .09 1A5.07 5.07 0 0 0 0 3.77 5.44 5.44 0 0 0 1.5 7.9c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 7 18.13V22"/></svg>
+            GitHub
+          </a>
+        )}
+        {socials.linkedin && (
+          <a href={socials.linkedin} className={styles.socialLink} target="_blank" rel="noreferrer">
+            <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="9" width="20" height="13" rx="2"/><path d="M7 9V5a5 5 0 0 1 10 0v4"/></svg>
+            LinkedIn
+          </a>
+        )}
+        {socials.twitter && (
+          <a href={socials.twitter} className={styles.socialLink} target="_blank" rel="noreferrer">
+            <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.5c1.6 12-14 12-18 6 2 0 4-1 5-2-2-1-3-4-1-6 2 2 4 3 7 3-1-5 6-7 9-3z"/></svg>
+            X/Twitter
+          </a>
+        )}
+        {socials.instagram && (
+          <a href={socials.instagram} className={styles.socialLink} target="_blank" rel="noreferrer">
+            <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+            Instagram
+          </a>
+        )}
+        {contact.website && (
+          <a href={contact.website} className={styles.socialLink} target="_blank" rel="noreferrer">
+            <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+            Website
+          </a>
+        )}
+      </div>
           </div>
         </div>
       </header>
@@ -131,8 +146,8 @@ export default function ClassicPortfolio({ data }) {
                   {p.description && <p className={styles.cardText}>{p.description}</p>}
                   {(p.link || p.videoUrl) && (
                     <div className={styles.cardLinks}>
-                      {p.link && <a href={p.link} target="_blank" rel="noreferrer">Visitar</a>}
-                      {p.videoUrl && <a href={p.videoUrl} target="_blank" rel="noreferrer">Vídeo</a>}
+                      {p.link && <a href={p.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Visitar</a>}
+                      {p.videoUrl && <a href={p.videoUrl} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vídeo</a>}
                     </div>
                   )}
                 </div>
@@ -154,7 +169,7 @@ export default function ClassicPortfolio({ data }) {
                     {c.issuer && <span> • {c.issuer}</span>}
                     {c.year && <span> ({c.year})</span>}
                     {c.link && (
-                      <span> – <a href={c.link} target="_blank" rel="noreferrer">Ver</a></span>
+                      <span> – <a href={c.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a></span>
                     )}
                   </li>
                 ))}

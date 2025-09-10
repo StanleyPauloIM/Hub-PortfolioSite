@@ -121,6 +121,11 @@ export default function ChooseUrCharacter() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+
+  const setTheme = (t) => {
+    try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
+  };
   // BACKEND: estado dos perfis – substituir por dados de resposta do servidor
   const [allProfiles, setAllProfiles] = useState(() => {
     const pub = readPublishedAsProfile();
@@ -234,7 +239,29 @@ export default function ChooseUrCharacter() {
               )}
             </div>
             <button type="button" className={styles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={styles.avatar}><img src={accountIcon} alt="Perfil" /></div>
+            <div className={styles.accountWrap}>
+              <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              {accountOpen && (
+                <div className={styles.accountMenu} role="menu">
+                  <NavLink to="/theportfolio" className={styles.accountLink} role="menuitem">
+                    <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
+                    Perfil
+                  </NavLink>
+                  <NavLink to="/generateurportfolio" className={styles.accountLink} role="menuitem">
+                    <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
+                    Criar Portfólio
+                  </NavLink>
+                  <hr className={styles.accountDivider} />
+                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
+                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <hr className={styles.accountDivider} />
+                  <button className={styles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                    <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
+                    Sair
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

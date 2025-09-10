@@ -334,17 +334,40 @@
 /* Mobile adjustments */
 @media (max-width: 700px) {
   .nav {
-    width: clamp(220px, 72vw, 96vw); /* tamanho variável só com o globo */
+    width: clamp(260px, 90vw, 96vw);
     margin: 0.5rem auto 0;
-    padding: 0.45rem 0.75rem; /* ligeiramente maior para toque confortável */
+    padding: 0.45rem 0.75rem;
     border-radius: 14px;
   }
   .nav::after { width: 70%; }
-  .logo { gap: 0.5rem; cursor: pointer; }
+  .logo { gap: 0.5rem; cursor: pointer; position: relative; }
   .logo img { width: 44px; height: 44px; }
-  .brand { display: none; }
+  .brand { display: inline; font-size: 1.25rem; text-shadow: 0 0 8px var(--primary); }
   .brandGlow { display: none; }
-  .navLinks { display: none; } /* impede que a nav ocupe 100% */
+  .navLinks { display: none; }
+}
+
+/* Small hint bubble to tap the globe on mobile */
+.tapHint {
+  position: absolute;
+  right: -6px;
+  top: -8px;
+  transform: translateX(100%);
+  background: var(--surface-1);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px var(--shadow);
+  animation: tapPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+  0% { transform: translateX(100%) scale(0.98); opacity: 0.85; }
+  50% { transform: translateX(100%) scale(1.05); opacity: 1; }
+  100% { transform: translateX(100%) scale(0.98); opacity: 0.85; }
 }
 
 /* Theme-aware overrides */

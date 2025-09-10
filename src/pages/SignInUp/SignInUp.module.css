@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 10rem 1rem 3rem; /* respiro maior para a navbar fixa */
+  padding: 6rem 1rem 2rem; /* reduz o respiro para experiência mais agradável */
   background-size: cover;
   background-position: center;
   position: relative;
@@ -44,7 +44,7 @@ width: min(820px, 92vw);
   -webkit-backdrop-filter: blur(12px);
   color: var(--text);
   font-size: 0.95rem;
-  padding: 1.4rem;
+  padding: 1.1rem; /* padding mais compacto */
   z-index: 1;
   overflow: hidden; /* impede overflow do conteúdo */
   box-sizing: border-box;
@@ -56,7 +56,7 @@ html[data-theme='light'] .card { background: var(--surface-1); border: 1px solid
 .title { font-size: 1.25rem; margin: 0; }
 .subtitle { color: var(--secondary); margin: 0.15rem 0 0; font-size: 0.95rem; }
 
-.form { display: grid; gap: 10px; box-sizing: border-box; }
+.form { display: grid; gap: 8px; box-sizing: border-box; }
 .label { font-weight: 600; font-size: 0.9rem; max-width: 100%; word-break: break-word; display: inline-block; margin-bottom: 4px; overflow-wrap: anywhere; }
 .input {
   width: 100%;
@@ -74,6 +74,15 @@ html[data-theme='light'] .card { background: var(--surface-1); border: 1px solid
 html[data-theme='light'] .input { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
 html[data-theme='light'] .input::placeholder { color: rgba(0,0,0,0.45); }
 .input::placeholder { color: rgba(255,255,255,0.55); }
+
+/* Input with icon wrapper */
+.inputWrap { display: grid; grid-template-columns: 24px 1fr; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 6px 10px; }
+.inputWithAction { grid-template-columns: 24px 1fr 28px; }
+.inputIcon { width: 16px; height: 16px; color: var(--icon); justify-self: center; }
+.inputWrap input { background: transparent; border: none; color: var(--text); padding: 8px 4px; outline: none; }
+.eyeBtn { background: transparent; border: none; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; color: var(--secondary); cursor: pointer; }
+.eyeBtn:hover { background: var(--surface-3); color: var(--text); }
+.eyeBtn svg { width: 18px; height: 18px; }
 
 /* Date input: fundo transparente e ícone adaptado ao tema */
 .inputDate {
@@ -113,6 +122,15 @@ html[data-theme='light'] .inputDate::-webkit-calendar-picker-indicator {
   color: var(--text);
 }
 .inputDate::-ms-expand { display: none; }
+
+/* Hide built-in password reveal/clear icons (Edge/IE/Chromium variants) */
+.input[type='password']::-ms-reveal, .input[type='password']::-ms-clear { display: none; }
+input[type='password']::-ms-reveal, input[type='password']::-ms-clear { display: none; }
+.input::-ms-reveal, .input::-ms-clear { display: none; }
+/* WebKit decoration container (best-effort) */
+.input::-webkit-textfield-decoration-container { display: none; }
+.input::-webkit-credentials-auto-fill-button { visibility: hidden; display: none !important; }
+
 .rowBetween { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; gap: 12px; flex-wrap: wrap; }
 .checkboxLabel { display: inline-flex; align-items: center; gap: 8px; color: var(--secondary); }
 .mutedLink { color: var(--secondary); text-decoration: none; }
@@ -205,7 +223,7 @@ html[data-theme='light'] .signupPanel { background: linear-gradient(rgba(255,255
 .panelHeader { margin-bottom: 0.5rem; }
 .panelTitle { margin: 0; font-size: 1.1rem; }
 .panelSubtitle { margin: 0.15rem 0 0; color: var(--secondary); font-size: 0.95rem; }
-.panelForm { display: grid; gap: 10px; }
+.panelForm { display: grid; gap: 8px; }
 .grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
 
 /* Fade stack views */
