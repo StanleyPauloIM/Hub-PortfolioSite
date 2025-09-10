@@ -11,6 +11,43 @@ function AppInner() {
   const [routeLoading, setRouteLoading] = useState(false);
   const lastPath = useRef(location.pathname);
 
+  // Apply theme on app mount and keep it in sync
+  useEffect(() => {
+    const getPreferredTheme = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      try { return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } catch { return 'dark'; }
+    };
+
+    const apply = (t) => { try { document.documentElement.setAttribute('data-theme', t); } catch {} };
+
+    // initial
+    apply(getPreferredTheme());
+
+    // listen to system preference changes only if user didn't explicitly set a theme
+    let mq;
+    try {
+      mq = window.matchMedia('(prefers-color-scheme: light)');
+      const onMQ = () => { if (!localStorage.getItem('theme')) apply(mq.matches ? 'light' : 'dark'); };
+      if (mq.addEventListener) mq.addEventListener('change', onMQ); else if (mq.addListener) mq.addListener(onMQ);
+      // cleanup
+      return () => {
+        try { if (mq.removeEventListener) mq.removeEventListener('change', onMQ); else if (mq.removeListener) mq.removeListener(onMQ); } catch {}
+      };
+    } catch { /* noop */ }
+  }, []);
+
+  // keep in sync with other tabs/windows
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
+        try { document.documentElement.setAttribute('data-theme', e.newValue); } catch {}
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   useEffect(() => {
     // Quando o path muda, mostra o overlay por um curto período
     if (location.pathname !== lastPath.current) {

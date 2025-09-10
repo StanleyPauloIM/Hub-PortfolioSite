@@ -55,14 +55,14 @@ export default function ThePortfolio() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    // Theme apply on mount (navbar global oculto)
-    const saved = localStorage.getItem('theme');
-    const theme = (saved === 'light' || saved === 'dark') ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    document.documentElement.setAttribute('data-theme', theme);
+  const setTheme = (t) => {
+    try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
+  };
 
+  useEffect(() => {
     try {
       const rawPub = localStorage.getItem(STORAGE_PUBLISHED);
       const rawDraft = localStorage.getItem(STORAGE_DRAFT);
@@ -180,7 +180,29 @@ export default function ThePortfolio() {
               )}
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={layoutStyles.avatar}><img src={accountIcon} alt="Perfil" /></div>
+            <div className={layoutStyles.accountWrap}>
+              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              {accountOpen && (
+                <div className={layoutStyles.accountMenu} role="menu">
+                  <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
+                    Perfil
+                  </NavLink>
+                  <NavLink to="/generateurportfolio" className={layoutStyles.accountLink} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
+                    Criar Portfólio
+                  </NavLink>
+                  <hr className={layoutStyles.accountDivider} />
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <hr className={layoutStyles.accountDivider} />
+                  <button className={layoutStyles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
+                    Sair
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

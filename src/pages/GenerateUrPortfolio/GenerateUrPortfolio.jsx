@@ -49,6 +49,36 @@ const Icon = {
       <polyline points="15 18 9 12 15 6" />
     </svg>
   ),
+  user: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+  ),
+  briefcase: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+    </svg>
+  ),
+  mapPin: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+  ),
+  image: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+    </svg>
+  ),
+  mail: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/>
+    </svg>
+  ),
+  phone: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M22 16.92V21a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2 4.18 2 2 0 0 1 4 2h4.09a2 2 0 0 1 2 1.72l.57 4a2 2 0 0 1-.55 1.73L8.91 12.09a16 16 0 0 0 6 6l2.64-1.2a2 2 0 0 1 1.73.55l4 4.09A2 2 0 0 1 22 16.92z"/>
+    </svg>
+  ),
 };
 
 const defaultData = {
@@ -86,6 +116,8 @@ export default function GenerateUrPortfolio() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const setTheme = (t) => { try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {} };
   const [data, setData] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_DRAFT);
@@ -98,12 +130,6 @@ export default function GenerateUrPortfolio() {
   const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {} });
   const navigate = useNavigate();
 
-  // Apply saved theme on mount (since global navbar is hidden here)
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    const theme = (saved === 'light' || saved === 'dark') ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    document.documentElement.setAttribute('data-theme', theme);
-  }, []);
 
   // Persist draft on each change (debounced)
   useEffect(() => {
@@ -282,7 +308,29 @@ export default function GenerateUrPortfolio() {
               )}
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={layoutStyles.avatar}><img src={accountIcon} alt="Perfil" /></div>
+            <div className={layoutStyles.accountWrap}>
+              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              {accountOpen && (
+                <div className={layoutStyles.accountMenu} role="menu">
+                  <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
+                    Perfil
+                  </NavLink>
+                  <NavLink to="/generateurportfolio" className={layoutStyles.accountLink} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
+                    Criar Portfólio
+                  </NavLink>
+                  <hr className={layoutStyles.accountDivider} />
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <hr className={layoutStyles.accountDivider} />
+                  <button className={layoutStyles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                    <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
+                    Sair
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -320,12 +368,12 @@ export default function GenerateUrPortfolio() {
             <div className={styles.formCard}>
               <div className={styles.sectionHeader}><h2>Perfil</h2></div>
               <div className={styles.grid2}>
-                <div className={styles.field}><label>Nome</label><input value={data.profile.name} onChange={(e)=>setField(['profile','name'], e.target.value)} placeholder="Ex.: Ana Silva"/></div>
-                <div className={styles.field}><label>Título</label><input value={data.profile.title} onChange={(e)=>setField(['profile','title'], e.target.value)} placeholder="Ex.: Frontend Engineer"/></div>
-                <div className={styles.field}><label>Localização</label><input value={data.profile.location} onChange={(e)=>setField(['profile','location'], e.target.value)} placeholder="Cidade, País"/></div>
+                <div className={styles.field}><label>Nome</label><div className={styles.inputWrap}><Icon.user className={styles.inputIcon} /><input value={data.profile.name} onChange={(e)=>setField(['profile','name'], e.target.value)} placeholder="Ex.: Ana Silva"/></div></div>
+                <div className={styles.field}><label>Título</label><div className={styles.inputWrap}><Icon.briefcase className={styles.inputIcon} /><input value={data.profile.title} onChange={(e)=>setField(['profile','title'], e.target.value)} placeholder="Ex.: Frontend Engineer"/></div></div>
+                <div className={styles.field}><label>Localização</label><div className={styles.inputWrap}><Icon.mapPin className={styles.inputIcon} /><input value={data.profile.location} onChange={(e)=>setField(['profile','location'], e.target.value)} placeholder="Cidade, País"/></div></div>
                 <div className={styles.field}>
                   <label>Avatar URL</label>
-                  <input value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/>
+                  <div className={styles.inputWrap}><Icon.image className={styles.inputIcon} /><input value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/></div>
                   <div className={styles.fileRow}>
                     <input type="file" accept="image/*" onChange={(e)=>handleAvatarFile(e.target.files?.[0])} />
                     <div className={styles.fileHint}>Imagem até 3MB. Apenas pré‑visualização local.</div>
@@ -349,7 +397,7 @@ export default function GenerateUrPortfolio() {
             <div className={styles.formCard}>
               <div className={styles.sectionHeader}><h2>Contato & Sociais</h2></div>
               <div className={styles.grid2}>
-                <div className={styles.field}><label>Email</label><input type="email" value={data.contact.email} onChange={(e)=>setField(['contact','email'], e.target.value)} placeholder="nome@dominio.com"/></div>
+                <div className={styles.field}><label>Email</label><div className={styles.inputWrap}><Icon.mail className={styles.inputIcon} /><input type="email" value={data.contact.email} onChange={(e)=>setField(['contact','email'], e.target.value)} placeholder="nome@dominio.com"/></div></div>
                 <div className={styles.field}>
                   <label>
                     Telefone
@@ -359,7 +407,7 @@ export default function GenerateUrPortfolio() {
                       ))}
                     </select>
                   </label>
-                  <input value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder="Número"/>
+                  <div className={styles.inputWrap}><Icon.phone className={styles.inputIcon} /><input value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder="Número"/></div>
                 </div>
                 <div className={styles.field}>
                   <label>Website</label>

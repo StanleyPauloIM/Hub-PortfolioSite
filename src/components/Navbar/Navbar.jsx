@@ -9,6 +9,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const location = useLocation();
 
 
@@ -34,6 +35,27 @@ export default function Navbar() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  // Mobile hint to tap the globe
+  useEffect(() => {
+    let mq;
+    try {
+      mq = window.matchMedia('(max-width: 700px)');
+      const decide = () => {
+        if (mq.matches && !mobileOpen) {
+          setShowHint(true);
+          // auto-hide after a few seconds
+          setTimeout(() => setShowHint(false), 4000);
+        } else {
+          setShowHint(false);
+        }
+      };
+      decide();
+      const onChange = () => decide();
+      if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
+      return () => { try { if (mq.removeEventListener) mq.removeEventListener('change', onChange); else if (mq.removeListener) mq.removeListener(onChange); } catch {} };
+    } catch { /* noop */ }
+  }, [mobileOpen]);
 
   // Close panels when route changes
   useEffect(() => {
@@ -66,6 +88,9 @@ export default function Navbar() {
           <span className={styles.brand}>HUB</span>
           <div className={styles.brandGlow}></div>
         </div>
+        {showHint && (
+          <div className={styles.tapHint} aria-hidden="true">Toca no globo</div>
+        )}
       </div>
 
       {/* Center + Right */}

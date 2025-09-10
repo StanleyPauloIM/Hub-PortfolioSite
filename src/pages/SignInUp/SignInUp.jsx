@@ -14,6 +14,11 @@ const SignInUp = () => {
 
   const isSignup = mode === 'signup';
 
+  // Password visibility states
+  const [showSignInPwd, setShowSignInPwd] = useState(false);
+  const [showSignUpPwd, setShowSignUpPwd] = useState(false);
+  const [showSignUpConfirm, setShowSignUpConfirm] = useState(false);
+
   // Handlers (placeholders)
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -48,12 +53,22 @@ const SignInUp = () => {
 
           <form className={styles.form} onSubmit={handleSignIn} autoComplete="on">
             <label className={styles.label} htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="Digite o seu email" className={styles.input} />
+            <div className={styles.inputWrap}>
+              <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/></svg>
+              <input id="email" name="email" type="email" required placeholder="Digite o seu email" className={styles.input} />
+            </div>
 
             <label className={styles.label} htmlFor="password">Password</label>
-            <div className={styles.passwordRow}>
-              <input id="password" name="password" type="password" required placeholder="Digite a sua password" className={styles.input} />
-              {/* Ícone olho seria adicionado aqui se necessário */}
+<div className={`${styles.inputWrap} ${styles.inputWithAction}`}>
+              <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="password" name="password" type={showSignInPwd ? 'text' : 'password'} required placeholder="Digite a sua password" className={styles.input} />
+              <button type="button" className={styles.eyeBtn} aria-label={showSignInPwd ? 'Ocultar password' : 'Mostrar password'} aria-pressed={showSignInPwd} onClick={() => setShowSignInPwd(v => !v)}>
+                {showSignInPwd ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94"/><path d="M1 1l22 22"/><path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                )}
+              </button>
             </div>
 
             <div className={styles.rowBetween}>
@@ -96,11 +111,17 @@ const SignInUp = () => {
             <div className={styles.grid2}>
               <div>
                 <label className={styles.label} htmlFor="firstName">Primeiro Nome</label>
-                <input id="firstName" name="firstName" type="text" required placeholder="Ex.: Ana" className={styles.input} />
+                <div className={styles.inputWrap}>
+                  <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input id="firstName" name="firstName" type="text" required placeholder="Ex.: Ana" className={styles.input} />
+                </div>
               </div>
               <div>
                 <label className={styles.label} htmlFor="lastName">Último Nome</label>
-                <input id="lastName" name="lastName" type="text" required placeholder="Ex.: Silva" className={styles.input} />
+                <div className={styles.inputWrap}>
+                  <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input id="lastName" name="lastName" type="text" required placeholder="Ex.: Silva" className={styles.input} />
+                </div>
               </div>
             </div>
 
@@ -111,15 +132,38 @@ const SignInUp = () => {
               </div>
               <div>
                 <label className={styles.label} htmlFor="signupEmail">Email</label>
-                <input id="signupEmail" name="email" type="email" required placeholder="email@exemplo.com" className={styles.input} />
+                <div className={styles.inputWrap}>
+                  <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/></svg>
+                  <input id="signupEmail" name="email" type="email" required placeholder="email@exemplo.com" className={styles.input} />
+                </div>
               </div>
             </div>
 
             <label className={styles.label} htmlFor="signupPassword">Password</label>
-            <input id="signupPassword" name="password" type="password" required placeholder="Crie uma password" className={styles.input} />
+<div className={`${styles.inputWrap} ${styles.inputWithAction}`}>
+              <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="signupPassword" name="password" type={showSignUpPwd ? 'text' : 'password'} required placeholder="Crie uma password" className={styles.input} />
+              <button type="button" className={styles.eyeBtn} aria-label={showSignUpPwd ? 'Ocultar password' : 'Mostrar password'} aria-pressed={showSignUpPwd} onClick={() => setShowSignUpPwd(v => !v)}>
+                {showSignUpPwd ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94"/><path d="M1 1l22 22"/><path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                )}
+              </button>
+            </div>
 
             <label className={styles.label} htmlFor="confirmPassword">Confirmar password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Repita a password" className={styles.input} />
+<div className={`${styles.inputWrap} ${styles.inputWithAction}`}>
+              <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="confirmPassword" name="confirmPassword" type={showSignUpConfirm ? 'text' : 'password'} required placeholder="Repita a password" className={styles.input} />
+              <button type="button" className={styles.eyeBtn} aria-label={showSignUpConfirm ? 'Ocultar password' : 'Mostrar password'} aria-pressed={showSignUpConfirm} onClick={() => setShowSignUpConfirm(v => !v)}>
+                {showSignUpConfirm ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94"/><path d="M1 1l22 22"/><path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                )}
+              </button>
+            </div>
 
             <label className={styles.checkboxLabel}>
               <input name="terms" type="checkbox" required />
