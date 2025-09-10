@@ -1,6 +1,7 @@
 // ClassicPortfolio component: read-only render of a portfolio in a classic layout
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './ClassicPortfolio.module.css';
+import PdfThumb from '../../../components/ui/PdfThumb/PdfThumb';
 
 function Section({ title, children }) {
   if (!children) return null;
@@ -43,6 +44,12 @@ export default function ClassicPortfolio({ data }) {
   };
 
   const hasAny = (arr) => Array.isArray(arr) && arr.length > 0;
+
+  const [expanded, setExpanded] = useState({ proj: false, cert: false, dip: false, med: false });
+
+  const isImg = (u) => /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(u||''));
+  const isPdfU = (u) => /\.pdf($|\?)/i.test(String(u||''));
+  const nameFromUrl = (u) => { try { const base = new URL(u).pathname.split('/').pop() || 'PDF'; return decodeURIComponent(base); } catch { return 'PDF'; } };
 
   return (
     <div className={styles.wrapper} style={cssVars}>
@@ -134,7 +141,7 @@ export default function ClassicPortfolio({ data }) {
       {hasAny(projects) && (
         <Section title="Projetos">
           <div className={styles.grid}>
-            {projects.map((p, i) => (
+            {(expanded.proj ? projects : projects.slice(0,5)).map((p, i) => (
               <article key={i} className={styles.card}>
                 {p.imageUrl && (
                   <div className={styles.cardMedia}>
@@ -154,6 +161,14 @@ export default function ClassicPortfolio({ data }) {
               </article>
             ))}
           </div>
+          <div className={styles.moreWrap}>
+            {media.length > 5 && !expanded.med && (
+              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:true}))}>Ver mais…</button>
+            )}
+            {expanded.med && (
+              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:false}))}>Ocultar</button>
+            )}
+          </div>
         </Section>
       )}
 
@@ -162,31 +177,153 @@ export default function ClassicPortfolio({ data }) {
         <div className={styles.twoCol}>
           {hasAny(certificates) && (
             <Section title="Certificados">
-              <ul className={styles.list}>
-                {certificates.map((c, i) => (
-                  <li key={i}>
-                    <strong>{c.name || 'Certificado'}</strong>
-                    {c.issuer && <span> • {c.issuer}</span>}
-                    {c.year && <span> ({c.year})</span>}
-                    {c.link && (
-                      <span> – <a href={c.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a></span>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <div className={styles.grid}>
+                {(expanded.cert ? certificates : certificates.slice(0,5)).map((c, i) => {
+                  const isImgLink = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(c.link||''));
+                  const isPdfLink = /\.pdf($|\?)/i.test(String(c.link||''));
+                  const host = (() => { try { return new URL(c.link).hostname; } catch { return ''; } })();
+                  const hasImgFile = c.fileType === 'image' && c.fileUrl;
+                  const hasPdfFile = c.fileType === 'pdf' && c.fileUrl;
+                  return (
+                    <article key={i} className={styles.card}>
+                      {(hasImgFile || hasPdfFile || isImgLink || isPdfLink) && (
+                        <div className={styles.cardMedia}>
+{hasImgFile && (()=>{ const fname = c.fileName || nameFromUrl(c.fileUrl||c.link||''); return (
+                          <div className={styles.imgCard}>
+                            <div className={styles.imgHeader}>
+                              <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                              <span className={styles.imgName}>{fname}</span>
+                            </div>
+                            <div className={styles.imgPreview}><img src={c.fileUrl} alt="Certificado"/></div>
+                          </div>
+                        )})()}
+{hasPdfFile && (()=>{ const fname = c.fileName || nameFromUrl(c.link||''); return (
+                            <div className={styles.pdfCard}>
+                              <div className={styles.pdfHeader}>
+                                <svg className={styles.pdfIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
+                                <span className={styles.pdfName}>{fname}</span>
+                              </div>
+                              <PdfThumb src={c.fileUrl} fileName={fname} height={104} />
+                            </div>
+                          ); })()}
+{!hasImgFile && !hasPdfFile && isImgLink && (()=>{ const fname = nameFromUrl(c.link); return (
+                          <div className={styles.imgCard}>
+                            <div className={styles.imgHeader}>
+                              <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                              <span className={styles.imgName}>{fname}</span>
+                            </div>
+                            <div className={styles.imgPreview}><img src={c.link} alt="Certificado"/></div>
+                          </div>
+                        )})()}
+{!hasImgFile && !hasPdfFile && isPdfLink && (()=>{ const fname = nameFromUrl(c.link); return (
+                            <div className={styles.pdfCard}>
+                              <div className={styles.pdfHeader}>
+                                <svg className={styles.pdfIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
+                                <span className={styles.pdfName}>{fname}</span>
+                              </div>
+                              <PdfThumb src={c.link} fileName={fname} height={104} />
+                            </div>
+                          ); })()}
+                        </div>
+                      )}
+                      <div className={styles.cardBody}>
+                        <h4 className={styles.cardTitle}>{c.name || 'Certificado'}</h4>
+                        {(c.issuer || c.year) && (
+                          <p className={styles.cardText}>{[c.issuer, c.year].filter(Boolean).join(' • ')}</p>
+                        )}
+                        {c.link && (
+                          <div className={styles.cardLinks}>
+                            <a href={c.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a>
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <div className={styles.moreWrap}>
+                {certificates.length > 5 && !expanded.cert && (
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:true}))}>Ver mais…</button>
+                )}
+                {expanded.cert && (
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:false}))}>Ocultar</button>
+                )}
+              </div>
             </Section>
           )}
           {hasAny(diplomas) && (
             <Section title="Diplomas">
-              <ul className={styles.list}>
-                {diplomas.map((d, i) => (
-                  <li key={i}>
-                    <strong>{d.degree || 'Grau'}</strong>
-                    {d.school && <span> • {d.school}</span>}
-                    {d.year && <span> ({d.year})</span>}
-                  </li>
-                ))}
-              </ul>
+              <div className={styles.grid}>
+                {(expanded.dip ? diplomas : diplomas.slice(0,5)).map((d, i) => {
+                  const isImgLink = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(d.link||''));
+                  const isPdfLink = /\.pdf($|\?)/i.test(String(d.link||''));
+                  const hasImgFile = d.fileType === 'image' && d.fileUrl;
+                  const hasPdfFile = d.fileType === 'pdf' && d.fileUrl;
+                  return (
+                    <article key={i} className={styles.card}>
+                      {(hasImgFile || hasPdfFile || isImgLink || isPdfLink) && (
+                        <div className={styles.cardMedia}>
+{hasImgFile && (()=>{ const fname = d.fileName || nameFromUrl(d.fileUrl||d.link||''); return (
+                          <div className={styles.imgCard}>
+                            <div className={styles.imgHeader}>
+                              <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                              <span className={styles.imgName}>{fname}</span>
+                            </div>
+                            <div className={styles.imgPreview}><img src={d.fileUrl} alt="Diploma"/></div>
+                          </div>
+                        )})()}
+{hasPdfFile && (()=>{ const fname = d.fileName || nameFromUrl(d.link||''); return (
+                            <div className={styles.pdfCard}>
+                              <div className={styles.pdfHeader}>
+                                <svg className={styles.pdfIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
+                                <span className={styles.pdfName}>{fname}</span>
+                              </div>
+                              <PdfThumb src={d.fileUrl} fileName={fname} height={104} />
+                            </div>
+                          ); })()}
+{!hasImgFile && !hasPdfFile && isImgLink && (()=>{ const fname = nameFromUrl(d.link); return (
+                          <div className={styles.imgCard}>
+                            <div className={styles.imgHeader}>
+                              <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                              <span className={styles.imgName}>{fname}</span>
+                            </div>
+                            <div className={styles.imgPreview}><img src={d.link} alt="Diploma"/></div>
+                          </div>
+                        )})()}
+{!hasImgFile && !hasPdfFile && isPdfLink && (()=>{ const fname = nameFromUrl(d.link); return (
+                            <div className={styles.pdfCard}>
+                              <div className={styles.pdfHeader}>
+                                <svg className={styles.pdfIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
+                                <span className={styles.pdfName}>{fname}</span>
+                              </div>
+                              <PdfThumb src={d.link} fileName={fname} height={104} />
+                            </div>
+                          ); })()}
+                        </div>
+                      )}
+                      <div className={styles.cardBody}>
+                        <h4 className={styles.cardTitle}>{d.degree || 'Diploma'}</h4>
+                        {(d.school || d.year) && (
+                          <p className={styles.cardText}>{[d.school, d.year].filter(Boolean).join(' • ')}</p>
+                        )}
+                        {d.link && (
+                          <div className={styles.cardLinks}>
+                            <a href={d.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a>
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <div className={styles.moreWrap}>
+                {diplomas.length > 5 && !expanded.dip && (
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, dip:true}))}>Ver mais…</button>
+                )}
+                {expanded.dip && (
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, dip:false}))}>Ocultar</button>
+                )}
+              </div>
             </Section>
           )}
         </div>
@@ -199,15 +336,17 @@ export default function ClassicPortfolio({ data }) {
             {links.map((l, i) => {
               const isImg = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(l.url||''));
               const host = (() => { try { return new URL(l.url).hostname; } catch { return ''; } })();
+              const fav = host ? `https://www.google.com/s2/favicons?sz=64&domain=${host}` : '';
               return (
                 <li key={i} className={styles.linkRow}>
-                  {isImg ? (
-                    <img className={styles.linkThumb} src={l.url} alt="thumb" />
-                  ) : (
-                    <svg className={styles.linkIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>
-                  )}
-                  <a href={l.url} target="_blank" rel="noreferrer">{l.label || l.url}</a>
-                  {host && <span className={styles.metaItem}>({host})</span>}
+                  <div className={styles.linkCard}>
+                    {isImg ? (
+                      <img className={styles.linkThumbLg} src={l.url} alt="thumb" />
+                    ) : (
+                      <img className={styles.favicon} src={fav} alt="" />
+                    )}
+                    <a href={l.url} target="_blank" rel="noreferrer" className={styles.linkAnchor}>{l.label || host || l.url}</a>
+                  </div>
                 </li>
               );
             })}
@@ -219,7 +358,7 @@ export default function ClassicPortfolio({ data }) {
       {hasAny(media) && (
         <Section title="Galeria">
           <div className={styles.mediaGrid}>
-            {media.map((m, i) => (
+            {(expanded.med ? media : media.slice(0,5)).map((m, i) => (
               <div key={i} className={styles.mediaItem}>
                 {m.type === 'video' ? (
                   <video src={m.url} controls />
