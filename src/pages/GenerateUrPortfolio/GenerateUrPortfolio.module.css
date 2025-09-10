@@ -70,7 +70,17 @@
 .avatarPreview { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
 .previewRow { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
 .fileRow { display: grid; gap: 6px; }
-.fileHint { color: var(--secondary); font-size: 12px; }
+ .fileHint { color: var(--secondary); font-size: 12px; }
+.docThumb { width: 160px; height: 100px; border-radius: 10px; border: 1px solid var(--border); display: grid; place-items: center; background: var(--surface-3); color: var(--text); font-weight: 800; }
+
+/* File stacks (thumbnails list with optional stacking) */
+.fileStack { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.stacked .stackItem { margin-left: -18px; }
+.stackItem { position: relative; width: 48px; height: 48px; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; background: var(--surface-2); cursor: pointer; display: grid; place-items: center; }
+.stackItem img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stackItem.selected { outline: 2px solid var(--primary); outline-offset: 0; }
+.closeSm { position: absolute; top: -6px; right: -6px; background: var(--surface-1); border: 1px solid var(--border); color: var(--secondary); width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; line-height: 1; cursor: pointer; }
+.stackPdf { font-size: 12px; font-weight: 800; }
 
 .toast { position: sticky; top: 80px; z-index: 1; width: fit-content; background: rgba(20,20,20,0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; color: var(--text); }
 
@@ -100,3 +110,20 @@
 .actionsSticky { background: var(--surface-2); border: 1px solid var(--border); box-shadow: 0 8px 24px var(--shadow); }
 .thumb, .videoThumb { border: 1px solid var(--border); }
 .toast { background: var(--surface-1); border: 1px solid var(--border); }
+
+/* OR divider between inputs */
+.orDivider { display: flex; align-items: center; gap: 8px; margin: 6px 0; color: var(--secondary); font-weight: 700; font-size: 12px; }
+.orDivider::before, .orDivider::after { content: ''; height: 1px; background: var(--border); flex: 1; }
+
+/* Disabled inputs visual */
+.field input:disabled, .field textarea:disabled, .field select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Quick palettes */
+.quickPalettesWrap { margin-top: 8px; display: grid; gap: 8px; }
+.quickTitle { color: var(--secondary); font-weight: 700; font-size: 12px; }
+.quickGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+.paletteCard { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); background: var(--surface-2); border-radius: 10px; cursor: pointer; }
+.paletteCard:hover { background: var(--surface-3); }
+.paletteName { font-weight: 700; font-size: 12px; color: var(--text); }
+.paletteDots { display: inline-flex; gap: 6px; }
+.paletteDots i { width: 14px; height: 14px; border-radius: 4px; background: var(--dot); display: inline-block; border: 1px solid var(--border-soft); }

@@ -52,22 +52,52 @@
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .card { background: var(--surface-2); border: 1px solid var(--border-soft); border-radius: 12px; overflow: hidden; display: grid; }
 .cardMedia img { width: 100%; height: 140px; object-fit: cover; display: block; }
+.pdfFrame { width: 100%; height: 140px; border: 0; display: block; background: var(--surface-2); }
+.docPreviewLg { width: 100%; height: 140px; display: grid; place-items: center; background: var(--surface-2); border-top: 1px solid var(--border-soft); color: var(--c-text); font-weight: 800; border-bottom: 1px solid var(--border-soft); }
+
+/* WhatsApp-like PDF card */
+.pdfCard { width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.pdfHeader { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--surface-2); border-bottom: 1px solid var(--border-soft); }
+.pdfIcon { width: 18px; height: 18px; color: var(--icon); }
+.pdfName { font-weight: 700; font-size: 0.9rem; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* WhatsApp-like Image card */
+.imgCard { width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.imgHeader { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--surface-2); border-bottom: 1px solid var(--border-soft); }
+.imgIcon { width: 18px; height: 18px; color: var(--icon); }
+.imgName { font-weight: 700; font-size: 0.9rem; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.imgPreview { width: 100%; height: 104px; overflow: hidden; background: var(--surface-2); }
+.imgPreview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 .cardBody { padding: 10px; display: grid; gap: 6px; }
 .cardTitle { margin: 0; font-size: 1rem; }
 .cardText { margin: 0; color: var(--c-secondary); }
 .cardLinks { display: flex; gap: 10px; }
 .cardLinks a { color: var(--c-primary); text-decoration: none; }
+.linkBtn { color: var(--c-primary); text-decoration: none; font-weight: 700; }
+.linkBtn:hover { text-decoration: underline; }
 
 .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .list { margin: 0; padding-left: 16px; }
-.linkRow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.linkRow { display: flex; align-items: center; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
 .linkThumb { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; border: 1px solid var(--border); }
+.linkThumbLg { width: 48px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: var(--surface-2); }
 .linkIcon { width: 16px; height: 16px; opacity: 0.9; color: var(--icon); }
+.linkCard { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--surface-2); padding: 6px 8px; border-radius: 10px; }
+.linkAnchor { color: var(--c-text); text-decoration: none; }
+.linkAnchor:hover { color: var(--c-primary); }
+.favicon { width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface-3); }
+.rowBetween { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.docThumbSm { width: 48px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-3); font-size: 0.8rem; }
 
 .mediaGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
 .mediaItem img, .mediaItem video { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
 
 .contactBox { display: grid; gap: 6px; background: var(--surface-3); border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; }
+
+.moreWrap { margin-top: 8px; display: flex; justify-content: center; }
+.moreBtn { padding: 6px 10px; font-weight: 700; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--c-text); cursor: pointer; }
+.moreBtn:hover { background: var(--surface-3); }
 
 @media (max-width: 800px) {
   .headerLeft { grid-template-columns: 60px 1fr; }
@@ -78,6 +108,7 @@
 @media (max-width: 600px) {
   .cardMedia img { height: 120px; }
   .mediaItem img, .mediaItem video { height: 90px; }
+  .imgPreview { height: 90px; }
 }
 
 @media (max-width: 480px) {

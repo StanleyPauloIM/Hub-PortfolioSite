@@ -1,0 +1,5 @@
+/* Styles for PDF thumbnail */
+.wrap { width: 100%; background: var(--surface-2); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); overflow: hidden; display: grid; place-items: center; }
+.canvas { height: 100%; width: auto; display: block; }
+.fallback { width: 100%; display: grid; place-items: center; background: var(--surface-2); color: var(--c-text); font-weight: 800; border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
+

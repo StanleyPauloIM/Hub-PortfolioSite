@@ -9,6 +9,7 @@ import ClassicPortfolio from '../ThePortfolio/components/ClassicPortfolio';
 import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
 import YearSelect from '../../components/ui/YearSelect/YearSelect';
+import FileInput from '../../components/ui/FileInput/FileInput';
 import { CALLING_CODES } from '../../data/callingCodes';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -103,8 +104,12 @@ const defaultData = {
   projects: [
     { title: 'HUB – Website', description: 'Plataforma social de portfólios.', link: '', imageUrl: '', videoUrl: '' },
   ],
-  certificates: [],
-  diplomas: [],
+  certificates: [
+    // { name:'', issuer:'', year:'', link:'', fileUrl:'', fileType:'' }
+  ],
+  diplomas: [
+    // { school:'', degree:'', year:'', link:'', fileUrl:'', fileType:'' }
+  ],
   links: [],
   media: [],
 };
@@ -127,7 +132,7 @@ export default function GenerateUrPortfolio() {
     }
   });
   const [message, setMessage] = useState('');
-  const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {} });
+  const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {}, certificates: {}, diplomas: {}, stacks: { avatar: [], projects: {}, media: {}, certificates: {}, diplomas: {} } });
   const navigate = useNavigate();
 
 
@@ -182,14 +187,19 @@ export default function GenerateUrPortfolio() {
   // Helpers: URL checks and file attachments (preview only)
   const isImageUrl = (url) => /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(url||''));
   const revoke = (u) => { try { if (u) URL.revokeObjectURL(u); } catch {} };
+  const isPdf = (file) => file && file.type === 'application/pdf';
 
   const handleAvatarFile = (file) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) return setMessage('Arquivo inválido. Escolhe uma imagem.');
     if (file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
     const url = URL.createObjectURL(file);
-    setPreviews((p) => { revoke(p.profileAvatar); return { ...p, profileAvatar: url }; });
-    // Atualiza o dado para que a pré‑visualização à direita reflita o avatar
+    setPreviews((p) => {
+      const list = [...(p.stacks?.avatar || [])];
+      list.push({ url, type: 'image' });
+      if (list.length > 5) { const removed = list.shift(); revoke(removed?.url); }
+      return { ...p, profileAvatar: url, stacks: { ...p.stacks, avatar: list } };
+    });
     setField(['profile','avatarUrl'], url);
   };
 
@@ -198,8 +208,12 @@ export default function GenerateUrPortfolio() {
     if (!file.type.startsWith('image/')) return setMessage('Escolhe uma imagem.');
     if (file.size > 3 * 1024 * 1024) return setMessage('Imagem de projeto muito grande (máx. 3MB).');
     const url = URL.createObjectURL(file);
-    setPreviews((p) => ({ ...p, projects: { ...(p.projects||{}), [idx]: (revoke(p.projects?.[idx]), url) } }));
-    // Atualiza o projeto no estado principal para refletir na pré‑visualização
+    setPreviews((p) => {
+      const proj = p.stacks?.projects?.[idx] || [];
+      const list = [...proj, { url, type: 'image' }];
+      if (list.length > 5) { const removed = list.shift(); revoke(removed?.url); }
+      return { ...p, projects: { ...(p.projects||{}), [idx]: (revoke(p.projects?.[idx]), url) }, stacks: { ...p.stacks, projects: { ...(p.stacks?.projects||{}), [idx]: list } } };
+    });
     updateArrayItem('projects', idx, { imageUrl: url });
   };
 
@@ -213,9 +227,49 @@ export default function GenerateUrPortfolio() {
       if (file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
     }
     const url = URL.createObjectURL(file);
-    setPreviews((p) => ({ ...p, media: { ...(p.media||{}), [idx]: (revoke(p.media?.[idx]), url) } }));
-    // Espelha no estado principal (para refletir na pré‑visualização à direita)
+    setPreviews((p) => {
+      const stacks = { ...(p.stacks||{}) };
+      if (type === 'image') {
+        const m = stacks.media?.[idx] || [];
+        const list = [...m, { url, type: 'image' }];
+        if (list.length > 5) { const removed = list.shift(); revoke(removed?.url); }
+        stacks.media = { ...(stacks.media||{}), [idx]: list };
+      }
+      return { ...p, media: { ...(p.media||{}), [idx]: (revoke(p.media?.[idx]), url) }, stacks };
+    });
     updateArrayItem('media', idx, { url });
+  };
+
+  const handleCertFile = (idx, file) => {
+    if (!file) return;
+    const type = isPdf(file) ? 'pdf' : (file.type.startsWith('image/') ? 'image' : '');
+    if (!type) return setMessage('Anexa uma imagem ou PDF.');
+    if (type === 'pdf' && file.size > 10 * 1024 * 1024) return setMessage('PDF muito grande (máx. 10MB).');
+    if (type === 'image' && file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
+    const url = URL.createObjectURL(file);
+    setPreviews((p) => {
+      const cert = p.stacks?.certificates?.[idx] || [];
+      const list = [...cert, { url, type, name: file.name }];
+      if (list.length > 5) { const removed = list.shift(); revoke(removed?.url); }
+      return { ...p, certificates: { ...(p.certificates||{}), [idx]: (revoke(p.certificates?.[idx]), url) }, stacks: { ...p.stacks, certificates: { ...(p.stacks?.certificates||{}), [idx]: list } } };
+    });
+    updateArrayItem('certificates', idx, { fileUrl: url, fileType: type, fileName: file.name });
+  };
+
+  const handleDiplomaFile = (idx, file) => {
+    if (!file) return;
+    const type = isPdf(file) ? 'pdf' : (file.type.startsWith('image/') ? 'image' : '');
+    if (!type) return setMessage('Anexa uma imagem ou PDF.');
+    if (type === 'pdf' && file.size > 10 * 1024 * 1024) return setMessage('PDF muito grande (máx. 10MB).');
+    if (type === 'image' && file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
+    const url = URL.createObjectURL(file);
+    setPreviews((p) => {
+      const dip = p.stacks?.diplomas?.[idx] || [];
+      const list = [...dip, { url, type, name: file.name }];
+      if (list.length > 5) { const removed = list.shift(); revoke(removed?.url); }
+      return { ...p, diplomas: { ...(p.diplomas||{}), [idx]: (revoke(p.diplomas?.[idx]), url) }, stacks: { ...p.stacks, diplomas: { ...(p.stacks?.diplomas||{}), [idx]: list } } };
+    });
+    updateArrayItem('diplomas', idx, { fileUrl: url, fileType: type, fileName: file.name });
   };
 
   const onSaveDraft = () => {
@@ -373,10 +427,16 @@ export default function GenerateUrPortfolio() {
                 <div className={styles.field}><label>Localização</label><div className={styles.inputWrap}><Icon.mapPin className={styles.inputIcon} /><input value={data.profile.location} onChange={(e)=>setField(['profile','location'], e.target.value)} placeholder="Cidade, País"/></div></div>
                 <div className={styles.field}>
                   <label>Avatar URL</label>
-                  <div className={styles.inputWrap}><Icon.image className={styles.inputIcon} /><input value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/></div>
-                  <div className={styles.fileRow}>
-                    <input type="file" accept="image/*" onChange={(e)=>handleAvatarFile(e.target.files?.[0])} />
-                    <div className={styles.fileHint}>Imagem até 3MB. Apenas pré‑visualização local.</div>
+                  <div className={styles.inputWrap}><Icon.image className={styles.inputIcon} /><input disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/></div>
+                  <div className={styles.orDivider}><span>OU</span></div>
+                  <FileInput disabled={Boolean((data.profile.avatarUrl||'').trim())} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB. Apenas pré‑visualização local." onChange={(file)=>handleAvatarFile(file)} />
+                  <div className={[styles.fileStack, (previews.stacks?.avatar||[]).length>3 ? styles.stacked : ''].join(' ')}>
+                    {(previews.stacks?.avatar||[]).map((it, si) => (
+                      <div key={si} className={[styles.stackItem, previews.profileAvatar===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, profileAvatar: it.url})); setField(['profile','avatarUrl'], it.url); }}>
+                        {it.type==='image' ? (<img src={it.url} alt="" />) : (<div className={styles.stackPdf}>PDF</div>)}
+                        <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...(p.stacks?.avatar||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = p.profileAvatar===removed?.url ? (list[list.length-1]?.url||'') : p.profileAvatar; setField(['profile','avatarUrl'], nextSel||''); return { ...p, profileAvatar: nextSel, stacks:{...p.stacks, avatar:list} }; }); }}>×</button>
+                      </div>
+                    ))}
                   </div>
                   <div className={styles.previewRow}>
                     {previews.profileAvatar ? (
@@ -448,13 +508,22 @@ export default function GenerateUrPortfolio() {
                   <div className={styles.groupHeader}><strong>Projeto #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('projects', idx)}>Remover</button></div>
                   <div className={styles.grid2}>
                     <div className={styles.field}><label>Título</label><input value={p.title||''} onChange={(e)=>updateArrayItem('projects', idx, { title: e.target.value })}/></div>
-                    <div className={styles.field}><label>Link</label><input value={p.link||''} onChange={(e)=>updateArrayItem('projects', idx, { link: e.target.value })} placeholder="https://..."/></div>
+                    <div className={styles.field}><label>Link</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg><input value={p.link||''} onChange={(e)=>updateArrayItem('projects', idx, { link: e.target.value })} placeholder="https://..."/></div></div>
                     <div className={styles.field}>
                       <label>Imagem URL</label>
-                      <input value={p.imageUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { imageUrl: e.target.value })} placeholder="https://..."/>
-                      <div className={styles.fileRow}>
-                        <input type="file" accept="image/*" onChange={(e)=>handleProjectImageFile(idx, e.target.files?.[0])} />
-                        <div className={styles.fileHint}>Imagem até 3MB</div>
+<div className={styles.urlWrap}>
+                        <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <input disabled={(previews.stacks?.projects?.[idx]||[]).length>0} value={p.imageUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { imageUrl: e.target.value })} placeholder="https://..."/>
+                      </div>
+                      <div className={styles.orDivider}><span>OU</span></div>
+                      <FileInput disabled={Boolean(p.imageUrl && !/^blob:/.test(p.imageUrl))} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB" onChange={(file)=>handleProjectImageFile(idx, file)} />
+                      <div className={[styles.fileStack, (previews.stacks?.projects?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
+                        {(previews.stacks?.projects?.[idx]||[]).map((it, si) => (
+                          <div key={si} className={[styles.stackItem, (previews.projects?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, projects:{...(p.projects||{}), [idx]: it.url}})); updateArrayItem('projects', idx, { imageUrl: it.url }); }}>
+                            <img src={it.url} alt="" />
+                            <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.projects?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.projects?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.projects?.[idx]||''); const nextStacks = { ...(p.stacks||{}), projects:{ ...(p.stacks?.projects||{}), [idx]: list } }; const nextProj = { ...(p.projects||{}), [idx]: nextSel }; updateArrayItem('projects', idx, { imageUrl: nextSel }); return { ...p, stacks: nextStacks, projects: nextProj }; }); }}>×</button>
+                          </div>
+                        ))}
                       </div>
                       <div className={styles.previewRow}>
                         {previews.projects?.[idx] ? (
@@ -462,7 +531,7 @@ export default function GenerateUrPortfolio() {
                         ) : (isImageUrl(p.imageUrl) && <img className={styles.thumb} src={p.imageUrl} alt="Preview" />)}
                       </div>
                     </div>
-                    <div className={styles.field}><label>Vídeo URL</label><input value={p.videoUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { videoUrl: e.target.value })} placeholder="https://..."/></div>
+                    <div className={styles.field}><label>Vídeo URL</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg><input value={p.videoUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { videoUrl: e.target.value })} placeholder="https://..."/></div></div>
                     <div className={styles.fieldFull}><label>Descrição</label><textarea className={styles.textarea} rows={3} value={p.description||''} onChange={(e)=>updateArrayItem('projects', idx, { description: e.target.value })} /></div>
                   </div>
                 </div>
@@ -486,14 +555,36 @@ export default function GenerateUrPortfolio() {
                       <label>Link</label>
                       <div className={styles.urlWrap}>
                         <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
-                        <input value={c.link||''} onChange={(e)=>updateArrayItem('certificates', idx, { link: e.target.value })} placeholder="https://..."/>
+                        <input disabled={Boolean(c.fileUrl)} value={c.link||''} onChange={(e)=>updateArrayItem('certificates', idx, { link: e.target.value })} placeholder="https://..."/>
+                      </div>
+                    </div>
+                    <div className={styles.orDivider}><span>OU</span></div>
+                    <div className={styles.fieldFull}>
+                      <label>Ficheiro (PDF/Imagem)</label>
+                      <FileInput disabled={Boolean((c.link||'').trim())} accept="image/*,application/pdf" label="Anexar ficheiro" hint="PDF até 10MB ou imagem até 3MB" onChange={(file)=>handleCertFile(idx, file)} />
+                      <div className={[styles.fileStack, (previews.stacks?.certificates?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
+                        {(previews.stacks?.certificates?.[idx]||[]).map((it, si) => (
+                          <div key={si} className={[styles.stackItem, (previews.certificates?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, certificates:{...(p.certificates||{}), [idx]: it.url}})); updateArrayItem('certificates', idx, { fileUrl: it.url, fileType: it.type, fileName: it.name }); }}>
+                            {it.type==='image' ? (<img src={it.url} alt="" />) : (<div className={styles.stackPdf}>PDF</div>)}
+                            <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.certificates?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.certificates?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.certificates?.[idx]||''); const nextStacks = { ...(p.stacks||{}), certificates:{ ...(p.stacks?.certificates||{}), [idx]: list } }; const nextC = { ...(p.certificates||{}), [idx]: nextSel }; const nextItem = list.length? list[list.length-1]: null; updateArrayItem('certificates', idx, { fileUrl: nextSel, fileType: nextItem?.type||'', fileName: nextItem?.name||'' }); return { ...p, stacks: nextStacks, certificates: nextC }; }); }}>×</button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className={styles.previewRow}>
+                        { (c.fileType||'') === 'image' ? (
+                          previews.certificates?.[idx] ? (
+                            <img className={styles.thumb} src={previews.certificates[idx]} alt="Certificado" />
+                          ) : (isImageUrl(c.fileUrl) && <img className={styles.thumb} src={c.fileUrl} alt="Certificado" />)
+                        ) : ( (c.fileType||'') === 'pdf' ? (
+                          <div className={styles.docThumb}>📄 PDF</div>
+                        ) : null) }
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('certificates', { name:'', issuer:'', year:'', link:'' })}>+ Adicionar certificado</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('certificates', { name:'', issuer:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>+ Adicionar certificado</button>
               </div>
             </div>
 
@@ -506,11 +597,40 @@ export default function GenerateUrPortfolio() {
                     <div className={styles.field}><label>Instituição</label><input value={d.school||''} onChange={(e)=>updateArrayItem('diplomas', idx, { school: e.target.value })}/></div>
                     <div className={styles.field}><label>Grau</label><input value={d.degree||''} onChange={(e)=>updateArrayItem('diplomas', idx, { degree: e.target.value })}/></div>
                     <div className={styles.field}><label>Ano</label><YearSelect value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} /></div>
+                    <div className={styles.fieldFull}>
+                      <label>Link</label>
+                      <div className={styles.urlWrap}>
+                        <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+                        <input disabled={Boolean(d.fileUrl)} value={d.link||''} onChange={(e)=>updateArrayItem('diplomas', idx, { link: e.target.value })} placeholder="https://..."/>
+                      </div>
+                    </div>
+                    <div className={styles.orDivider}><span>OU</span></div>
+                    <div className={styles.fieldFull}>
+                      <label>Ficheiro (PDF/Imagem)</label>
+                      <FileInput disabled={Boolean((d.link||'').trim())} accept="image/*,application/pdf" label="Anexar ficheiro" hint="PDF até 10MB ou imagem até 3MB" onChange={(file)=>handleDiplomaFile(idx, file)} />
+                      <div className={[styles.fileStack, (previews.stacks?.diplomas?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
+                        {(previews.stacks?.diplomas?.[idx]||[]).map((it, si) => (
+                          <div key={si} className={[styles.stackItem, (previews.diplomas?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, diplomas:{...(p.diplomas||{}), [idx]: it.url}})); updateArrayItem('diplomas', idx, { fileUrl: it.url, fileType: it.type, fileName: it.name }); }}>
+                            {it.type==='image' ? (<img src={it.url} alt="" />) : (<div className={styles.stackPdf}>PDF</div>)}
+                            <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.diplomas?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.diplomas?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.diplomas?.[idx]||''); const nextStacks = { ...(p.stacks||{}), diplomas:{ ...(p.stacks?.diplomas||{}), [idx]: list } }; const nextD = { ...(p.diplomas||{}), [idx]: nextSel }; const nextItem = list.length? list[list.length-1]: null; updateArrayItem('diplomas', idx, { fileUrl: nextSel, fileType: nextItem?.type||'', fileName: nextItem?.name||'' }); return { ...p, stacks: nextStacks, diplomas: nextD }; }); }}>×</button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className={styles.previewRow}>
+                        { (d.fileType||'') === 'image' ? (
+                          previews.diplomas?.[idx] ? (
+                            <img className={styles.thumb} src={previews.diplomas[idx]} alt="Diploma" />
+                          ) : (isImageUrl(d.fileUrl) && <img className={styles.thumb} src={d.fileUrl} alt="Diploma" />)
+                        ) : ( (d.fileType||'') === 'pdf' ? (
+                          <div className={styles.docThumb}>📄 PDF</div>
+                        ) : null) }
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('diplomas', { school:'', degree:'', year:'' })}>+ Adicionar diploma</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('diplomas', { school:'', degree:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>+ Adicionar diploma</button>
               </div>
             </div>
 
@@ -524,7 +644,10 @@ export default function GenerateUrPortfolio() {
                     <div className={styles.field}><label>Rótulo</label><input value={l.label||''} onChange={(e)=>updateArrayItem('links', idx, { label: e.target.value })}/></div>
                     <div className={styles.field}>
                       <label>URL</label>
-                      <input value={l.url||''} onChange={(e)=>updateArrayItem('links', idx, { url: e.target.value })} placeholder="https://..."/>
+                      <div className={styles.urlWrap}>
+                        <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+                        <input value={l.url||''} onChange={(e)=>updateArrayItem('links', idx, { url: e.target.value })} placeholder="https://..."/>
+                      </div>
                       <div className={styles.previewRow}>
                         {isImageUrl(l.url) && <img className={styles.thumb} src={l.url} alt="Preview" />}
                       </div>
@@ -552,20 +675,26 @@ export default function GenerateUrPortfolio() {
                     </div>
                     <div className={styles.field} style={{gridColumn:'span 2'}}>
                       <label>URL</label>
-                      <input value={m.url||''} onChange={(e)=>updateArrayItem('media', idx, { url: e.target.value })} placeholder="https://..."/>
-                      <div className={styles.fileRow}>
-                        { (m.type||'image') === 'image' ? (
-                          <>
-                            <input type="file" accept="image/*" onChange={(e)=>handleMediaFile(idx, e.target.files?.[0], 'image')} />
-                            <div className={styles.fileHint}>Imagem até 3MB</div>
-                          </>
-                        ) : (
-                          <>
-                            <input type="file" accept="video/*" onChange={(e)=>handleMediaFile(idx, e.target.files?.[0], 'video')} />
-                            <div className={styles.fileHint}>Vídeo até 20MB</div>
-                          </>
-                        ) }
+                      <div className={styles.urlWrap}>
+                        <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+                        <input disabled={(m.type||'image')==='image' && (previews.stacks?.media?.[idx]||[]).length>0} value={m.url||''} onChange={(e)=>updateArrayItem('media', idx, { url: e.target.value })} placeholder="https://..."/>
                       </div>
+                      <div className={styles.orDivider}><span>OU</span></div>
+                      { (m.type||'image') === 'image' ? (
+                        <FileInput disabled={Boolean(m.url && !/^blob:/.test(m.url))} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB" onChange={(file)=>handleMediaFile(idx, file, 'image')} />
+                      ) : (
+                        <FileInput accept="video/*" label="Selecionar vídeo" hint="Vídeo até 20MB" onChange={(file)=>handleMediaFile(idx, file, 'video')} />
+                      ) }
+                      {(m.type||'image') === 'image' && (
+                        <div className={[styles.fileStack, (previews.stacks?.media?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
+                          {(previews.stacks?.media?.[idx]||[]).map((it, si) => (
+                            <div key={si} className={[styles.stackItem, (previews.media?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, media:{...(p.media||{}), [idx]: it.url}})); updateArrayItem('media', idx, { url: it.url }); }}>
+                              <img src={it.url} alt="" />
+                              <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.media?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.media?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.media?.[idx]||''); const nextStacks = { ...(p.stacks||{}), media:{ ...(p.stacks?.media||{}), [idx]: list } }; const nextMedia = { ...(p.media||{}), [idx]: nextSel }; updateArrayItem('media', idx, { url: nextSel }); return { ...p, stacks: nextStacks, media: nextMedia }; }); }}>×</button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       <div className={styles.previewRow}>
                         { (m.type||'image') === 'image' ? (
                           previews.media?.[idx] ? (
@@ -601,6 +730,39 @@ export default function GenerateUrPortfolio() {
                 </div>
                 <div className={styles.field}>
                   <ColorSwatches label="Texto" value={data.theme.text} onChange={(c)=>setField(['theme','text'], c)} />
+                </div>
+              </div>
+              <div className={styles.quickPalettesWrap}>
+                <div className={styles.quickTitle}>Paletas rápidas</div>
+                <div className={styles.quickGrid}>
+                  {(() => {
+                    const mode = document.documentElement.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                    const quick = mode === 'light' ? [
+                      { name:'Aurora', primary:'#52097b', secondary:'#7a6f89', background:'#f6f2f8', text:'#0d0113' },
+                      { name:'Sky', primary:'#0066ff', secondary:'#667085', background:'#f9fbff', text:'#101828' },
+                      { name:'Forest', primary:'#0e8f6e', secondary:'#6b7280', background:'#f7faf7', text:'#0b1220' },
+                      { name:'Sunset', primary:'#b54708', secondary:'#7a6f89', background:'#fff7ed', text:'#1f2937' },
+                    ] : [
+                      { name:'Neon', primary:'#1e90ff', secondary:'#b0b8c1', background:'#0a0a0a', text:'#ffffff' },
+                      { name:'Indigo', primary:'#7b68ee', secondary:'#b0b8c1', background:'#0b0b0b', text:'#f5f5f5' },
+                      { name:'Teal Dark', primary:'#14b8a6', secondary:'#9ca3af', background:'#0a0f0f', text:'#e5e7eb' },
+                      { name:'Crimson', primary:'#e11d48', secondary:'#cbd5e1', background:'#0a0a0a', text:'#fafafa' },
+                    ];
+                    return quick.map((p, i) => (
+                      <button key={p.name+i} type="button" className={styles.paletteCard} onClick={() => setData(d => ({
+                        ...d,
+                        theme: { primary:p.primary, secondary:p.secondary, background:p.background, text:p.text }
+                      }))}>
+                        <span className={styles.paletteName}>{p.name}</span>
+                        <span className={styles.paletteDots}>
+                          <i style={{'--dot': p.primary}} />
+                          <i style={{'--dot': p.secondary}} />
+                          <i style={{'--dot': p.background}} />
+                          <i style={{'--dot': p.text}} />
+                        </span>
+                      </button>
+                    ));
+                  })()}
                 </div>
               </div>
             </div>
