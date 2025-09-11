@@ -830,11 +830,23 @@ allowCustom={true}
                       { name:'Nord Light', primary:'#5e81ac', secondary:'#7b8dab', background:'#e6eef7', text:'#0b1f31' },
                       { name:'Blush', primary:'#ec4899', secondary:'#a78bfa', background:'#fff1f5', text:'#1f2937' },
                       { name:'Forest Light', primary:'#10b981', secondary:'#6b7280', background:'#f3faf7', text:'#0b1220' },
+                      { name:'Sunset Glow', primary:'#fb7185', secondary:'#f59e0b', background:'#fff7ed', text:'#1f2937' },
+                      { name:'Lavender', primary:'#8b5cf6', secondary:'#a78bfa', background:'#f5f3ff', text:'#1f1b2d' },
+                      { name:'Citrus', primary:'#eab308', secondary:'#22c55e', background:'#fffbeb', text:'#1f2937' },
+                      { name:'Sandstone', primary:'#8b5e34', secondary:'#d4a373', background:'#f5efe6', text:'#1f252e' },
+                      { name:'Mint Frost', primary:'#14b8a6', secondary:'#60a5fa', background:'#f0fdfa', text:'#0b1220' },
+                      { name:'Solar Light', primary:'#268bd2', secondary:'#2aa198', background:'#fdf6e3', text:'#073642' },
                     ] : [
                       { name:'Midnight', primary:'#4f46e5', secondary:'#94a3b8', background:'#0b1220', text:'#e5e7eb' },
                       { name:'Ocean', primary:'#22d3ee', secondary:'#7dd3fc', background:'#0a1216', text:'#e6faff' },
                       { name:'Emerald', primary:'#10b981', secondary:'#9ca3af', background:'#0a0f0f', text:'#e5f6ef' },
                       { name:'Rose Dark', primary:'#f43f5e', secondary:'#cbd5e1', background:'#0a0a0a', text:'#fafafa' },
+                      { name:'Neon Purple', primary:'#a78bfa', secondary:'#22d3ee', background:'#0b0b1a', text:'#eaeaff' },
+                      { name:'Dracula', primary:'#ff79c6', secondary:'#50fa7b', background:'#282a36', text:'#f8f8f2' },
+                      { name:'Monochrome', primary:'#ffffff', secondary:'#94a3b8', background:'#0a0a0a', text:'#e5e7eb' },
+                      { name:'Slate', primary:'#38bdf8', secondary:'#94a3b8', background:'#111827', text:'#e5e7eb' },
+                      { name:'Amber Night', primary:'#f59e0b', secondary:'#fcd34d', background:'#0f0a00', text:'#fff7e6' },
+                      { name:'Solar Dark', primary:'#268bd2', secondary:'#b58900', background:'#002b36', text:'#eee8d5' },
                     ];
                     return quick.map((p, i) => (
                       <button key={p.name+i} type="button" className={styles.paletteCard} onClick={() => setData(d => ({
