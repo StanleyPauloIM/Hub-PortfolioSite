@@ -1,5 +1,5 @@
 /* Layout simples para a página de exemplo */
-.wrapper { padding: 24px; }
+.wrapper { padding: 5.5rem 24px 24px; }
 .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .link { color: var(--c-primary, #1e90ff); text-decoration: none; }
 .link:hover { text-decoration: underline; }
