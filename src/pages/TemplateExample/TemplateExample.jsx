@@ -153,7 +153,7 @@ export default function TemplateExample() {
   const isDisabled = slug === 'minimalist';
   const shareUrl = (typeof window !== 'undefined') ? window.location.href : '';
 
-  const [tab, setTab] = React.useState('preview');
+  const [commentsOpen, setCommentsOpen] = React.useState(false);
   const [likes, setLikes] = useLocalNumber(`hub_template_likes_${slug}`, 128);
   const [liked, setLiked] = React.useState(() => localStorage.getItem(`hub_template_liked_${slug}`) === '1');
   React.useEffect(()=>{ localStorage.setItem(`hub_template_liked_${slug}`, liked ? '1' : '0'); }, [slug, liked]);
@@ -193,20 +193,26 @@ export default function TemplateExample() {
       ) : (
         <>
           <div className={styles.tabs}>
-            <button className={`${styles.tabBtn} ${tab==='preview'?styles.tabBtnActive:''}`} onClick={()=>setTab('preview')}>Preview</button>
-            <button className={`${styles.tabBtn} ${tab==='comments'?styles.tabBtnActive:''}`} onClick={()=>setTab('comments')}>Comentários</button>
+            <button className={`${styles.tabBtn} ${styles.tabBtnActive}`}>Preview</button>
+            <button className={`${styles.tabBtn} ${commentsOpen?styles.tabBtnActive:''}`} aria-pressed={commentsOpen} onClick={()=>setCommentsOpen(v=>!v)}>
+              <span className={`${styles.tabDot} ${commentsOpen?styles.tabDotOn:''}`} /> Comentários
+            </button>
           </div>
 
-          {tab === 'preview' ? (
-            <div className={styles.canvas}>
-              {slug === 'classic' ? (
-                <ClassicPortfolio data={data} />
-              ) : (
-                <MinimalistPortfolio data={data} />
-              )}
+          <div className={styles.canvas}>
+            {slug === 'classic' ? (
+              <ClassicPortfolio data={data} />
+            ) : (
+              <MinimalistPortfolio data={data} />
+            )}
+          </div>
+
+          <aside className={`${styles.sidePanel} ${commentsOpen ? styles.sideOpen : ''}`} aria-hidden={!commentsOpen}>
+            <div className={styles.sideHeader}>
+              <h2 className={styles.sideTitle}>Comentários</h2>
+              <button className={styles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
             </div>
-          ) : (
-            <div className={styles.comments}>
+            <div className={styles.sideBody}>
               <div className={styles.commentForm}>
                 <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={3} className={styles.commentInput} placeholder="Escreve um comentário…"/>
                 <div className={styles.actionsBar}>
@@ -215,14 +221,16 @@ export default function TemplateExample() {
                   <button className={styles.actionBtn} onClick={post}><Icon.arrowRight/> Publicar</button>
                 </div>
               </div>
-              {comments.map((c,i)=> (
-                <div key={i} className={styles.commentItem}>
-                  <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
-                  <div>{c.text}</div>
-                </div>
-              ))}
+              <div className={styles.comments}>
+                {comments.map((c,i)=> (
+                  <div key={i} className={styles.commentItem}>
+                    <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                    <div>{c.text}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+          </aside>
         </>
       )}
     </div>

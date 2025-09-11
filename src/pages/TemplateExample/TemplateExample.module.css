@@ -10,9 +10,21 @@
 .actionBtn:hover { background: var(--surface-2); }
 .likeActive { color:#e11d48; border-color:#e11d48; }
 .tabs { margin-top: 12px; border-bottom: 1px solid var(--border); display:flex; gap:8px; }
-.tabBtn { background:transparent; border:none; color:var(--secondary); padding:8px 10px; border-bottom:2px solid transparent; cursor:pointer; }
+.tabBtn { background:transparent; border:none; color:var(--secondary); padding:8px 10px; border-bottom:2px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
 .tabBtnActive { color:var(--text); border-color: var(--primary, #1e90ff); }
-.comments { padding: 12px 2px; display:grid; gap:10px; }
+.tabDot { width:8px; height:8px; border-radius:50%; background: var(--border); display:inline-block; }
+.tabDotOn { background: var(--primary, #1e90ff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+
+/* Side comments panel */
+.sidePanel { position: fixed; top: 5.5rem; right: 12px; width: min(420px, 92vw); height: calc(100vh - 6.5rem); background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 14px 40px rgba(0,0,0,.45); transform: translateX(110%); transition: transform .28s ease; z-index: 100; display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+.sideOpen { transform: translateX(0); }
+.sideHeader { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); }
+.sideTitle { margin:0; font-size: 14px; color: var(--secondary); }
+.sideClose { background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; color: var(--text); cursor:pointer; }
+.sideBody { padding: 10px; overflow: auto; display:grid; gap:10px; }
+
+/* Comments content reused in side panel */
+.comments { display:grid; gap:10px; }
 .commentForm { display:grid; gap:8px; }
 .commentInput { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text); }
 .commentItem { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: var(--surface-1); }
