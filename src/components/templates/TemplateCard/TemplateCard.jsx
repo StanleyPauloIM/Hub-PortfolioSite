@@ -5,6 +5,7 @@ import styles from './TemplateCard.module.css';
 import HubGlobe from '../../../assets/HubGlobe.png';
 import MinimalistImg from '../../../assets/images/Minimalist.png';
 import { Icon } from '../../ui/Icons/Icons';
+import GlowButton from '../../ui/GlowButton/GlowButton';
 
 function Preview({ kind }) {
   if (kind === 'minimalist') {
@@ -47,18 +48,18 @@ export default function TemplateCard({ t, onSave }) {
         </div>
 
         <div className={styles.metaRow}>
-          <span className={styles.meta}><Icon.star /> {t.rating.toFixed(1)}</span>
+          <span className={styles.meta}><Icon.heart /> {t.likes}</span>
           <span className={styles.meta}><Icon.flag /> {t.uses}</span>
           <span className={styles.meta}><Icon.eye /> Preview</span>
         </div>
 
         <div className={styles.actions}>
-          <button className={`${styles.btn} ${styles.btnGhost}`} onClick={(e)=>{ e.stopPropagation(); onView(); }} disabled={t.disabled}>
+          <GlowButton onClick={(e)=>{ e.stopPropagation(); onView(); }} disabled={t.disabled}>
             <Icon.eye /> Ver
-          </button>
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={onDoSave}>
-            <Icon.save /> Salvar
-          </button>
+          </GlowButton>
+          <GlowButton onClick={onDoSave}>
+            <Icon.save /> Escolher
+          </GlowButton>
         </div>
       </div>
     </div>

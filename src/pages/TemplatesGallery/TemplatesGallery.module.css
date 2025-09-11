@@ -1,7 +1,12 @@
 /* Estilos para os cards de templates (aparência tipo pasta com preview no topo) */
-.wrapper { padding: 5.5rem 24px 24px; margin-top: 0.75rem; }
-.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.wrapper { padding: 6.5rem 24px 24px; margin-top: 0.75rem; }
+@media (min-width: 1100px){ .wrapper { padding-top: 7.25rem; } }
+.header { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; margin-bottom: 18px; max-width: 1200px; margin-inline: auto; }
+.headLeft { display: grid; gap: 4px; }
 .title { font-size: 24px; margin: 0; }
+.subtitle { margin: 0; color: var(--secondary); }
+.headRight { display: inline-flex; align-items: center; gap: 10px; }
+.countPill { background: var(--surface-3); border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px; font-weight: 700; color: var(--secondary); }
 .link { color: var(--c-primary, #1e90ff); text-decoration: none; }
 .link:hover { text-decoration: underline; }
 
