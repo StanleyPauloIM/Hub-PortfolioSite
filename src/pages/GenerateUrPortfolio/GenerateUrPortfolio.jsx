@@ -473,7 +473,7 @@ export default function GenerateUrPortfolio() {
             {/* Sobre */}
             <div className={styles.formCard}>
               <div className={styles.sectionHeader}><h2>Sobre</h2></div>
-<div className={styles.field}><label>Resumo</label><textarea spellCheck={false} className={styles.textarea} rows={4} value={data.about.summary} onChange={(e)=>setField(['about','summary'], e.target.value)} placeholder="Breve apresentação"/></div>
+<div className={styles.field}><label>Resumo</label><textarea spellCheck={true} className={styles.textarea} rows={4} value={data.about.summary} onChange={(e)=>setField(['about','summary'], e.target.value)} placeholder="Breve apresentação"/></div>
             </div>
 
             {/* Contatos e Sociais */}
@@ -555,7 +555,7 @@ export default function GenerateUrPortfolio() {
                       </div>
                     </div>
 <div className={styles.field}><label>Vídeo URL</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={p.videoUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { videoUrl: e.target.value })} placeholder="https://..."/></div></div>
-<div className={styles.fieldFull}><label>Descrição</label><textarea spellCheck={false} className={styles.textarea} rows={3} value={p.description||''} onChange={(e)=>updateArrayItem('projects', idx, { description: e.target.value })} /></div>
+<div className={styles.fieldFull}><label>Descrição</label><textarea spellCheck={true} className={styles.textarea} rows={3} value={p.description||''} onChange={(e)=>updateArrayItem('projects', idx, { description: e.target.value })} /></div>
                   </div>
                 </div>
               ))}
@@ -572,7 +572,7 @@ export default function GenerateUrPortfolio() {
                   <div className={styles.groupHeader}><strong>Certificado #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
 <div className={styles.field}><label>Nome</label><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })}/></div>
-                    <div className={styles.field}><label>Entidade</label>
+                    <div className={`${styles.field} noOuterField`}><label>Entidade</label>
                       <AutocompleteSelect
                         value={c.issuer||''}
                         onChange={(val)=>updateArrayItem('certificates', idx, { issuer: val })}
@@ -626,7 +626,7 @@ export default function GenerateUrPortfolio() {
                 <div key={idx} className={styles.groupCard}>
                   <div className={styles.groupHeader}><strong>Diploma #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('diplomas', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>Instituição</label>
+                    <div className={`${styles.field} noOuterField`}><label>Instituição</label>
                       <AutocompleteSelect
                         value={d.school||''}
                         onChange={(val)=>updateArrayItem('diplomas', idx, { school: val })}

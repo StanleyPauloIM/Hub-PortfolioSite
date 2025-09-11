@@ -1,8 +1,13 @@
 /* Estilos para AutocompleteSelect, alinhados com surface/border existentes */
 .wrap { position: relative; display: block; width: 100%; max-width: 100%; min-width: 0; }
 .inputWrap { display: grid; grid-template-columns: 24px 1fr; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; width: 100%; box-sizing: border-box; }
+/* Quando usado dentro de .inputWrap do formulário, o container externo já tem moldura.
+   Se um pai tiver a classe .noOuterField, removemos a moldura deste componente para evitar "dupla caixa". */
+:global(.noOuterField) .wrap { margin-top: 0; }
+:global(.noOuterField) .inputWrap { background: transparent; border: none; padding-left: 0; }
+:global(.noOuterField) .leading { color: var(--icon); }
 .leading { width: 16px; height: 16px; color: var(--icon); justify-self: center; display: inline-flex; align-items: center; justify-content: center; }
-.input { background: transparent; border: none; color: var(--text); outline: none; padding: 6px 0; width: 100%; min-width: 0; }
+.input { background: transparent !important; border: none !important; color: var(--text); outline: none; padding: 6px 0; width: 100%; min-width: 0; box-shadow: none !important; }
 
 .panel { position: absolute; z-index: 1001; left: 0; right: 0; top: calc(100% + 6px); background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px var(--shadow); max-height: 240px; overflow: auto; max-width: 100%; box-sizing: border-box; overscroll-behavior: contain; }
 
