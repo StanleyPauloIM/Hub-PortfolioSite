@@ -1,6 +1,6 @@
 // Página de preview do template escolhido com dados de exemplo
 import React, { useMemo } from 'react';
-import { useParams, NavLink } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styles from './TemplateExample.module.css';
 import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import MinimalistPortfolio from '../ThePortfolio/templates/minimalist/MinimalistPortfolio';
@@ -153,9 +153,16 @@ function ShareDropdown({ open, onClose, url }) {
 
 export default function TemplateExample() {
   const { slug = 'classic' } = useParams();
+  const navigate = useNavigate();
   const data = useMemo(() => makeExample(slug), [slug]);
   const isDisabled = slug === 'minimalist';
   const shareUrl = (typeof window !== 'undefined') ? window.location.href : '';
+  const titleMap = {
+    classic: { main: 'Classic Template', badge: 'exemple' },
+    minimalist: { main: 'Minimalist Template', badge: 'exemple' },
+  };
+  const titleMain = titleMap[slug]?.main || `Template ${slug}`;
+  const titleBadgeText = titleMap[slug]?.badge || 'exemple';
 
   const [commentsOpen, setCommentsOpen] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
@@ -239,13 +246,18 @@ export default function TemplateExample() {
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
-        <NavLink to="/templates" className={styles.link}>← Voltar</NavLink>
-        <h1 className={styles.title}>Exemplo: {slug}</h1>
+        <button type="button" className={styles.backBtn} onClick={() => navigate('/templates')} aria-label="Voltar">
+          <span className={styles.backIcon}><Icon.arrowRight/></span>
+          Voltar
+        </button>
+        <h1 className={styles.title}><span className={styles.titleMain}>{titleMain}</span><span className={styles.titleBadge}>{titleBadgeText}</span></h1>
         <div className={styles.actionsBar}>
-          <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> {likes}</button>
+          <GlowButton onClick={toggleLike} className={liked ? styles.likeActive : ''} aria-pressed={liked} aria-label="Gostei">
+            <Icon.heart/> {likes}
+          </GlowButton>
           <div className={layoutStyles.shareWrap}>
             <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar">
-              Partilhar
+              <Icon.share/> Partilhar
             </GlowButton>
             <ShareDropdown open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} />
           </div>
@@ -263,7 +275,7 @@ export default function TemplateExample() {
             </button>
           </div>
 
-          <div className={styles.exampleGrid}>
+          <div className={`${styles.exampleGrid} ${commentsOpen ? styles.gridWithSide : styles.gridNoSide}`}>
             <div className={styles.canvas}>
               {slug === 'classic' ? (
                 <ClassicPortfolio data={data} />
@@ -272,7 +284,7 @@ export default function TemplateExample() {
               )}
             </div>
 
-            <aside className={`${styles.sidePanel} ${commentsOpen ? styles.sideOpen : ''}`} aria-hidden={!commentsOpen}>
+            <aside className={`${styles.sidePanel} ${commentsOpen ? styles.sideOpen : styles.sideClosed}`} aria-hidden={!commentsOpen}>
               <div className={styles.sideHeader}>
                 <h2 className={styles.sideTitle}>Comentários</h2>
                 <button className={styles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>

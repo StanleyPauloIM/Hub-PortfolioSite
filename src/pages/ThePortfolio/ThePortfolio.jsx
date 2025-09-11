@@ -1,12 +1,15 @@
 // Página que exibe o portfólio do utilizador (versão não editável)
 import React, { useMemo, useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './ThePortfolio.module.css';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
+import exStyles from '../TemplateExample/TemplateExample.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
+import defaultAvatar from '../../assets/images/account_ex.jpg';
 import ClassicPortfolio from './templates/classic/ClassicPortfolio';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
+import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 
 const Icon = {
   home: (props) => (
@@ -51,12 +54,16 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function ThePortfolio() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [data, setData] = useState(null);
+
+  // Controls for view interactions (like/comments)
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   const setTheme = (t) => {
     try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
@@ -97,6 +104,64 @@ export default function ThePortfolio() {
     { label: 'GenerateUrPortfolio', path: '/generateurportfolio' },
     { label: 'ThePortfolio', path: '/theportfolio' },
   ];
+
+  // Identifier based on profile email (unique)
+  const profileEmail = data?.profile?.email || 'theportfolio';
+  const likesKey = `hub_port_view_likes_${profileEmail}`;
+  const likedKey = `hub_port_view_liked_${profileEmail}`;
+  const commentsKey = `hub_port_view_comments_${profileEmail}`;
+
+  const [likes, setLikes] = useState(() => {
+    try { return Number(localStorage.getItem(likesKey) || data?.stats?.likes || 0); } catch { return data?.stats?.likes || 0; }
+  });
+  const [liked, setLiked] = useState(() => {
+    try { return localStorage.getItem(likedKey) === '1'; } catch { return false; }
+  });
+  useEffect(()=>{ try { localStorage.setItem(likedKey, liked ? '1' : '0'); } catch {} }, [likedKey, liked]);
+  useEffect(()=>{ try { localStorage.setItem(likesKey, String(likes)); } catch {} }, [likesKey, likes]);
+
+  const toggleLike = () => setLiked(v => { const nv = !v; setLikes(n => n + (nv ? 1 : -1)); return nv; });
+
+  const avatarPool = [
+    'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=128&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=128&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=128&auto=format&fit=crop',
+  ];
+
+  const loggedAvatar = (() => {
+    try {
+      const pub = JSON.parse(localStorage.getItem('hub_portfolio_published')||'null');
+      const draft = JSON.parse(localStorage.getItem('hub_portfolio_draft')||'null');
+      const url = pub?.profile?.avatarUrl || draft?.profile?.avatarUrl;
+      return (url && String(url).trim()) ? url : defaultAvatar;
+    } catch { return defaultAvatar; }
+  })();
+
+  const [comments, setComments] = useState(() => {
+    try {
+      const raw = localStorage.getItem(commentsKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed)
+          ? parsed.map(c => ({ likes: 0, liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
+          : [];
+      }
+      return [];
+    } catch { return []; }
+  });
+  useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
+
+  const [text, setText] = useState('');
+  const textareaRef = React.useRef(null);
+  const MAX_LINES = 50;
+  const onTextInput = (e) => {
+    const el = e.target; let val = el.value; const parts = String(val).split(/\r?\n/);
+    if (parts.length > MAX_LINES) { val = parts.slice(0, MAX_LINES).join('\n'); el.value = val; }
+    setText(val);
+    try { el.style.height = 'auto'; const s = window.getComputedStyle(el); const lh = parseFloat(s.lineHeight || '20'); const maxH = lh * MAX_LINES; el.style.height = Math.min(el.scrollHeight, maxH) + 'px'; } catch {}
+  };
+  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); try { if (textareaRef.current) { textareaRef.current.style.height = ''; } } catch {} };
+  const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> { if (i !== idx) return c; const base = Number(c.likes || 0); const next = c.liked ? Math.max(0, base - 1) : base + 1; return { ...c, liked: !c.liked, likes: next }; }));
 
   return (
     <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
@@ -146,13 +211,17 @@ export default function ThePortfolio() {
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+              <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
+              Voltar
+            </button>
             <h1 className={layoutStyles.title}>The Portfolio</h1>
             <div className={layoutStyles.badge}>read‑only</div>
           </div>
           <div className={layoutStyles.topActions}>
             {/* Partilhar */}
             <div className={layoutStyles.shareWrap}>
-              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar">Partilhar</GlowButton>
+              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar"><UIIcon.share/> Partilhar</GlowButton>
               {shareOpen && (
                 <div className={layoutStyles.shareDropdown} role="menu">
                   <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">WhatsApp</a>
@@ -213,7 +282,56 @@ export default function ThePortfolio() {
           </div>
         ) : (
           <div className={styles.viewWrap} style={cssPreviewVars}>
-            <ClassicPortfolio data={data} />
+            {/* Like prompt */}
+            <div className={styles.likeRow}>
+              <span>Gostou do perfil? <strong>Deixe seu like</strong>.</span>
+              <GlowButton onClick={toggleLike} className={liked ? exStyles.likeActive : ''} aria-pressed={liked} aria-label="Gostei">
+                <UIIcon.heart/> {likes}
+              </GlowButton>
+            </div>
+
+            {/* Tabs */}
+            <div className={exStyles.tabs}>
+              <button className={`${exStyles.tabBtn} ${exStyles.tabBtnActive}`}>Preview</button>
+              <button className={`${exStyles.tabBtn} ${commentsOpen?exStyles.tabBtnActive:''}`} aria-pressed={commentsOpen} onClick={()=>setCommentsOpen(v=>!v)}>
+                <span className={`${exStyles.tabDot} ${commentsOpen?exStyles.tabDotOn:''}`} /> Comentários <span className={exStyles.countPill}>{comments.length}</span>
+              </button>
+            </div>
+
+            {/* Grid: canvas + comentários */}
+            <div className={`${exStyles.exampleGrid} ${commentsOpen ? exStyles.gridWithSide : exStyles.gridNoSide}`}>
+              <div className={exStyles.canvas}>
+                <ClassicPortfolio data={data} />
+              </div>
+
+              <aside className={`${exStyles.sidePanel} ${commentsOpen ? exStyles.sideOpen : exStyles.sideClosed}`} aria-hidden={!commentsOpen}>
+                <div className={exStyles.sideHeader}>
+                  <h2 className={exStyles.sideTitle}>Comentários</h2>
+                  <button className={exStyles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
+                </div>
+                <div className={exStyles.sideBody}>
+                  <div className={`${exStyles.commentForm} ${exStyles.commentFormSticky}`}>
+                    <div className={exStyles.commentRow}>
+                      <img className={exStyles.commentAvatar} src={loggedAvatar} alt="" />
+                      <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={exStyles.commentInput} placeholder="Escreve um comentário…"/>
+                      <GlowButton variant="icon" onClick={post} aria-label="Publicar"><UIIcon.arrowRight/></GlowButton>
+                    </div>
+                  </div>
+                  <div className={exStyles.comments}>
+                    {comments.map((c,i)=> (
+                      <div key={i} className={exStyles.commentItem}>
+                        <img className={exStyles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
+                        <div>
+                          <div className={exStyles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                          <div>{c.text}</div>
+                        </div>
+                        <button className={`${exStyles.commentLike} ${c.liked?exStyles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><UIIcon.heart/> {c.likes}</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+            </div>
           </div>
         )}
       </main>
