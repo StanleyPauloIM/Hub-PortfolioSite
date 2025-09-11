@@ -126,7 +126,11 @@ export default function GenerateUrPortfolio() {
   const [data, setData] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_DRAFT);
-      return raw ? JSON.parse(raw) : defaultData;
+      if (raw) return JSON.parse(raw);
+      const chosen = (localStorage.getItem('hub_selected_template') || '').toLowerCase();
+      if (chosen === 'minimalist') return { ...defaultData, template: 'minimalist' };
+      if (chosen === 'classic') return { ...defaultData, template: 'classic' };
+      return defaultData;
     } catch {
       return defaultData;
     }

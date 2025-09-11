@@ -9,6 +9,8 @@ const ChooseUrCharacter = lazy(() => import('../pages/ChooseUrCharacter/ChooseUr
 const GenerateUrPortfolio = lazy(() => import('../pages/GenerateUrPortfolio/GenerateUrPortfolio'));
 const ThePortfolio = lazy(() => import('../pages/ThePortfolio/ThePortfolio'));
 const Terms = lazy(() => import('../pages/Terms/Terms'));
+const TemplatesGallery = lazy(() => import('../pages/TemplatesGallery/TemplatesGallery'));
+const TemplateExample = lazy(() => import('../pages/TemplateExample/TemplateExample'));
 
 const AppRoutes = () => {
   return (
@@ -18,6 +20,8 @@ const AppRoutes = () => {
       <Route path="/chooseurcharacter" element={<ChooseUrCharacter />} />
       <Route path="/generateurportfolio" element={<GenerateUrPortfolio />} />
       <Route path="/theportfolio" element={<ThePortfolio />} />
+      <Route path="/templates" element={<TemplatesGallery />} />
+      <Route path="/templates/:slug" element={<TemplateExample />} />
       <Route path="/terms" element={<Terms />} />
     </Routes>
   );
