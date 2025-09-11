@@ -572,15 +572,18 @@ export default function GenerateUrPortfolio() {
                   <div className={styles.groupHeader}><strong>Certificado #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
 <div className={styles.field}><label>Nome</label><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })}/></div>
-                    <div className={`${styles.field} noOuterField`}><label>Entidade</label>
-                      <AutocompleteSelect
-                        value={c.issuer||''}
-                        onChange={(val)=>updateArrayItem('certificates', idx, { issuer: val })}
-                        options={INSTITUTION_SUGGESTIONS}
-                        placeholder="Ex.: UEM, Coursera"
-                        allowCustom={true}
-                        maxVisible={7}
-                      />
+                    <div className={styles.field}><label>Entidade</label>
+                      <div className={`${styles.inputWrap} noOuterField`}>
+                        <Icon.briefcase className={styles.inputIcon} />
+                        <AutocompleteSelect
+                          value={c.issuer||''}
+                          onChange={(val)=>updateArrayItem('certificates', idx, { issuer: val })}
+                          options={INSTITUTION_SUGGESTIONS}
+                          placeholder="Ex.: UEM, Coursera"
+                          allowCustom={true}
+                          maxVisible={7}
+                        />
+                      </div>
                     </div>
                     <div className={styles.field}><label>Ano</label><YearSelect value={c.year||''} onChange={(y)=>updateArrayItem('certificates', idx, { year: y })} /></div>
                     <div className={styles.fieldFull}>
@@ -626,15 +629,18 @@ export default function GenerateUrPortfolio() {
                 <div key={idx} className={styles.groupCard}>
                   <div className={styles.groupHeader}><strong>Diploma #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('diplomas', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
-                    <div className={`${styles.field} noOuterField`}><label>Instituição</label>
-                      <AutocompleteSelect
-                        value={d.school||''}
-                        onChange={(val)=>updateArrayItem('diplomas', idx, { school: val })}
-                        options={INSTITUTION_SUGGESTIONS}
-                        placeholder="Ex.: UEM, UCM"
-                        allowCustom={true}
-                        maxVisible={7}
-                      />
+                    <div className={styles.field}><label>Instituição</label>
+                      <div className={`${styles.inputWrap} noOuterField`}>
+                        <Icon.briefcase className={styles.inputIcon} />
+                        <AutocompleteSelect
+                          value={d.school||''}
+                          onChange={(val)=>updateArrayItem('diplomas', idx, { school: val })}
+                          options={INSTITUTION_SUGGESTIONS}
+                          placeholder="Ex.: UEM, UCM"
+                          allowCustom={true}
+                          maxVisible={7}
+                        />
+                      </div>
                     </div>
 <div className={styles.field}><label>Grau</label><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={d.degree||''} onChange={(e)=>updateArrayItem('diplomas', idx, { degree: e.target.value })}/></div>
                     <div className={styles.field}><label>Ano</label><YearSelect value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} /></div>

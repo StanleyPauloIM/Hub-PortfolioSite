@@ -4,8 +4,8 @@
 /* Quando usado dentro de .inputWrap do formulário, o container externo já tem moldura.
    Se um pai tiver a classe .noOuterField, removemos a moldura deste componente para evitar "dupla caixa". */
 :global(.noOuterField) .wrap { margin-top: 0; }
-:global(.noOuterField) .inputWrap { background: transparent; border: none; padding-left: 0; }
-:global(.noOuterField) .leading { color: var(--icon); }
+:global(.noOuterField) .inputWrap { background: transparent; border: none; padding: 0; grid-template-columns: 1fr; }
+:global(.noOuterField) .leading { display: none; }
 .leading { width: 16px; height: 16px; color: var(--icon); justify-self: center; display: inline-flex; align-items: center; justify-content: center; }
 .input { background: transparent !important; border: none !important; color: var(--text); outline: none; padding: 6px 0; width: 100%; min-width: 0; box-shadow: none !important; }
 
