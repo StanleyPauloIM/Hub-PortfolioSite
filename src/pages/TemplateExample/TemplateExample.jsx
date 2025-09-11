@@ -123,6 +123,7 @@ const makeExample = (slug) => {
 
 import { Icon } from '../../components/ui/Icons/Icons';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
+import defaultAvatar from '../../assets/images/account_ex.jpg';
 
 function useLocalNumber(key, initial) {
   const [n, setN] = React.useState(() => {
@@ -168,6 +169,15 @@ export default function TemplateExample() {
     'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=128&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=128&auto=format&fit=crop',
   ];
+
+  const loggedAvatar = (() => {
+    try {
+      const pub = JSON.parse(localStorage.getItem('hub_portfolio_published')||'null');
+      const draft = JSON.parse(localStorage.getItem('hub_portfolio_draft')||'null');
+      const url = pub?.profile?.avatarUrl || draft?.profile?.avatarUrl;
+      return (url && String(url).trim()) ? url : defaultAvatar;
+    } catch { return defaultAvatar; }
+  })();
   const [comments, setComments] = React.useState(() => {
     try {
       const raw = localStorage.getItem(commentsKey);
@@ -181,7 +191,7 @@ export default function TemplateExample() {
   });
   React.useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
   const [text, setText] = React.useState('');
-  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); };
+  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); };
   const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> i!==idx? c : ({...c, liked: !c.liked, likes: c.likes + (c.liked?-1:1)})));
 
   return (
@@ -202,7 +212,7 @@ export default function TemplateExample() {
           <div className={styles.tabs}>
             <button className={`${styles.tabBtn} ${styles.tabBtnActive}`}>Preview</button>
             <button className={`${styles.tabBtn} ${commentsOpen?styles.tabBtnActive:''}`} aria-pressed={commentsOpen} onClick={()=>setCommentsOpen(v=>!v)}>
-              <span className={`${styles.tabDot} ${commentsOpen?styles.tabDotOn:''}`} /> Comentários
+              <span className={`${styles.tabDot} ${commentsOpen?styles.tabDotOn:''}`} /> Comentários <span className={styles.countPill}>{comments.length}</span>
             </button>
           </div>
 
@@ -223,7 +233,7 @@ export default function TemplateExample() {
               <div className={styles.sideBody}>
                 <div className={styles.commentForm}>
                   <div className={styles.commentRow}>
-                    <img className={styles.commentAvatar} src={avatarPool[0]} alt="" />
+                    <img className={styles.commentAvatar} src={loggedAvatar} alt="" />
                     <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
                     <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
                   </div>
