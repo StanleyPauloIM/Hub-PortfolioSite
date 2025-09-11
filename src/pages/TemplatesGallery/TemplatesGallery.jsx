@@ -73,7 +73,7 @@ function TemplateCard({ t, onSave }) {
   const handleSave = () => onSave(t.slug);
 
   return (
-    <div className={`${styles.card} ${t.disabled ? styles.disabled : ''}`}>
+    <div className={`${styles.card} ${t.disabled ? styles.disabled : ''}`} onClick={handleView} role="button" tabIndex={0}>
       <div className={styles.folderTab} />
       <Preview kind={t.preview} />
       <div className={styles.cardBody}>
@@ -92,10 +92,10 @@ function TemplateCard({ t, onSave }) {
         </div>
 
         <div className={styles.actions}>
-          <button className={`${styles.btn} ${styles.btnGhost}`} onClick={handleView} disabled={t.disabled}>
+          <button className={`${styles.btn} ${styles.btnGhost}`} onClick={(e)=>{ e.stopPropagation(); handleView(); }} disabled={t.disabled}>
             <Icon.eye /> Ver
           </button>
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSave}>
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={(e)=>{ e.stopPropagation(); handleSave(); }}>
             <Icon.save /> Salvar
           </button>
         </div>

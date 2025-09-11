@@ -111,6 +111,28 @@
 .thumb, .videoThumb { border: 1px solid var(--border); }
 .toast { background: var(--surface-1); border: 1px solid var(--border); }
 
+.templateBox { position: relative; }
+/* gradient border pulse via masked pseudo-element */
+.templateGlow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 14px; /* sync with .formCard */
+  padding: 1px;
+  background: linear-gradient(120deg, #1e90ff, #7b68ee, #14b8a6);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+}
+.templateGlowActive::before { animation: glowPulse 2.4s ease-out forwards; }
+@keyframes glowPulse { 0%{opacity:0} 15%{opacity:1} 100%{opacity:0} }
+
+.templatesCta { margin-left: 8px; border: 1px solid var(--border); background: var(--surface-3); color: var(--text); border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.templatesCta:hover { background: var(--surface-2); }
+
 /* OR divider between inputs */
 .orDivider { display: flex; align-items: center; gap: 8px; margin: 6px 0; color: var(--secondary); font-weight: 700; font-size: 12px; }
 .orDivider::before, .orDivider::after { content: ''; height: 1px; background: var(--border); flex: 1; }

@@ -136,6 +136,7 @@ export default function GenerateUrPortfolio() {
     }
   });
   const [message, setMessage] = useState('');
+  const [highlightTemplates, setHighlightTemplates] = useState(false);
   const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {}, certificates: {}, diplomas: {}, stacks: { avatar: [], projects: {}, media: {}, certificates: {}, diplomas: {} } });
   const navigate = useNavigate();
 
@@ -150,6 +151,19 @@ export default function GenerateUrPortfolio() {
     }, 250);
     return () => clearTimeout(t);
   }, [data]);
+
+  // Pulse gradient border on the templates box from time to time
+  useEffect(() => {
+    const tick = () => {
+      setHighlightTemplates(true);
+      setTimeout(() => setHighlightTemplates(false), 2200);
+    };
+    const delay = 14000; // every ~14s
+    const id = setInterval(tick, delay);
+    // first run after short delay
+    const first = setTimeout(tick, 2000);
+    return () => { clearInterval(id); clearTimeout(first); };
+  }, []);
 
   const cssPreviewVars = useMemo(() => ({
     '--c-primary': data.theme?.primary || '#1e90ff',
@@ -399,11 +413,14 @@ export default function GenerateUrPortfolio() {
           {/* Form */}
           <section className={styles.formColumn}>
             {/* Template */}
-            <div className={styles.formCard}>
-              <div className={styles.sectionHeader}>
-                <h2>Template</h2>
-                <span className={styles.sectionHint}>Associe ao Classic Portfolio</span>
-              </div>
+            <div className={[styles.formCard, styles.templateBox, styles.templateGlow, highlightTemplates ? styles.templateGlowActive : ''].join(' ')}>
+            <div className={styles.sectionHeader}>
+              <h2>Template</h2>
+              <span className={styles.sectionHint}>Associe ao Classic Portfolio</span>
+              <button type="button" className={styles.templatesCta} onClick={() => navigate('/templates')}>
+                Ver galeria
+              </button>
+            </div>
               <div className={styles.row}>
                 <label className={styles.radioCard}>
                   <input type="radio" name="template" checked={data.template === 'classic'} onChange={() => setField('template','classic')} />
