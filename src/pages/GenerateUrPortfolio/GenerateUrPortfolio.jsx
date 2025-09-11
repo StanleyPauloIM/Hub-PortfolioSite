@@ -6,7 +6,6 @@ import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
-import { useNavigate } from 'react-router-dom';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
@@ -145,7 +144,6 @@ export default function GenerateUrPortfolio() {
   const [message, setMessage] = useState('');
   const [highlightTemplates, setHighlightTemplates] = useState(false);
   const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {}, certificates: {}, diplomas: {}, stacks: { avatar: [], projects: {}, media: {}, certificates: {}, diplomas: {} } });
-  const navigate = useNavigate();
 
 
   // Persist draft on each change (debounced)
