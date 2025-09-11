@@ -85,6 +85,11 @@ const Icon = {
       <path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/>
     </svg>
   ),
+  text: (props) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 6h18"/><path d="M12 6v10"/><path d="M5 20h14"/>
+    </svg>
+  ),
   phone: (props) => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M22 16.92V21a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2 4.18 2 2 0 0 1 4 2h4.09a2 2 0 0 1 2 1.72l.57 4a2 2 0 0 1-.55 1.73L8.91 12.09a16 16 0 0 0 6 6l2.64-1.2a2 2 0 0 1 1.73.55l4 4.09A2 2 0 0 1 22 16.92z"/>
@@ -428,7 +433,7 @@ export default function GenerateUrPortfolio() {
               <div className={styles.sectionHeader}><h2>Perfil</h2></div>
               <div className={styles.grid2}>
 <div className={styles.field}><label>Nome</label>
-                <FieldInput
+<FieldInput
                   icon={<Icon.user className={styles.inputIcon} />}
                   spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words"
                   value={data.profile.name}
@@ -552,7 +557,7 @@ renderLeadingIcon={() => null}
                   <div className={styles.groupHeader}><strong>Projeto #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('projects', idx)}>Remover</button></div>
                   <div className={styles.grid2}>
 <div className={styles.field}><label>Título</label>
-                      <FieldInput icon={<Icon.portfolio className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" value={p.title||''} onChange={(e)=>updateArrayItem('projects', idx, { title: e.target.value })} />
+<FieldInput icon={<Icon.text className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" value={l.label||''} onChange={(e)=>updateArrayItem('links', idx, { label: e.target.value })} />
                     </div>
 <div className={styles.field}><label>Link</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={p.link||''} onChange={(e)=>updateArrayItem('projects', idx, { link: e.target.value })} placeholder="https://..." />
@@ -596,7 +601,7 @@ renderLeadingIcon={() => null}
                   <div className={styles.groupHeader}><strong>Certificado #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
 <div className={styles.field}><label>Nome</label>
-                      <FieldInput icon={<Icon.portfolio className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })} />
+<FieldInput icon={<Icon.text className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })} />
                     </div>
 <div className={styles.field}><label>Entidade</label>
                       <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
