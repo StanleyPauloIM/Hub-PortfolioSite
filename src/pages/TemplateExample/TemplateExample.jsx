@@ -122,6 +122,7 @@ const makeExample = (slug) => {
 };
 
 import { Icon } from '../../components/ui/Icons/Icons';
+import GlowButton from '../../components/ui/GlowButton/GlowButton';
 
 function useLocalNumber(key, initial) {
   const [n, setN] = React.useState(() => {
@@ -162,20 +163,26 @@ export default function TemplateExample() {
 
   // Comments store
   const commentsKey = `hub_template_comments_${slug}`;
+  const avatarPool = [
+    'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=128&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=128&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=128&auto=format&fit=crop',
+  ];
   const [comments, setComments] = React.useState(() => {
     try {
       const raw = localStorage.getItem(commentsKey);
       if (raw) return JSON.parse(raw);
       return [
-        { author: 'Ana', text: 'Uau! Layout muito limpo e profissional 👏', at: Date.now()-86400000 },
-        { author: 'Paulo', text: 'Adorei as cores e a secção de projetos!', at: Date.now()-43200000 },
-        { author: 'Marta', text: 'Isso inspira! Mal posso esperar para criar o meu.', at: Date.now()-3600000 },
+        { author: 'Ana', text: 'Uau! Layout muito limpo e profissional 👏', at: Date.now()-86400000, avatar: avatarPool[0], likes: 4, liked:false },
+        { author: 'Paulo', text: 'Adorei as cores e a secção de projetos!', at: Date.now()-43200000, avatar: avatarPool[1], likes: 2, liked:false },
+        { author: 'Marta', text: 'Isso inspira! Mal posso esperar para criar o meu.', at: Date.now()-3600000, avatar: avatarPool[2], likes: 1, liked:false },
       ];
     } catch { return []; }
   });
   React.useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
   const [text, setText] = React.useState('');
-  const post = () => { const msg = text.trim(); if (!msg) return; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now() }, ...c]); setText(''); };
+  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); };
+  const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> i!==idx? c : ({...c, liked: !c.liked, likes: c.likes + (c.liked?-1:1)})));
 
   return (
     <div className={styles.wrapper}>
@@ -214,18 +221,25 @@ export default function TemplateExample() {
             </div>
             <div className={styles.sideBody}>
               <div className={styles.commentForm}>
-                <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={3} className={styles.commentInput} placeholder="Escreve um comentário…"/>
+                <div className={styles.commentRow}>
+                  <img className={styles.commentAvatar} src={avatarPool[0]} alt="" />
+                  <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
+                  <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
+                </div>
                 <div className={styles.actionsBar}>
                   <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
                   <ShareMenu url={shareUrl} />
-                  <button className={styles.actionBtn} onClick={post}><Icon.arrowRight/> Publicar</button>
                 </div>
               </div>
               <div className={styles.comments}>
                 {comments.map((c,i)=> (
                   <div key={i} className={styles.commentItem}>
-                    <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
-                    <div>{c.text}</div>
+                    <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
+                    <div>
+                      <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                      <div>{c.text}</div>
+                    </div>
+                    <button className={`${styles.commentLike} ${c.liked?styles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><Icon.heart/> {c.likes}</button>
                   </div>
                 ))}
               </div>

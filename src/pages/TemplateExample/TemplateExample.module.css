@@ -26,8 +26,13 @@
 /* Comments content reused in side panel */
 .comments { display:grid; gap:10px; }
 .commentForm { display:grid; gap:8px; }
-.commentInput { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text); }
-.commentItem { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: var(--surface-1); }
+.commentRow { display:grid; grid-template-columns: 36px 1fr auto; align-items:start; gap:10px; }
+.commentAvatar { width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary, #1e90ff); }
+.commentInput { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text); min-height: 42px; }
+.commentItem { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: var(--surface-1); display:grid; grid-template-columns: 36px 1fr auto; align-items:start; gap:10px; }
 .commentMeta { color: var(--secondary); font-size: 12px; margin-bottom: 4px; }
+.commentLike { background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+.commentLiked { color:#e11d48; border-color:#e11d48; } 
+@media (max-width: 700px){ .sidePanel{ right:6px; width:min(96vw, 420px);} }
 .soon { padding: 24px; border: 1px dashed #d0d5dd; border-radius: 12px; }
 
