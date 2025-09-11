@@ -121,29 +121,109 @@ const makeExample = (slug) => {
   };
 };
 
+import { Icon } from '../../components/ui/Icons/Icons';
+
+function useLocalNumber(key, initial) {
+  const [n, setN] = React.useState(() => {
+    const raw = localStorage.getItem(key);
+    return raw ? Number(raw) : initial;
+  });
+  React.useEffect(()=>{ localStorage.setItem(key, String(n)); }, [key, n]);
+  return [n, setN];
+}
+
+function ShareMenu({ url }) {
+  const shareText = 'Vê este template de portfólio no HUB!';
+  const copy = async () => { try { await navigator.clipboard.writeText(url); alert('Link copiado!'); } catch {} };
+  const open = (u) => window.open(u, '_blank');
+  return (
+    <>
+      <button className={styles.actionBtn} onClick={()=>{ try { if (navigator.share) navigator.share({ url, text: shareText, title: 'HUB Portfólio' }); else copy(); } catch {} }}> <Icon.share/> Partilhar</button>
+      <button className={styles.actionBtn} onClick={()=>open(`https://wa.me/?text=${encodeURIComponent(shareText+' '+url)}`)}>WhatsApp</button>
+      <button className={styles.actionBtn} onClick={()=>open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`)}>Facebook</button>
+      <button className={styles.actionBtn} onClick={()=>open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`)}>X</button>
+      <button className={styles.actionBtn} onClick={copy}>Copiar link</button>
+    </>
+  );
+}
+
 export default function TemplateExample() {
   const { slug = 'classic' } = useParams();
   const data = useMemo(() => makeExample(slug), [slug]);
   const isDisabled = slug === 'minimalist';
+  const shareUrl = (typeof window !== 'undefined') ? window.location.href : '';
+
+  const [tab, setTab] = React.useState('preview');
+  const [likes, setLikes] = useLocalNumber(`hub_template_likes_${slug}`, 128);
+  const [liked, setLiked] = React.useState(() => localStorage.getItem(`hub_template_liked_${slug}`) === '1');
+  React.useEffect(()=>{ localStorage.setItem(`hub_template_liked_${slug}`, liked ? '1' : '0'); }, [slug, liked]);
+
+  const toggleLike = () => { setLiked(v => { const nv = !v; setLikes(n => n + (nv ? 1 : -1)); return nv; }); };
+
+  // Comments store
+  const commentsKey = `hub_template_comments_${slug}`;
+  const [comments, setComments] = React.useState(() => {
+    try {
+      const raw = localStorage.getItem(commentsKey);
+      if (raw) return JSON.parse(raw);
+      return [
+        { author: 'Ana', text: 'Uau! Layout muito limpo e profissional 👏', at: Date.now()-86400000 },
+        { author: 'Paulo', text: 'Adorei as cores e a secção de projetos!', at: Date.now()-43200000 },
+        { author: 'Marta', text: 'Isso inspira! Mal posso esperar para criar o meu.', at: Date.now()-3600000 },
+      ];
+    } catch { return []; }
+  });
+  React.useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
+  const [text, setText] = React.useState('');
+  const post = () => { const msg = text.trim(); if (!msg) return; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now() }, ...c]); setText(''); };
 
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
         <NavLink to="/templates" className={styles.link}>← Voltar</NavLink>
         <h1 className={styles.title}>Exemplo: {slug}</h1>
-        <div />
+        <div className={styles.actionsBar}>
+          <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> {likes}</button>
+          <ShareMenu url={shareUrl} />
+        </div>
       </header>
 
       {isDisabled ? (
         <div className={styles.soon}>O template Minimalist estará disponível em breve.</div>
       ) : (
-        <div className={styles.canvas}>
-          {slug === 'classic' ? (
-            <ClassicPortfolio data={data} />
+        <>
+          <div className={styles.tabs}>
+            <button className={`${styles.tabBtn} ${tab==='preview'?styles.tabBtnActive:''}`} onClick={()=>setTab('preview')}>Preview</button>
+            <button className={`${styles.tabBtn} ${tab==='comments'?styles.tabBtnActive:''}`} onClick={()=>setTab('comments')}>Comentários</button>
+          </div>
+
+          {tab === 'preview' ? (
+            <div className={styles.canvas}>
+              {slug === 'classic' ? (
+                <ClassicPortfolio data={data} />
+              ) : (
+                <MinimalistPortfolio data={data} />
+              )}
+            </div>
           ) : (
-            <MinimalistPortfolio data={data} />
+            <div className={styles.comments}>
+              <div className={styles.commentForm}>
+                <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={3} className={styles.commentInput} placeholder="Escreve um comentário…"/>
+                <div className={styles.actionsBar}>
+                  <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
+                  <ShareMenu url={shareUrl} />
+                  <button className={styles.actionBtn} onClick={post}><Icon.arrowRight/> Publicar</button>
+                </div>
+              </div>
+              {comments.map((c,i)=> (
+                <div key={i} className={styles.commentItem}>
+                  <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                  <div>{c.text}</div>
+                </div>
+              ))}
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
