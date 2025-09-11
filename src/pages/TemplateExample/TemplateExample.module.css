@@ -32,9 +32,10 @@
 /* Comments content reused in side panel */
 .comments { display:grid; gap:10px; }
 .commentForm { display:grid; gap:8px; }
+.commentFormSticky { position: sticky; top: 44px; z-index: 1; background: var(--surface-1); padding-bottom: 6px; }
 .commentRow { display:grid; grid-template-columns: 36px 1fr auto; align-items:start; gap:10px; }
 .commentAvatar { width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary, #1e90ff); }
-.commentInput { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text); min-height: 42px; }
+.commentInput { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text); min-height: 42px; resize: none; overflow: auto; }
 .commentItem { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--surface-2); display:grid; grid-template-columns: 36px 1fr auto; align-items:start; gap:10px; }
 .commentMeta { color: var(--secondary); font-size: 12px; margin-bottom: 4px; display:flex; gap:6px; align-items:center; flex-wrap: wrap; }
 .commentLike { background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; }

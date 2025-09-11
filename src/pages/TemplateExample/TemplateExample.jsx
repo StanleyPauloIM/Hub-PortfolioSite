@@ -199,7 +199,36 @@ export default function TemplateExample() {
   });
   React.useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
   const [text, setText] = React.useState('');
-  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); };
+  const textareaRef = React.useRef(null);
+  const MAX_LINES = 50;
+  const onTextInput = (e) => {
+    // Enforce max lines and auto-resize
+    const el = e.target;
+    let val = el.value;
+    const parts = String(val).split(/\r?\n/);
+    if (parts.length > MAX_LINES) {
+      val = parts.slice(0, MAX_LINES).join('\n');
+      el.value = val;
+    }
+    setText(val);
+    try {
+      el.style.height = 'auto';
+      const s = window.getComputedStyle(el);
+      const lh = parseFloat(s.lineHeight || '20');
+      const maxH = lh * MAX_LINES;
+      el.style.height = Math.min(el.scrollHeight, maxH) + 'px';
+    } catch {}
+  };
+
+  const post = () => {
+    const msg = text.trim();
+    if (!msg) return;
+    const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)];
+    setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]);
+    setText('');
+    try { if (textareaRef.current) { textareaRef.current.style.height = ''; } } catch {}
+  };
+
   const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> {
     if (i !== idx) return c;
     const base = Number(c.likes || 0);
@@ -249,10 +278,10 @@ export default function TemplateExample() {
                 <button className={styles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
               </div>
               <div className={styles.sideBody}>
-                <div className={styles.commentForm}>
+                <div className={`${styles.commentForm} ${styles.commentFormSticky}`}>
                   <div className={styles.commentRow}>
                     <img className={styles.commentAvatar} src={loggedAvatar} alt="" />
-                    <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
+                    <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
                     <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
                   </div>
                 </div>
