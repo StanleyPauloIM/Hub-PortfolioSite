@@ -124,6 +124,7 @@ const makeExample = (slug) => {
 import { Icon } from '../../components/ui/Icons/Icons';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import defaultAvatar from '../../assets/images/account_ex.jpg';
+import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 
 function useLocalNumber(key, initial) {
   const [n, setN] = React.useState(() => {
@@ -134,18 +135,19 @@ function useLocalNumber(key, initial) {
   return [n, setN];
 }
 
-function ShareMenu({ url }) {
-  const shareText = 'Vê este template de portfólio no HUB!';
-  const copy = async () => { try { await navigator.clipboard.writeText(url); alert('Link copiado!'); } catch {} };
-  const open = (u) => window.open(u, '_blank');
+// Share dropdown styled like ThePortfolio/GenerateUrPortfolio
+function ShareDropdown({ open, onClose, url }) {
+  const shareText = 'Meu portfólio no HUB';
+  const onCopy = async () => { try { await navigator.clipboard.writeText(url); } catch {} onClose?.(); };
   return (
-    <>
-      <button className={styles.actionBtn} onClick={()=>{ try { if (navigator.share) navigator.share({ url, text: shareText, title: 'HUB Portfólio' }); else copy(); } catch {} }}> <Icon.share/> Partilhar</button>
-      <button className={styles.actionBtn} onClick={()=>open(`https://wa.me/?text=${encodeURIComponent(shareText+' '+url)}`)}>WhatsApp</button>
-      <button className={styles.actionBtn} onClick={()=>open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`)}>Facebook</button>
-      <button className={styles.actionBtn} onClick={()=>open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`)}>X</button>
-      <button className={styles.actionBtn} onClick={copy}>Copiar link</button>
-    </>
+    open ? (
+      <div className={layoutStyles.shareDropdown} role="menu">
+        <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer">WhatsApp</a>
+        <a className={layoutStyles.shareLink} role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer">Facebook</a>
+        <a className={layoutStyles.shareLink} role="menuitem" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`} target="_blank" rel="noreferrer">X (Twitter)</a>
+        <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={onCopy}>Copiar link</button>
+      </div>
+    ) : null
   );
 }
 
@@ -156,6 +158,7 @@ export default function TemplateExample() {
   const shareUrl = (typeof window !== 'undefined') ? window.location.href : '';
 
   const [commentsOpen, setCommentsOpen] = React.useState(false);
+  const [shareOpen, setShareOpen] = React.useState(false);
   const [likes, setLikes] = useLocalNumber(`hub_template_likes_${slug}`, 128);
   const [liked, setLiked] = React.useState(() => localStorage.getItem(`hub_template_liked_${slug}`) === '1');
   React.useEffect(()=>{ localStorage.setItem(`hub_template_liked_${slug}`, liked ? '1' : '0'); }, [slug, liked]);
@@ -211,7 +214,12 @@ export default function TemplateExample() {
         <h1 className={styles.title}>Exemplo: {slug}</h1>
         <div className={styles.actionsBar}>
           <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> {likes}</button>
-          <ShareMenu url={shareUrl} />
+          <div className={layoutStyles.shareWrap}>
+            <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar">
+              Partilhar
+            </GlowButton>
+            <ShareDropdown open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} />
+          </div>
         </div>
       </header>
 
@@ -249,7 +257,6 @@ export default function TemplateExample() {
                   </div>
                   <div className={styles.actionsBar}>
                     <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
-                    <ShareMenu url={shareUrl} />
                   </div>
                 </div>
                 <div className={styles.comments}>
