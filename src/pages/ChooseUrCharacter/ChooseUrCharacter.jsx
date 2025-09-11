@@ -6,7 +6,7 @@ import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
-import SideNav from '../../components/layout/SideNav/SideNav';
+import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -122,6 +122,7 @@ const readPublishedAsProfile = () => {
 export default function ChooseUrCharacter() {
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const Layout = SidebarLayout;
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
@@ -186,11 +187,11 @@ export default function ChooseUrCharacter() {
   useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
 
   return (
-    <div className={[styles.layoutWrapper, collapsed ? styles.layoutCollapsed : ''].join(' ')}>
-      {/* Sidebar */}
-      <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-
-      {/* Conteúdo principal */}
+    <Layout>
+      {({ styles, setMobileOpen }) => (
+        <>
+          {/* Conteúdo principal */}
+          <main className={styles.content}>
       <main className={styles.content}>
         <div className={styles.topBar}>
           <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
@@ -346,8 +347,10 @@ export default function ChooseUrCharacter() {
                 <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
                   <Icon.sliders />
                 </button>
-              </div>
-            </div>
+          </main>
+        </>
+      )}
+    </Layout>
           </form>
         </section>
 

@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './ThePortfolio.module.css';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
-import SideNav from '../../components/layout/SideNav/SideNav';
+import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import defaultAvatar from '../../assets/images/account_ex.jpg';
@@ -60,6 +60,7 @@ export default function ThePortfolio() {
   // Sidebar appears minimized by default
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const Layout = SidebarLayout;
   const [notifOpen, setNotifOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -176,11 +177,11 @@ export default function ThePortfolio() {
   const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> { if (i !== idx) return c; const base = Number(c.likes || 0); const next = c.liked ? Math.max(0, base - 1) : base + 1; return { ...c, liked: !c.liked, likes: next }; }));
 
   return (
-    <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
-      {/* Sidebar */}
-      <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-
-      {/* Conteúdo */}
+    <Layout>
+      {({ styles }) => (
+        <>
+          {/* Conteúdo */}
+          <main className={styles.content}>
       <main className={layoutStyles.content}>
         {/* Top bar */}
         <div className={layoutStyles.topBar}>
@@ -311,10 +312,9 @@ export default function ThePortfolio() {
             </div>
           </div>
         )}
-      </main>
-
-      {/* backdrop para mobile */}
-      {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
-    </div>
+          </main>
+        </>
+      )}
+    </Layout>
   );
 }

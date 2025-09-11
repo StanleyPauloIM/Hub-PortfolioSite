@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './GenerateUrPortfolio.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
-import SideNav from '../../components/layout/SideNav/SideNav';
+import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
@@ -122,6 +122,7 @@ const STORAGE_PUBLISHED = 'hub_portfolio_published';
 export default function GenerateUrPortfolio() {
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const Layout = SidebarLayout;
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const setTheme = (t) => { try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {} };
@@ -322,10 +323,10 @@ export default function GenerateUrPortfolio() {
   useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
 
   return (
-    <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
-      {/* Sidebar */}
-      <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-
+    <Layout>
+      {({ styles }) => (
+        <>
+          <main className={styles.content}>
       {/* Conteúdo */}
       <main className={layoutStyles.content}>
         {/* Top bar */}
@@ -777,8 +778,10 @@ export default function GenerateUrPortfolio() {
             </div>
           </aside>
         </div>
-      </main>
-
+          </main>
+        </>
+      )}
+    </Layout>
       {/* backdrop para mobile */}
       {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
     </div>
