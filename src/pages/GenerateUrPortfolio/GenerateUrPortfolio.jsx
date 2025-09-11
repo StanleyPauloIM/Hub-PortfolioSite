@@ -15,6 +15,7 @@ import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
 import YearSelect from '../../components/ui/YearSelect/YearSelect';
 import FileInput from '../../components/ui/FileInput/FileInput';
 import AutocompleteSelect from '../../components/ui/AutocompleteSelect/AutocompleteSelect';
+import { Field, FieldInput } from '../../components/ui/Field/Field';
 import { JOB_TITLES } from '../../data/jobTitles';
 import { COUNTRIES } from '../../data/countries';
 import INSTITUTION_SUGGESTIONS from '../../data/institutions';
@@ -425,32 +426,44 @@ export default function GenerateUrPortfolio() {
             <div className={styles.formCard}>
               <div className={styles.sectionHeader}><h2>Perfil</h2></div>
               <div className={styles.grid2}>
-<div className={styles.field}><label>Nome</label><div className={styles.inputWrap}><Icon.user className={styles.inputIcon} /><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={data.profile.name} onChange={(e)=>setField(['profile','name'], e.target.value)} placeholder="Ex.: Ana Silva"/></div></div>
-                <div className={styles.field}><label>Título</label>
-                  <AutocompleteSelect
+<div className={styles.field}><label>Nome</label>
+                <FieldInput
+                  icon={<Icon.user className={styles.inputIcon} />}
+                  spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words"
+                  value={data.profile.name}
+                  onChange={(e)=>setField(['profile','name'], e.target.value)}
+                  placeholder="Ex.: Ana Silva"
+                />
+                </div>
+<div className={styles.field}><label>Título</label>
+                  <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
+                    <AutocompleteSelect
                     value={data.profile.title}
                     onChange={(val)=>setField(['profile','title'], val)}
                     options={JOB_TITLES}
                     placeholder="Ex.: Frontend Engineer"
                     allowCustom={true}
                     maxVisible={7}
-                    renderLeadingIcon={() => <Icon.briefcase className={styles.inputIcon} />}
-                  />
+renderLeadingIcon={() => null}
+                    />
+                  </Field>
                 </div>
-                <div className={styles.field}><label>Localização</label>
-                  <AutocompleteSelect
+<div className={styles.field}><label>Localização</label>
+                  <Field icon={<Icon.mapPin className={styles.inputIcon} />} dropdown noInnerFrame>
+                    <AutocompleteSelect
                     value={data.profile.location}
                     onChange={(val)=>setField(['profile','location'], val)}
                     options={COUNTRIES}
                     placeholder="País"
                     allowCustom={true}
                     maxVisible={7}
-                    renderLeadingIcon={() => <Icon.mapPin className={styles.inputIcon} />}
-                  />
+renderLeadingIcon={() => null}
+                    />
+                  </Field>
                 </div>
                 <div className={styles.field}>
                   <label>Avatar URL</label>
-<div className={styles.inputWrap}><Icon.image className={styles.inputIcon} /><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/></div>
+<FieldInput icon={<Icon.image className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..." />
                   <div className={styles.orDivider}><span>OU</span></div>
                   <FileInput disabled={Boolean((data.profile.avatarUrl||'').trim())} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB. Apenas pré‑visualização local." onChange={(file)=>handleAvatarFile(file)} />
                   <div className={[styles.fileStack, (previews.stacks?.avatar||[]).length>3 ? styles.stacked : ''].join(' ')}>
@@ -480,7 +493,9 @@ export default function GenerateUrPortfolio() {
             <div className={styles.formCard}>
               <div className={styles.sectionHeader}><h2>Contato & Sociais</h2></div>
               <div className={styles.grid2}>
-<div className={styles.field}><label>Email</label><div className={styles.inputWrap}><Icon.mail className={styles.inputIcon} /><input type="email" spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.email} onChange={(e)=>setField(['contact','email'], e.target.value)} placeholder="nome@dominio.com"/></div></div>
+<div className={styles.field}><label>Email</label>
+                <FieldInput icon={<Icon.mail className={styles.inputIcon} />} type="email" spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.email} onChange={(e)=>setField(['contact','email'], e.target.value)} placeholder="nome@dominio.com" />
+                </div>
                 <div className={styles.field}>
                   <label>
                     Telefone
@@ -490,16 +505,15 @@ export default function GenerateUrPortfolio() {
                       ))}
                     </select>
                   </label>
-<div className={styles.inputWrap}><Icon.phone className={styles.inputIcon} /><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder="Número"/></div>
+<FieldInput icon={<Icon.phone className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder="Número" />
                 </div>
                 <div className={styles.field}>
                   <label>Website</label>
-                  <div className={styles.urlWrap}>
-                    <svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
-<input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.website} onChange={(e)=>setField(['contact','website'], e.target.value)} placeholder="https://..."/>
-                  </div>
+<FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.contact.website} onChange={(e)=>setField(['contact','website'], e.target.value)} placeholder="https://..." />
                 </div>
-<div className={styles.field}><label>GitHub</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3"/><path d="M15 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 18 3.77 5.07 5.07 0 0 0 17.91 1S16.73.65 13 2.48a13.38 13.38 0 0 0-8 0C1.27.65.09 1 .09 1A5.07 5.07 0 0 0 0 3.77 5.44 5.44 0 0 0 1.5 7.9c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 7 18.13V22"/></svg><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.socials.github} onChange={(e)=>setField(['socials','github'], e.target.value)} placeholder="https://github.com/..."/></div></div>
+<div className={styles.field}><label>GitHub</label>
+                <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3"/><path d="M15 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 18 3.77 5.07 5.07 0 0 0 17.91 1S16.73.65 13 2.48a13.38 13.38 0 0 0-8 0C1.27.65.09 1 .09 1A5.07 5.07 0 0 0 0 3.77 5.44 5.44 0 0 0 1.5 7.9c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 7 18.13V22"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.socials.github} onChange={(e)=>setField(['socials','github'], e.target.value)} placeholder="https://github.com/..." />
+                </div>
 <div className={styles.field}><label>LinkedIn</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="9" width="20" height="13" rx="2"/><path d="M7 9V5a5 5 0 0 1 10 0v4"/></svg><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.socials.linkedin} onChange={(e)=>setField(['socials','linkedin'], e.target.value)} placeholder="https://linkedin.com/in/..."/></div></div>
 <div className={styles.field}><label>Twitter/X</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.5c1.6 12-14 12-18 6 2 0 4-1 5-2-2-1-3-4-1-6 2 2 4 3 7 3-1-5 6-7 9-3z"/></svg><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.socials.twitter} onChange={(e)=>setField(['socials','twitter'], e.target.value)} placeholder="https://x.com/..."/></div></div>
 <div className={styles.field}><label>Instagram</label><div className={styles.urlWrap}><svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg><input spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={data.socials.instagram} onChange={(e)=>setField(['socials','instagram'], e.target.value)} placeholder="https://instagram.com/..."/></div></div>
