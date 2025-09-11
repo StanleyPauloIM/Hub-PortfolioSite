@@ -1,7 +1,7 @@
 // ClassicPortfolio component: read-only render of a portfolio in a classic layout
 import React, { useState } from 'react';
 import styles from './ClassicPortfolio.module.css';
-import PdfThumb from '../../../components/ui/PdfThumb/PdfThumb';
+import PdfThumb from '../../../../components/ui/PdfThumb/PdfThumb';
 
 function Section({ title, children }) {
   if (!children) return null;
