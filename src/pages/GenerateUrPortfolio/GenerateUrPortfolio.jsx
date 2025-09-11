@@ -16,6 +16,8 @@ import YearSelect from '../../components/ui/YearSelect/YearSelect';
 import FileInput from '../../components/ui/FileInput/FileInput';
 import AutocompleteSelect from '../../components/ui/AutocompleteSelect/AutocompleteSelect';
 import { JOB_TITLES } from '../../data/jobTitles';
+import { COUNTRIES } from '../../data/countries';
+import INSTITUTION_SUGGESTIONS from '../../data/institutions';
 import { CALLING_CODES } from '../../data/callingCodes';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -435,7 +437,17 @@ export default function GenerateUrPortfolio() {
                     renderLeadingIcon={() => <Icon.briefcase className={styles.inputIcon} />}
                   />
                 </div>
-                <div className={styles.field}><label>Localização</label><div className={styles.inputWrap}><Icon.mapPin className={styles.inputIcon} /><input value={data.profile.location} onChange={(e)=>setField(['profile','location'], e.target.value)} placeholder="Cidade, País"/></div></div>
+                <div className={styles.field}><label>Localização</label>
+                  <AutocompleteSelect
+                    value={data.profile.location}
+                    onChange={(val)=>setField(['profile','location'], val)}
+                    options={COUNTRIES}
+                    placeholder="País"
+                    allowCustom={true}
+                    maxVisible={7}
+                    renderLeadingIcon={() => <Icon.mapPin className={styles.inputIcon} />}
+                  />
+                </div>
                 <div className={styles.field}>
                   <label>Avatar URL</label>
                   <div className={styles.inputWrap}><Icon.image className={styles.inputIcon} /><input disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..."/></div>
@@ -560,7 +572,16 @@ export default function GenerateUrPortfolio() {
                   <div className={styles.groupHeader}><strong>Certificado #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
                     <div className={styles.field}><label>Nome</label><input value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })}/></div>
-                    <div className={styles.field}><label>Entidade</label><input value={c.issuer||''} onChange={(e)=>updateArrayItem('certificates', idx, { issuer: e.target.value })}/></div>
+                    <div className={styles.field}><label>Entidade</label>
+                      <AutocompleteSelect
+                        value={c.issuer||''}
+                        onChange={(val)=>updateArrayItem('certificates', idx, { issuer: val })}
+                        options={INSTITUTION_SUGGESTIONS}
+                        placeholder="Ex.: UEM, Coursera"
+                        allowCustom={true}
+                        maxVisible={7}
+                      />
+                    </div>
                     <div className={styles.field}><label>Ano</label><YearSelect value={c.year||''} onChange={(y)=>updateArrayItem('certificates', idx, { year: y })} /></div>
                     <div className={styles.fieldFull}>
                       <label>Link</label>
@@ -605,7 +626,16 @@ export default function GenerateUrPortfolio() {
                 <div key={idx} className={styles.groupCard}>
                   <div className={styles.groupHeader}><strong>Diploma #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('diplomas', idx)}>Remover</button></div>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>Instituição</label><input value={d.school||''} onChange={(e)=>updateArrayItem('diplomas', idx, { school: e.target.value })}/></div>
+                    <div className={styles.field}><label>Instituição</label>
+                      <AutocompleteSelect
+                        value={d.school||''}
+                        onChange={(val)=>updateArrayItem('diplomas', idx, { school: val })}
+                        options={INSTITUTION_SUGGESTIONS}
+                        placeholder="Ex.: UEM, UCM"
+                        allowCustom={true}
+                        maxVisible={7}
+                      />
+                    </div>
                     <div className={styles.field}><label>Grau</label><input value={d.degree||''} onChange={(e)=>updateArrayItem('diplomas', idx, { degree: e.target.value })}/></div>
                     <div className={styles.field}><label>Ano</label><YearSelect value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} /></div>
                     <div className={styles.fieldFull}>
