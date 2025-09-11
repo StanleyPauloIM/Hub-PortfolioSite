@@ -328,11 +328,9 @@ export default function GenerateUrPortfolio() {
 
   return (
     <Layout>
-      {({ styles }) => (
+      {({ styles, mobileOpen, setMobileOpen }) => (
         <>
-          <main className={styles.content}>
-      {/* Conteúdo */}
-      <main className={layoutStyles.content}>
+        {/* Top bar */}
         {/* Top bar */}
         <div className={layoutStyles.topBar}>
           <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
@@ -786,12 +784,9 @@ export default function GenerateUrPortfolio() {
             </div>
           </aside>
         </div>
-          </main>
+        {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
         </>
       )}
     </Layout>
-      {/* backdrop para mobile */}
-      {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
-    </div>
   );
 }
