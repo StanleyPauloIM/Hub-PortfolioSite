@@ -1,12 +1,14 @@
 // Página para escolher o personagem do utilizador
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
+import exStyles from '../TemplateExample/TemplateExample.module.css';
+import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -120,6 +122,7 @@ const readPublishedAsProfile = () => {
 };
 
 export default function ChooseUrCharacter() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const Layout = SidebarLayout;
@@ -197,6 +200,10 @@ export default function ChooseUrCharacter() {
             <span className={styles.hamburger} />
           </button>
           <div className={styles.pageTitleRow}>
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+              <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
+              Voltar
+            </button>
             <h1 className={styles.title}>Choose Your Character</h1>
             <div className={styles.badge}>beta</div>
           </div>

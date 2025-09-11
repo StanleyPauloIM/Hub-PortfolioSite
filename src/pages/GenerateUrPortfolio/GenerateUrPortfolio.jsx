@@ -4,6 +4,9 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './GenerateUrPortfolio.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
+import exStyles from '../TemplateExample/TemplateExample.module.css';
+import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
+import { useNavigate } from 'react-router-dom';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
@@ -120,6 +123,7 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function GenerateUrPortfolio() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const Layout = SidebarLayout;
@@ -335,6 +339,10 @@ export default function GenerateUrPortfolio() {
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+              <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
+              Voltar
+            </button>
             <h1 className={layoutStyles.title}>Generate Your Portfolio</h1>
             <div className={layoutStyles.badge}>classic</div>
           </div>
