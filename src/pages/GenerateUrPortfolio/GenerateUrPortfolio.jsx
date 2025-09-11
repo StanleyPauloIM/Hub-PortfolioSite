@@ -826,15 +826,15 @@ allowCustom={true}
                   {(() => {
                     const mode = document.documentElement.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
                     const quick = mode === 'light' ? [
-                      { name:'Aurora', primary:'#52097b', secondary:'#7a6f89', background:'#f6f2f8', text:'#0d0113' },
-                      { name:'Sky', primary:'#0066ff', secondary:'#667085', background:'#f9fbff', text:'#101828' },
-                      { name:'Forest', primary:'#0e8f6e', secondary:'#6b7280', background:'#f7faf7', text:'#0b1220' },
-                      { name:'Sunset', primary:'#b54708', secondary:'#7a6f89', background:'#fff7ed', text:'#1f2937' },
+                      { name:'Azure', primary:'#2563eb', secondary:'#64748b', background:'#f8fafc', text:'#0f172a' },
+                      { name:'Nord Light', primary:'#5e81ac', secondary:'#7b8dab', background:'#e6eef7', text:'#0b1f31' },
+                      { name:'Blush', primary:'#ec4899', secondary:'#a78bfa', background:'#fff1f5', text:'#1f2937' },
+                      { name:'Forest Light', primary:'#10b981', secondary:'#6b7280', background:'#f3faf7', text:'#0b1220' },
                     ] : [
-                      { name:'Neon', primary:'#1e90ff', secondary:'#b0b8c1', background:'#0a0a0a', text:'#ffffff' },
-                      { name:'Indigo', primary:'#7b68ee', secondary:'#b0b8c1', background:'#0b0b0b', text:'#f5f5f5' },
-                      { name:'Teal Dark', primary:'#14b8a6', secondary:'#9ca3af', background:'#0a0f0f', text:'#e5e7eb' },
-                      { name:'Crimson', primary:'#e11d48', secondary:'#cbd5e1', background:'#0a0a0a', text:'#fafafa' },
+                      { name:'Midnight', primary:'#4f46e5', secondary:'#94a3b8', background:'#0b1220', text:'#e5e7eb' },
+                      { name:'Ocean', primary:'#22d3ee', secondary:'#7dd3fc', background:'#0a1216', text:'#e6faff' },
+                      { name:'Emerald', primary:'#10b981', secondary:'#9ca3af', background:'#0a0f0f', text:'#e5f6ef' },
+                      { name:'Rose Dark', primary:'#f43f5e', secondary:'#cbd5e1', background:'#0a0a0a', text:'#fafafa' },
                     ];
                     return quick.map((p, i) => (
                       <button key={p.name+i} type="button" className={styles.paletteCard} onClick={() => setData(d => ({
