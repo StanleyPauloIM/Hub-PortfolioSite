@@ -47,6 +47,7 @@ export default function SidebarLayout({ initialCollapsed = true, children }) {
         <main className={layoutStyles.content}>
           {typeof children === 'function' ? children(ctx) : children}
         </main>
+        {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
       </div>
     </SidebarLayoutContext.Provider>
   );

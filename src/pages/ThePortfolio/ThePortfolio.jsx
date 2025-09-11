@@ -178,11 +178,10 @@ export default function ThePortfolio() {
 
   return (
     <Layout>
-      {({ styles }) => (
+      {({ styles: lay, mobileOpen, setMobileOpen }) => (
         <>
           {/* Conteúdo */}
-          <main className={styles.content}>
-      <main className={layoutStyles.content}>
+          <main className={lay.content}>
         {/* Top bar */}
         <div className={layoutStyles.topBar}>
           <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
