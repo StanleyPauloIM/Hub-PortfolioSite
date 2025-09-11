@@ -14,6 +14,8 @@ import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
 import YearSelect from '../../components/ui/YearSelect/YearSelect';
 import FileInput from '../../components/ui/FileInput/FileInput';
+import AutocompleteSelect from '../../components/ui/AutocompleteSelect/AutocompleteSelect';
+import { JOB_TITLES } from '../../data/jobTitles';
 import { CALLING_CODES } from '../../data/callingCodes';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -422,7 +424,17 @@ export default function GenerateUrPortfolio() {
               <div className={styles.sectionHeader}><h2>Perfil</h2></div>
               <div className={styles.grid2}>
                 <div className={styles.field}><label>Nome</label><div className={styles.inputWrap}><Icon.user className={styles.inputIcon} /><input value={data.profile.name} onChange={(e)=>setField(['profile','name'], e.target.value)} placeholder="Ex.: Ana Silva"/></div></div>
-                <div className={styles.field}><label>Título</label><div className={styles.inputWrap}><Icon.briefcase className={styles.inputIcon} /><input value={data.profile.title} onChange={(e)=>setField(['profile','title'], e.target.value)} placeholder="Ex.: Frontend Engineer"/></div></div>
+                <div className={styles.field}><label>Título</label>
+                  <AutocompleteSelect
+                    value={data.profile.title}
+                    onChange={(val)=>setField(['profile','title'], val)}
+                    options={JOB_TITLES}
+                    placeholder="Ex.: Frontend Engineer"
+                    allowCustom={true}
+                    maxVisible={7}
+                    renderLeadingIcon={() => <Icon.briefcase className={styles.inputIcon} />}
+                  />
+                </div>
                 <div className={styles.field}><label>Localização</label><div className={styles.inputWrap}><Icon.mapPin className={styles.inputIcon} /><input value={data.profile.location} onChange={(e)=>setField(['profile','location'], e.target.value)} placeholder="Cidade, País"/></div></div>
                 <div className={styles.field}>
                   <label>Avatar URL</label>
