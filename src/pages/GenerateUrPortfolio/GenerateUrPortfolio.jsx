@@ -19,6 +19,7 @@ import { Field, FieldInput } from '../../components/ui/Field/Field';
 import { JOB_TITLES } from '../../data/jobTitles';
 import { COUNTRIES } from '../../data/countries';
 import INSTITUTION_SUGGESTIONS from '../../data/institutions';
+import DEGREE_OPTIONS from '../../data/degrees';
 import { CALLING_CODES } from '../../data/callingCodes';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -665,9 +666,23 @@ allowCustom={true}
                       </Field>
                     </div>
 <div className={styles.field}><label>Grau</label>
-                      <FieldInput icon={<Icon.briefcase className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={d.degree||''} onChange={(e)=>updateArrayItem('diplomas', idx, { degree: e.target.value })} />
+                      <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
+                        <AutocompleteSelect
+                          value={d.degree||''}
+                          onChange={(val)=>updateArrayItem('diplomas', idx, { degree: val })}
+                          options={DEGREE_OPTIONS}
+                          placeholder="Selecione o grau"
+                          allowCustom={true}
+                          maxVisible={7}
+                          renderLeadingIcon={() => null}
+                        />
+                      </Field>
                     </div>
-                    <div className={styles.field}><label>Ano</label><YearSelect value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} /></div>
+                    <div className={styles.field}><label>Ano</label>
+                      <Field icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>} dropdown>
+                        <YearSelect embedded value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} />
+                      </Field>
+                    </div>
 <div className={styles.fieldFull}>
                       <label>Link</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={Boolean(d.fileUrl)} value={d.link||''} onChange={(e)=>updateArrayItem('diplomas', idx, { link: e.target.value })} placeholder="https://..." />
@@ -710,7 +725,7 @@ allowCustom={true}
                   <div className={styles.groupHeader}><strong>Link #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('links', idx)}>Remover</button></div>
                   <div className={styles.grid2}>
 <div className={styles.field}><label>Rótulo</label>
-                      <FieldInput icon={<Icon.portfolio className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" value={l.label||''} onChange={(e)=>updateArrayItem('links', idx, { label: e.target.value })} />
+                      <FieldInput icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 16c1.333-4 6.667-4 8 0"/><path d="M8 8c1.333-2 6.667-2 8 0"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" value={l.label||''} onChange={(e)=>updateArrayItem('links', idx, { label: e.target.value })} />
                     </div>
                     <div className={styles.field}>
                       <label>URL</label>
