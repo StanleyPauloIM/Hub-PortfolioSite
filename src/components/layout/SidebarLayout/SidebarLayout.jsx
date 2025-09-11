@@ -27,11 +27,11 @@ export function useSidebarLayout() {
  *           <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
  *             <span className={styles.hamburger} />
  *           </button>
- *           {/* ... resto do top bar ... */}
+ *           ... resto do top bar ...
  *         </div>
  *         <main className={styles.content}>Conteúdo</main>
  *       </>
- *     )}
+ *     )
  *   </SidebarLayout>
  */
 export default function SidebarLayout({ initialCollapsed = true, children }) {

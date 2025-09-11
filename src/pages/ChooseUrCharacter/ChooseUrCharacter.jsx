@@ -188,11 +188,10 @@ export default function ChooseUrCharacter() {
 
   return (
     <Layout>
-      {({ styles, setMobileOpen }) => (
+      {({ styles, mobileOpen, setMobileOpen }) => (
         <>
           {/* Conteúdo principal */}
           <main className={styles.content}>
-      <main className={styles.content}>
         <div className={styles.topBar}>
           <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
             <span className={styles.hamburger} />
@@ -347,10 +346,8 @@ export default function ChooseUrCharacter() {
                 <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
                   <Icon.sliders />
                 </button>
-          </main>
-        </>
-      )}
-    </Layout>
+              </div>
+            </div>
           </form>
         </section>
 
@@ -396,6 +393,8 @@ export default function ChooseUrCharacter() {
 
       {/* backdrop para mobile */}
       {mobileOpen && <div className={styles.backdrop} onClick={() => setMobileOpen(false)} />}
-    </div>
+        </>
+      )}
+    </Layout>
   );
 }
