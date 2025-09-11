@@ -206,45 +206,47 @@ export default function TemplateExample() {
             </button>
           </div>
 
-          <div className={styles.canvas}>
-            {slug === 'classic' ? (
-              <ClassicPortfolio data={data} />
-            ) : (
-              <MinimalistPortfolio data={data} />
-            )}
-          </div>
+          <div className={styles.exampleGrid}>
+            <div className={styles.canvas}>
+              {slug === 'classic' ? (
+                <ClassicPortfolio data={data} />
+              ) : (
+                <MinimalistPortfolio data={data} />
+              )}
+            </div>
 
-          <aside className={`${styles.sidePanel} ${commentsOpen ? styles.sideOpen : ''}`} aria-hidden={!commentsOpen}>
-            <div className={styles.sideHeader}>
-              <h2 className={styles.sideTitle}>Comentários</h2>
-              <button className={styles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
-            </div>
-            <div className={styles.sideBody}>
-              <div className={styles.commentForm}>
-                <div className={styles.commentRow}>
-                  <img className={styles.commentAvatar} src={avatarPool[0]} alt="" />
-                  <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
-                  <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
-                </div>
-                <div className={styles.actionsBar}>
-                  <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
-                  <ShareMenu url={shareUrl} />
-                </div>
+            <aside className={`${styles.sidePanel} ${commentsOpen ? styles.sideOpen : ''}`} aria-hidden={!commentsOpen}>
+              <div className={styles.sideHeader}>
+                <h2 className={styles.sideTitle}>Comentários</h2>
+                <button className={styles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
               </div>
-              <div className={styles.comments}>
-                {comments.map((c,i)=> (
-                  <div key={i} className={styles.commentItem}>
-                    <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
-                    <div>
-                      <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
-                      <div>{c.text}</div>
-                    </div>
-                    <button className={`${styles.commentLike} ${c.liked?styles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><Icon.heart/> {c.likes}</button>
+              <div className={styles.sideBody}>
+                <div className={styles.commentForm}>
+                  <div className={styles.commentRow}>
+                    <img className={styles.commentAvatar} src={avatarPool[0]} alt="" />
+                    <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
+                    <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
                   </div>
-                ))}
+                  <div className={styles.actionsBar}>
+                    <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
+                    <ShareMenu url={shareUrl} />
+                  </div>
+                </div>
+                <div className={styles.comments}>
+                  {comments.map((c,i)=> (
+                    <div key={i} className={styles.commentItem}>
+                      <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
+                      <div>
+                        <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                        <div>{c.text}</div>
+                      </div>
+                      <button className={`${styles.commentLike} ${c.liked?styles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><Icon.heart/> {c.likes}</button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </aside>
+            </aside>
+          </div>
         </>
       )}
     </div>
