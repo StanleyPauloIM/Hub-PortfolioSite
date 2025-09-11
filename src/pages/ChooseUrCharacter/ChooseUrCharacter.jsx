@@ -6,6 +6,7 @@ import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
+import SideNav from '../../components/layout/SideNav/SideNav';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -119,7 +120,7 @@ const readPublishedAsProfile = () => {
 };
 
 export default function ChooseUrCharacter() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -187,36 +188,7 @@ export default function ChooseUrCharacter() {
   return (
     <div className={[styles.layoutWrapper, collapsed ? styles.layoutCollapsed : ''].join(' ')}>
       {/* Sidebar */}
-      <aside className={[styles.sidebar, collapsed ? styles.collapsed : '', mobileOpen ? styles.mobileOpen : ''].join(' ')}>
-        <div className={styles.sidebarHeader}>
-          <div className={styles.brandRow}>
-            <img className={styles.brandLogo} src={HubGlobe} alt="HUB logo" />
-            {!collapsed && <div className={styles.brandText}>HUB</div>}
-          </div>
-          <button className={styles.collapseBtn} onClick={() => setCollapsed(v => !v)} aria-label="Alternar barra">
-            <Icon.arrow />
-          </button>
-          <button className={styles.mobileClose} onClick={() => setMobileOpen(false)} aria-label="Fechar menu">×</button>
-        </div>
-
-        <nav>
-          <NavSection title="Páginas">
-            <PageLink to="/" icon={<Icon.home />} label="Início" exact />
-            <PageLink to="/chooseurcharacter" icon={<Icon.search />} label="ChooseUrCharacter" />
-            <PageLink to="/generateurportfolio" icon={<Icon.wand />} label="GenerateUrPortfolio" />
-            <PageLink to="/theportfolio" icon={<Icon.portfolio />} label="ThePortfolio" />
-          </NavSection>
-
-          <NavSection title="Conta">
-            <ButtonItem onClick={() => alert('Notificações')} icon={<Icon.bell />} label="Notificações" />
-            <ButtonItem onClick={() => alert('Definições')} icon={<Icon.settings />} label="Definições" />
-          </NavSection>
-
-          <NavSection title="Ajuda">
-            <ButtonItem onClick={() => alert('Ajuda e Suporte')} icon={<Icon.info />} label="Ajuda e Suporte" />
-          </NavSection>
-        </nav>
-      </aside>
+      <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
       {/* Conteúdo principal */}
       <main className={styles.content}>

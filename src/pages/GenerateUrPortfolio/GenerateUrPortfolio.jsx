@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './GenerateUrPortfolio.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
+import SideNav from '../../components/layout/SideNav/SideNav';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
@@ -119,7 +120,7 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function GenerateUrPortfolio() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -323,42 +324,7 @@ export default function GenerateUrPortfolio() {
   return (
     <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
       {/* Sidebar */}
-      <aside className={[layoutStyles.sidebar, collapsed ? layoutStyles.collapsed : '', mobileOpen ? layoutStyles.mobileOpen : ''].join(' ')}>
-        <div className={layoutStyles.sidebarHeader}>
-          <div className={layoutStyles.brandRow}>
-            <img className={layoutStyles.brandLogo} src={HubGlobe} alt="HUB logo" />
-            {!collapsed && <div className={layoutStyles.brandText}>HUB</div>}
-          </div>
-          <button className={layoutStyles.collapseBtn} onClick={() => setCollapsed(v => !v)} aria-label="Alternar barra">
-            <Icon.arrow />
-          </button>
-          <button className={layoutStyles.mobileClose} onClick={() => setMobileOpen(false)} aria-label="Fechar menu">×</button>
-        </div>
-
-        <nav>
-          <div className={layoutStyles.section}>
-            <div className={layoutStyles.sectionTitle}>Páginas</div>
-            <ul className={layoutStyles.sectionList}>
-              {pages.map(p => (
-                <li key={p.path}>
-                  <NavLink to={p.path} className={layoutStyles.itemLink} title={collapsed ? p.label : undefined}>
-<span className={layoutStyles.itemIcon}>{p.label.includes('Generate') ? <Icon.wand /> : p.label.includes('Choose') ? <Icon.search /> : p.label.includes('Portfolio') ? <Icon.portfolio /> : <Icon.home />}</span>
-                    {!collapsed && <span className={layoutStyles.itemLabel}>{p.label}</span>}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={layoutStyles.section}>
-            <div className={layoutStyles.sectionTitle}>Conta</div>
-            <ul className={layoutStyles.sectionList}>
-              <li><button type="button" className={layoutStyles.itemLink} title={collapsed ? 'Notificações' : undefined}><span className={layoutStyles.itemIcon}><Icon.bell /></span>{!collapsed && <span className={layoutStyles.itemLabel}>Notificações</span>}</button></li>
-              <li><button type="button" className={layoutStyles.itemLink} title={collapsed ? 'Definições' : undefined}><span className={layoutStyles.itemIcon}><Icon.settings /></span>{!collapsed && <span className={layoutStyles.itemLabel}>Definições</span>}</button></li>
-            </ul>
-          </div>
-        </nav>
-      </aside>
+      <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
       {/* Conteúdo */}
       <main className={layoutStyles.content}>
