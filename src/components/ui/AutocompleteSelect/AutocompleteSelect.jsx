@@ -85,6 +85,10 @@ export default function AutocompleteSelect({
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           aria-expanded={open}
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
       </div>
       {open && (

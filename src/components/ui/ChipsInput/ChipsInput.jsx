@@ -83,6 +83,10 @@ export default function ChipsInput({ value = [], onChange, placeholder = 'Adicio
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           aria-expanded={open}
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
       </div>
       {open && filtered.length > 0 && (
