@@ -181,7 +181,12 @@ export default function TemplateExample() {
   const [comments, setComments] = React.useState(() => {
     try {
       const raw = localStorage.getItem(commentsKey);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed)
+          ? parsed.map(c => ({ likes: 0, liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
+          : [];
+      }
       return [
         { author: 'Ana', text: 'Uau! Layout muito limpo e profissional 👏', at: Date.now()-86400000, avatar: avatarPool[0], likes: 4, liked:false },
         { author: 'Paulo', text: 'Adorei as cores e a secção de projetos!', at: Date.now()-43200000, avatar: avatarPool[1], likes: 2, liked:false },
@@ -192,7 +197,12 @@ export default function TemplateExample() {
   React.useEffect(()=>{ try { localStorage.setItem(commentsKey, JSON.stringify(comments)); } catch {} }, [commentsKey, comments]);
   const [text, setText] = React.useState('');
   const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); };
-  const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> i!==idx? c : ({...c, liked: !c.liked, likes: c.likes + (c.liked?-1:1)})));
+  const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> {
+    if (i !== idx) return c;
+    const base = Number(c.likes || 0);
+    const next = c.liked ? Math.max(0, base - 1) : base + 1;
+    return { ...c, liked: !c.liked, likes: next };
+  }));
 
   return (
     <div className={styles.wrapper}>
