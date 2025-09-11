@@ -178,7 +178,7 @@ export default function ThePortfolio() {
 
   return (
     <Layout>
-      {({ styles: lay }) => (
+      {({ styles: lay, mobileOpen, setMobileOpen }) => (
         <>
           {/* Conteúdo */}
           <main className={lay.content}>
