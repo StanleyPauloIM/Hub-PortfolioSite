@@ -1,0 +1,35 @@
+/* CSS único para inputs e dropdowns padronizados */
+.wrap {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.leading {
+  width: 16px; height: 16px; color: var(--icon);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.body { min-width: 0; }
+.input {
+  width: 100%; min-width: 0;
+  background: transparent; border: none; color: var(--text); outline: none;
+  padding: 6px 0; box-shadow: none;
+}
+.caret { color: var(--secondary); display: inline-flex; }
+.noCaret .caret { display: none; }
+.hasCaret .caret { display: inline-flex; }
+
+/* Responsivo: ocupa toda a largura do grid pai */
+:where(.wrap) { max-width: 100%; }
+
+/* Integração com AutocompleteSelect quando noOuterField está ativo */
+.noOuterField :global(.wrap) { margin: 0; }
+.noOuterField :global(.inputWrap) { background: transparent; border: none; padding: 0; grid-template-columns: 1fr; }
+.noOuterField :global(.leading) { display: none; }
+
