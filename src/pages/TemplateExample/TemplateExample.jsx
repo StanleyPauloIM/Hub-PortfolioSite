@@ -255,9 +255,6 @@ export default function TemplateExample() {
                     <textarea value={text} onChange={(e)=>setText(e.target.value)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
                     <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
                   </div>
-                  <div className={styles.actionsBar}>
-                    <button className={`${styles.actionBtn} ${liked ? styles.likeActive : ''}`} onClick={toggleLike}><Icon.heart/> Gostei ({likes})</button>
-                  </div>
                 </div>
                 <div className={styles.comments}>
                   {comments.map((c,i)=> (
