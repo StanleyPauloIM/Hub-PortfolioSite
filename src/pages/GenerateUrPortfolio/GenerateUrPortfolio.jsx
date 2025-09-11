@@ -5,7 +5,7 @@ import styles from './GenerateUrPortfolio.module.css';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
-import ClassicPortfolio from '../ThePortfolio/components/ClassicPortfolio';
+import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
 import YearSelect from '../../components/ui/YearSelect/YearSelect';
@@ -126,12 +126,17 @@ export default function GenerateUrPortfolio() {
   const [data, setData] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_DRAFT);
-      return raw ? JSON.parse(raw) : defaultData;
+      if (raw) return JSON.parse(raw);
+      const chosen = (localStorage.getItem('hub_selected_template') || '').toLowerCase();
+      if (chosen === 'minimalist') return { ...defaultData, template: 'minimalist' };
+      if (chosen === 'classic') return { ...defaultData, template: 'classic' };
+      return defaultData;
     } catch {
       return defaultData;
     }
   });
   const [message, setMessage] = useState('');
+  const [highlightTemplates, setHighlightTemplates] = useState(false);
   const [previews, setPreviews] = useState({ profileAvatar: '', projects: {}, media: {}, certificates: {}, diplomas: {}, stacks: { avatar: [], projects: {}, media: {}, certificates: {}, diplomas: {} } });
   const navigate = useNavigate();
 
@@ -146,6 +151,19 @@ export default function GenerateUrPortfolio() {
     }, 250);
     return () => clearTimeout(t);
   }, [data]);
+
+  // Pulse gradient border on the templates box from time to time
+  useEffect(() => {
+    const tick = () => {
+      setHighlightTemplates(true);
+      setTimeout(() => setHighlightTemplates(false), 2200);
+    };
+    const delay = 14000; // every ~14s
+    const id = setInterval(tick, delay);
+    // first run after short delay
+    const first = setTimeout(tick, 2000);
+    return () => { clearInterval(id); clearTimeout(first); };
+  }, []);
 
   const cssPreviewVars = useMemo(() => ({
     '--c-primary': data.theme?.primary || '#1e90ff',
@@ -395,11 +413,14 @@ export default function GenerateUrPortfolio() {
           {/* Form */}
           <section className={styles.formColumn}>
             {/* Template */}
-            <div className={styles.formCard}>
-              <div className={styles.sectionHeader}>
-                <h2>Template</h2>
-                <span className={styles.sectionHint}>Associe ao Classic Portfolio</span>
-              </div>
+            <div className={[styles.formCard, styles.templateBox, styles.templateGlow, highlightTemplates ? styles.templateGlowActive : ''].join(' ')}>
+            <div className={styles.sectionHeader}>
+              <h2>Template</h2>
+              <span className={styles.sectionHint}>Associe ao Classic Portfolio</span>
+              <button type="button" className={styles.templatesCta} onClick={() => navigate('/templates')}>
+                Ver galeria
+              </button>
+            </div>
               <div className={styles.row}>
                 <label className={styles.radioCard}>
                   <input type="radio" name="template" checked={data.template === 'classic'} onChange={() => setField('template','classic')} />

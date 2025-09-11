@@ -1,5 +1,6 @@
 // Seção de herói que apresenta o produto
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './HeroSection.module.css';
 import Minimalist from '../../../assets/images/Minimalist.png'; // 👈 importa a imagem
 
@@ -53,9 +54,9 @@ const HeroSection = () => {
             <button className={styles.primaryButton}>
               Começar Agora
             </button>
-            <button className="btn">
+            <NavLink to="/templates" className="btn">
               Ver Exemplos
-            </button>
+            </NavLink>
           </div>
 
           {/* Trust bar */}

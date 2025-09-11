@@ -167,6 +167,16 @@ html[data-theme='dark'] #root {
   color: var(--text);
 }
 
+/* Global, subtle scrollbar styling */
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+/********* WebKit (Chrome/Edge/Safari) *********/
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-thumb:hover { background-color: var(--secondary); }
+
 /* Light theme buttons: white -> light blue gradient with subtle shadow */
 html[data-theme='light'] .btn {
   background: linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%);
