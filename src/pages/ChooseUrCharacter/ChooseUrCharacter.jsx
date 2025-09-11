@@ -398,8 +398,6 @@ export default function ChooseUrCharacter() {
         )}
       </main>
 
-      {/* backdrop para mobile */}
-      {mobileOpen && <div className={styles.backdrop} onClick={() => setMobileOpen(false)} />}
         </>
       )}
     </Layout>

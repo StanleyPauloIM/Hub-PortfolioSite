@@ -312,7 +312,6 @@ export default function ThePortfolio() {
           </div>
         )}
           </main>
-          {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
         </>
       )}
     </Layout>

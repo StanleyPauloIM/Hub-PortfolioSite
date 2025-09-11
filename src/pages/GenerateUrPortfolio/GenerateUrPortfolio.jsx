@@ -781,7 +781,6 @@ export default function GenerateUrPortfolio() {
             </div>
           </aside>
         </div>
-        {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}
         </>
       )}
     </Layout>
