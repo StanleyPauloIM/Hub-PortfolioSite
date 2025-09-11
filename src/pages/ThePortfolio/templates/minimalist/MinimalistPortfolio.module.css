@@ -1,0 +1,75 @@
+/* Minimalist portfolio theme: neutral spacing, subtly themed via CSS vars */
+:root {}
+
+.root {
+  --c-primary: #111;
+  --c-text: #111;
+  --c-bg: #fff;
+  color: var(--c-text);
+  background: var(--c-bg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--c-text) 12%, transparent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--c-text) 15%, transparent);
+}
+
+.name {
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.title {
+  margin: 4px 0 0;
+  color: color-mix(in srgb, var(--c-text) 70%, white);
+}
+
+.section { margin: 20px 0; }
+.h2 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--c-text) 65%, white);
+}
+
+.text { margin: 0; line-height: 1.6; }
+
+.projectList {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.projectItem {
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--c-text) 12%, transparent);
+  border-radius: 10px;
+}
+.projectHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.media img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 8px; }
+
+.link {
+  color: var(--c-primary);
+  text-decoration: none;
+}
+.link:hover { text-decoration: underline; }
+
+.footer { margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; }
+

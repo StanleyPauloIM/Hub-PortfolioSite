@@ -5,7 +5,7 @@ import styles from './GenerateUrPortfolio.module.css';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
-import ClassicPortfolio from '../ThePortfolio/components/ClassicPortfolio';
+import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
 import YearSelect from '../../components/ui/YearSelect/YearSelect';

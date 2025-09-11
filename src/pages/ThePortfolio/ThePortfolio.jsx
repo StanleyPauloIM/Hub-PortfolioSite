@@ -5,7 +5,7 @@ import styles from './ThePortfolio.module.css';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
-import ClassicPortfolio from './components/ClassicPortfolio';
+import ClassicPortfolio from './templates/classic/ClassicPortfolio';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 
 const Icon = {
