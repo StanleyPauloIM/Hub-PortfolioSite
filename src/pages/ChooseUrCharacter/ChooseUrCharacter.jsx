@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './ChooseUrCharacter.module.css';
+import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
@@ -176,6 +177,13 @@ export default function ChooseUrCharacter() {
     </li>
   );
 
+  // Outside click/Escape refs
+  const notifRef = React.useRef(null);
+  const accountRef = React.useRef(null);
+  useOnClickOutside(notifRef, () => setNotifOpen(false), { enabled: notifOpen });
+  useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
+  useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
+
   return (
     <div className={[styles.layoutWrapper, collapsed ? styles.layoutCollapsed : ''].join(' ')}>
       {/* Sidebar */}
@@ -222,7 +230,7 @@ export default function ChooseUrCharacter() {
           </div>
           <div className={styles.topActions}>
             {/* BACKEND: abrir dropdown com notificações reais do utilizador */}
-            <div className={styles.bellWrap}>
+            <div className={styles.bellWrap} ref={notifRef}>
               <button type="button" className={styles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
                 <Icon.bell />
               </button>
@@ -239,7 +247,7 @@ export default function ChooseUrCharacter() {
               )}
             </div>
             <button type="button" className={styles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={styles.accountWrap}>
+            <div className={styles.accountWrap} ref={accountRef}>
               <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
               {accountOpen && (
                 <div className={styles.accountMenu} role="menu">

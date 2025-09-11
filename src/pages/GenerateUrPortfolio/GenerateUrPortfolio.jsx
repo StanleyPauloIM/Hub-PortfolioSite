@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './GenerateUrPortfolio.module.css';
+import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
@@ -312,6 +313,13 @@ export default function GenerateUrPortfolio() {
     } catch {}
   };
 
+  // Outside click/Escape for dropdowns
+  const notifRef = React.useRef(null);
+  const accountRef = React.useRef(null);
+  useOnClickOutside(notifRef, () => setNotifOpen(false), { enabled: notifOpen });
+  useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
+  useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
+
   return (
     <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
       {/* Sidebar */}
@@ -364,7 +372,7 @@ export default function GenerateUrPortfolio() {
             <div className={layoutStyles.badge}>classic</div>
           </div>
           <div className={layoutStyles.topActions}>
-            <div className={layoutStyles.bellWrap}>
+            <div className={layoutStyles.bellWrap} ref={notifRef}>
               <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
                 <Icon.bell />
               </button>
@@ -380,7 +388,7 @@ export default function GenerateUrPortfolio() {
               )}
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={layoutStyles.accountWrap}>
+            <div className={layoutStyles.accountWrap} ref={accountRef}>
               <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">

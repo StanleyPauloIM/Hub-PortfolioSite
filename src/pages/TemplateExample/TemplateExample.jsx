@@ -125,6 +125,7 @@ import { Icon } from '../../components/ui/Icons/Icons';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import defaultAvatar from '../../assets/images/account_ex.jpg';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
+import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 
 function useLocalNumber(key, initial) {
   const [n, setN] = React.useState(() => {
@@ -166,6 +167,9 @@ export default function TemplateExample() {
 
   const [commentsOpen, setCommentsOpen] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
+  const shareRef = React.useRef(null);
+  useOnClickOutside(shareRef, () => setShareOpen(false), { enabled: shareOpen });
+  useOnEscape(() => setShareOpen(false), shareOpen);
   const [likes, setLikes] = useLocalNumber(`hub_template_likes_${slug}`, 128);
   const [liked, setLiked] = React.useState(() => localStorage.getItem(`hub_template_liked_${slug}`) === '1');
   React.useEffect(()=>{ localStorage.setItem(`hub_template_liked_${slug}`, liked ? '1' : '0'); }, [slug, liked]);
@@ -255,7 +259,7 @@ export default function TemplateExample() {
           <GlowButton onClick={toggleLike} className={liked ? styles.likeActive : ''} aria-pressed={liked} aria-label="Gostei">
             <Icon.heart/> {likes}
           </GlowButton>
-          <div className={layoutStyles.shareWrap}>
+          <div className={layoutStyles.shareWrap} ref={shareRef}>
             <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar">
               <Icon.share/> Partilhar
             </GlowButton>

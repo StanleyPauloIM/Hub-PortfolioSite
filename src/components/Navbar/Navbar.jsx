@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styles from './Navbar.module.css';
+import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
 
@@ -79,6 +80,10 @@ export default function Navbar() {
   const currentPath = location.pathname.toLowerCase();
   const isCurrent = (path) => currentPath === path.toLowerCase();
 
+  const accountRef = React.useRef(null);
+  useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
+  useOnEscape(() => setAccountOpen(false), accountOpen);
+  
   return (
     <nav className={`${styles.nav} ${isScrolled ? styles.scrolled : ''}`}>
       {/* Logo - on mobile toggles the panel */}
@@ -134,7 +139,7 @@ export default function Navbar() {
 
         {/* Right actions */}
         <li><NavLink to="/signin" className={`btn ${styles.joinBtn}`}>Juntar‑se</NavLink></li>
-        <li className={styles.accountWrap}>
+        <li className={styles.accountWrap} ref={accountRef}>
           <div className={styles.profilePic} title="Conta" onClick={() => setAccountOpen((v) => !v)}>
             <img src={accountIcon} alt="Account Icon" />
           </div>

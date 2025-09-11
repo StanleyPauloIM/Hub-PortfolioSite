@@ -10,6 +10,7 @@ import defaultAvatar from '../../assets/images/account_ex.jpg';
 import ClassicPortfolio from './templates/classic/ClassicPortfolio';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
+import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 
 const Icon = {
   home: (props) => (
@@ -64,6 +65,15 @@ export default function ThePortfolio() {
 
   // Controls for view interactions (like/comments)
   const [commentsOpen, setCommentsOpen] = useState(false);
+
+  // Close dropdowns on outside click / Escape
+  const shareRef = React.useRef(null);
+  const notifRef = React.useRef(null);
+  const accountRef = React.useRef(null);
+  useOnClickOutside(shareRef, () => setShareOpen(false), { enabled: shareOpen });
+  useOnClickOutside(notifRef, () => setNotifOpen(false), { enabled: notifOpen });
+  useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
+  useOnEscape(() => { setShareOpen(false); setNotifOpen(false); setAccountOpen(false); }, shareOpen || notifOpen || accountOpen);
 
   const setTheme = (t) => {
     try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
@@ -220,7 +230,7 @@ export default function ThePortfolio() {
           </div>
           <div className={layoutStyles.topActions}>
             {/* Partilhar */}
-            <div className={layoutStyles.shareWrap}>
+            <div className={layoutStyles.shareWrap} ref={shareRef}>
               <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar"><UIIcon.share/> Partilhar</GlowButton>
               {shareOpen && (
                 <div className={layoutStyles.shareDropdown} role="menu">
@@ -233,7 +243,7 @@ export default function ThePortfolio() {
               )}
             </div>
 
-            <div className={layoutStyles.bellWrap}>
+            <div className={layoutStyles.bellWrap} ref={notifRef}>
               <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
                 <Icon.bell />
               </button>
@@ -249,7 +259,7 @@ export default function ThePortfolio() {
               )}
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={layoutStyles.accountWrap}>
+            <div className={layoutStyles.accountWrap} ref={accountRef}>
               <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">
