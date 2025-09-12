@@ -87,6 +87,13 @@
 
 .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .list { margin: 0; padding-left: 16px; }
+
+/* Languages */
+.langGrid { display: flex; flex-wrap: wrap; gap: 8px; }
+.langPill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; background: var(--p-surface-2); border: 1px solid var(--p-border); border-radius: 999px; color: var(--c-text); }
+.langName { font-weight: 700; }
+.langDot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-primary); display: inline-block; }
+.langLevel { color: var(--c-secondary); font-size: 12px; }
 .linkRow { display: flex; align-items: center; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
 .linkThumb { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; border: 1px solid var(--p-border); }
 .linkThumbLg { width: 48px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--p-border); background: var(--p-surface-2); }

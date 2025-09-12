@@ -20,6 +20,7 @@ import { JOB_TITLES } from '../../data/jobTitles';
 import { COUNTRIES } from '../../data/countries';
 import INSTITUTION_SUGGESTIONS from '../../data/institutions';
 import DEGREE_OPTIONS from '../../data/degrees';
+import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -127,6 +128,9 @@ const defaultData = {
   ],
   links: [],
   media: [],
+  languages: [
+    // { language:'Português', fluency:'Nativo / Bilingue' }
+  ],
 };
 
 const STORAGE_DRAFT = 'hub_portfolio_draft';
@@ -590,6 +594,49 @@ renderLeadingIcon={() => null}
               ))}
               <div className={styles.actionsRow}>
                 <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('projects', { title:'', description:'', link:'', imageUrl:'', videoUrl:'' })}>+ Adicionar projeto</button>
+              </div>
+            </div>
+
+            {/* Línguas */}
+            <div className={styles.formCard}>
+              <div className={styles.sectionHeader}><h2>Línguas</h2></div>
+              {(data.languages||[]).map((l, idx) => (
+                <div key={idx} className={styles.groupCard}>
+                  <div className={styles.grid3}>
+                    <div className={styles.field}><label>Língua</label>
+                      <Field icon={<Icon.wand className={styles.inputIcon} />} dropdown noInnerFrame>
+                        <AutocompleteSelect
+                          value={l.language||''}
+                          onChange={(val)=>updateArrayItem('languages', idx, { language: val })}
+                          options={LANGUAGES}
+                          placeholder="Ex.: Português"
+                          allowCustom={true}
+                          maxVisible={7}
+                          renderLeadingIcon={() => null}
+                        />
+                      </Field>
+                    </div>
+                    <div className={styles.field}><label>Fluência</label>
+                      <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
+                        <AutocompleteSelect
+                          value={l.fluency||''}
+                          onChange={(val)=>updateArrayItem('languages', idx, { fluency: val })}
+                          options={FLUENCY_OPTIONS}
+                          placeholder="Selecione"
+                          allowCustom={true}
+                          maxVisible={7}
+                          renderLeadingIcon={() => null}
+                        />
+                      </Field>
+                    </div>
+                    <div className={styles.field}><label>&nbsp;</label>
+                      <button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('languages', idx)}>Remover</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className={styles.actionsRow}>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('languages', { language:'', fluency:'' })}>+ Adicionar língua</button>
               </div>
             </div>
 

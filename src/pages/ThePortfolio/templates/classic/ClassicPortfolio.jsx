@@ -34,6 +34,7 @@ export default function ClassicPortfolio({ data }) {
     diplomas = [],
     links = [],
     media = [],
+    languages = [],
   } = data || {};
 
   const cssVars = (() => {
@@ -368,6 +369,21 @@ export default function ClassicPortfolio({ data }) {
             </Section>
           )}
         </div>
+      )}
+
+      {/* Languages */}
+      {hasAny(languages) && (
+        <Section title="Línguas">
+          <div className={styles.langGrid}>
+            {languages.map((l, i) => (
+              <div key={i} className={styles.langPill}>
+                <span className={styles.langName}>{l.language || '—'}</span>
+                {l.fluency && <span className={styles.langDot} />}
+                {l.fluency && <span className={styles.langLevel}>{l.fluency}</span>}
+              </div>
+            ))}
+          </div>
+        </Section>
       )}
 
       {/* Links */}
