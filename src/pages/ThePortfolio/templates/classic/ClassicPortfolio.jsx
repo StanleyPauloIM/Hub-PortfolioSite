@@ -111,7 +111,7 @@ export default function ClassicPortfolio({ data }) {
             {(profile.location || profile.gender || contact.email || socials.github || socials.linkedin) && (
               <div className={styles.metaRow}>
                 {profile.location && <span className={styles.metaItem}>📍 {profile.location}</span>}
-                {profile.gender && <span className={styles.metaItem}>🧑 {profile.gender}</span>}
+{profile.gender && (()=>{ const g=String(profile.gender||'').toLowerCase(); const icon = g.startsWith('masc') ? '♂' : (g.startsWith('fem') ? '♀' : '—'); return (<span className={styles.metaItem}>{icon} {profile.gender}</span>); })()}
                 {contact.email && <span className={styles.metaItem}>✉️ {contact.email}</span>}
               </div>
             )}
