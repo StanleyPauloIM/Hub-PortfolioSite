@@ -110,6 +110,7 @@ const defaultData = {
     name: '',
     title: '',
     location: '',
+    gender: '',
     avatarUrl: '',
   },
   stats: { likes: 0, views: 0 },
@@ -198,6 +199,8 @@ export default function GenerateUrPortfolio() {
     { label: 'GenerateUrPortfolio', path: '/generateurportfolio' },
     { label: 'ThePortfolio', path: '/theportfolio' },
   ];
+
+  const GENDER_OPTIONS = ['Masculino', 'Feminino', 'Não dizer'];
 
   // Helpers to update nested fields
   const setField = (path, value) => {
@@ -458,8 +461,8 @@ renderLeadingIcon={() => null}
                     />
                   </Field>
                 </div>
-<div className={styles.field}><label>Localização</label>
-                  <Field icon={<Icon.mapPin className={styles.inputIcon} />} dropdown noInnerFrame>
+                <div className={styles.field}><label>Localização</label>
+                  <Field icon={<Icon.mapPin className={styles.inputIcon} />} dropdown noInnerField>
                     <AutocompleteSelect
                     value={data.profile.location}
                     onChange={(val)=>setField(['profile','location'], val)}
@@ -467,7 +470,20 @@ renderLeadingIcon={() => null}
                     placeholder="País"
                     allowCustom={true}
                     maxVisible={7}
-renderLeadingIcon={() => null}
+                    renderLeadingIcon={() => null}
+                    />
+                  </Field>
+                </div>
+                <div className={styles.field}><label>Gênero</label>
+                  <Field icon={<Icon.user className={styles.inputIcon} />} dropdown noInnerField>
+                    <AutocompleteSelect
+                      value={data.profile.gender||''}
+                      onChange={(val)=>setField(['profile','gender'], val)}
+                      options={GENDER_OPTIONS}
+                      placeholder="Selecione"
+                      allowCustom={false}
+                      maxVisible={7}
+                      renderLeadingIcon={() => null}
                     />
                   </Field>
                 </div>

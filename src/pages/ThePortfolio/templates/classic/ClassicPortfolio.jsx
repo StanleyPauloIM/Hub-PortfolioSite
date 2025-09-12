@@ -108,9 +108,10 @@ export default function ClassicPortfolio({ data }) {
           <div className={styles.headerText}>
             <h1 className={styles.name}>{profile.name || 'Your Name'}</h1>
             <div className={styles.title}>{profile.title || 'Your Role / Title'}</div>
-            {(profile.location || contact.email || socials.github || socials.linkedin) && (
+            {(profile.location || profile.gender || contact.email || socials.github || socials.linkedin) && (
               <div className={styles.metaRow}>
                 {profile.location && <span className={styles.metaItem}>📍 {profile.location}</span>}
+                {profile.gender && <span className={styles.metaItem}>🧑 {profile.gender}</span>}
                 {contact.email && <span className={styles.metaItem}>✉️ {contact.email}</span>}
               </div>
             )}
