@@ -103,3 +103,22 @@ VITE_FIREBASE_MEASUREMENT_ID=...
 - `/generateurportfolio` – Gerador de portfólio
 - `/theportfolio` – Visualização read‑only
 - `/chooseurcharacter` – Exploração de perfis (mock)
+
+## 📌 Futuras implementações (sem garantia)
+
+- Submissão de templates pela comunidade
+  - MVP (HTML + CSS, sem JavaScript)
+    - Contrato de dados do portfólio com placeholders em HTML (ex.: {{profile.name}}, {{projects[0].title}}).
+    - Pacote do template (ZIP): manifest.json (nome, autor, versão, licença), index.html, styles.css e assets/.
+    - Renderização segura: sanitização (DOMPurify) + iframe com sandbox e CSP restrita.
+    - UI: card "Adicionar seu template" na galeria; validação do pacote; upload e registo (screenshot, autor, tags, licença).
+  - Avançado (opcional, para o futuro): template como plugin React/ESM carregado dinamicamente.
+    - Bundle (esbuild/SWC), isolamento via iframe/CSP/Trusted Types e revisão manual.
+  - Híbrido: HTML+CSS aberto a todos; plugins JS só para parceiros aprovados.
+
+- Próximos passos sugeridos quando for implementar
+  1. Definir o PortfolioSchema (contrato de dados).
+  2. Criar um template exemplo e guia de criação.
+  3. Implementar o renderer HTML+CSS em iframe sandbox.
+  4. Página de upload com validação e armazenamento do registo.
+  5. Galeria com screenshot automático e gestão de estados (pendente/aprovado).
