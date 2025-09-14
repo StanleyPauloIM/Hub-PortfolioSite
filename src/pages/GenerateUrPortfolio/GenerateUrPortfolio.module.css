@@ -3,11 +3,12 @@
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 14px;
+  min-width: 0;
 }
 .formColumn { display: grid; gap: 12px; align-content: start; }
-.previewColumn { position: sticky; top: 90px; align-self: start; display: grid; gap: 8px; }
+.previewColumn { position: sticky; top: 90px; align-self: start; display: grid; gap: 8px; min-width: 0; }
 .previewHeader { color: var(--secondary); font-weight: 700; }
-.previewBox { background: rgba(12,12,12,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 10px; height: calc(100vh - 140px); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; }
+.previewBox { background: rgba(12,12,12,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 10px; height: calc(100vh - 140px); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; max-width: 100%; }
 .previewBox::-webkit-scrollbar { width: 10px; }
 .previewBox::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 10px; }
 .previewBox::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
@@ -20,7 +21,7 @@
   padding: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
-.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; min-width: 0; }
 .sectionHeader h2 { margin: 0; font-size: 1.1rem; }
 .sectionHint { color: var(--secondary); font-size: 0.9rem; }
 
@@ -47,7 +48,7 @@
 .grid2 > *, .grid3 > * { min-width: 0; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
-.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; min-width: 0; }
 .radioCard { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 8px 10px; cursor: pointer; }
 .radioCard input { accent-color: var(--primary); }
 .radioContent { display: grid; }

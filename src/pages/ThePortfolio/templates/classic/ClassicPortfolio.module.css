@@ -32,7 +32,7 @@
   padding: 12px;
   margin-bottom: 12px;
 }
-.headerLeft { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; width: 100%; }
+.headerLeft { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; width: 100%; min-width: 0; }
 .avatarWrap { width: 110px; height: 110px; border-radius: 50%; overflow: hidden; border: 2px solid var(--c-primary); display: grid; place-items: center; background: var(--p-surface-2); }
 .avatar { width: 100%; height: 100%; object-fit: cover; display: block; }
 .avatarPlaceholder { font-size: 28px; font-weight: 800; color: var(--c-primary); }
@@ -46,7 +46,7 @@
 .socialLink:hover { color: var(--c-primary); border-color: var(--p-border); }
 
 /* Stats row */
-.statsRow { display: inline-flex; align-items: center; gap: 10px; margin: 6px 0; }
+.statsRow { display: inline-flex; align-items: center; gap: 10px; margin: 6px 0; min-width: 0; }
 .stat { display: inline-flex; align-items: center; gap: 6px; background: var(--p-surface-3); border: 1px solid var(--p-border); padding: 4px 8px; border-radius: 999px; font-weight: 700; color: var(--c-text); }
 .statIcon { width: 16px; height: 16px; color: var(--p-icon); }
 

@@ -28,6 +28,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Global layout safety */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { width: 100%; max-width: 100%; overflow-x: hidden; }
+/* Media should never overflow */
+img, video, canvas { max-width: 100%; height: auto; display: block; }
+/* Safer wrapping for unusually long strings */
+:where(h1,h2,h3,h4,h5,h6,p,span,div,li,a,button,label) { overflow-wrap: anywhere; word-break: normal; }
+
 a {
   font-weight: 500;
   color: var(--primary);

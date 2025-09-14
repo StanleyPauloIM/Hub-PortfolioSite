@@ -6,6 +6,9 @@
   background: radial-gradient(1200px 600px at 30% -10%, rgba(30,144,255,0.12), transparent 40%),
               radial-gradient(1200px 600px at 100% 120%, rgba(138,43,226,0.10), transparent 40%),
               var(--background);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 /* When sidebar is collapsed, reduce grid first column */
 .layoutCollapsed { grid-template-columns: 96px 1fr; }
@@ -72,7 +75,7 @@
 .collapsed .brandLogo { width: 28px; height: 28px; }
 
 /* Conteúdo */
-.content { padding: 22px; }
+.content { padding: 22px; min-width: 0; }
 .topBar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
 .pageTitleRow { display: inline-flex; align-items: center; gap: 10px; }
 .title { margin: 0; font-size: 1.5rem; }
