@@ -17,10 +17,10 @@ export function Field({ icon, children, dropdown = false, className = '', noInne
   );
 }
 
-export function FieldInput({ icon, dropdown = false, className = '', noInnerFrame = false, ...inputProps }) {
+export function FieldInput({ icon, dropdown = false, className = '', noInnerFrame = false, maxLength, ...inputProps }) {
   return (
     <Field icon={icon} dropdown={dropdown} className={className} noInnerFrame={noInnerFrame}>
-      <input className={styles.input} {...inputProps} />
+      <input className={styles.input} maxLength={typeof maxLength === 'number' ? maxLength : undefined} {...inputProps} />
     </Field>
   );
 }
