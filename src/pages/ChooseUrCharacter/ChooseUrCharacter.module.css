@@ -195,7 +195,7 @@
 .tag { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text); padding: 2px 8px; border-radius: 999px; font-size: 12px; }
 .cardFooter { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .cardStats { display: inline-flex; align-items: center; gap: 10px; color: var(--secondary); }
-.stat { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 999px; font-weight: 700; }
+.stat { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 999px; font-weight: 700; white-space: nowrap; overflow-wrap: normal; }
 .stat svg { width: 16px; height: 16px; color: var(--icon); }
 .viewBtn { width: auto; }
 

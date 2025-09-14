@@ -88,11 +88,12 @@ const mockProfiles = [
 ];
 
 // Formata contagens para 'K' quando >= 1000 (arredonda para inteiro)
+// e garante exibição compacta em uma linha (ex.: 12K)
 const formatCount = (n) => {
   const value = Math.max(0, Number(n) || 0);
   if (value < 1000) return String(value);
   const k = Math.round(value / 1000);
-  return `${k}K`;
+  return `${k}\u00A0K`; // NBSP entre número e K evita quebra feia
 };
 
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
