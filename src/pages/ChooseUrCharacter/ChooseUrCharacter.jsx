@@ -9,7 +9,7 @@ import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
-import { AREAS } from '../../data/areas';
+import { JOB_TITLES } from '../../data/jobTitles';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -166,6 +166,14 @@ export default function ChooseUrCharacter() {
     const pub = readPublishedAsProfile();
     return pub ? [...mockProfiles, pub] : [...mockProfiles];
   });
+
+  // Dataset partilhado para experiência
+  const EXPERIENCE_OPTIONS = [
+    { value: 'junior', label: 'Júnior' },
+    { value: 'mid', label: 'Pleno' },
+    { value: 'senior', label: 'Sénior' },
+    { value: '5+', label: '5+ anos' },
+  ];
   const [profiles, setProfiles] = useState(() => allProfiles);
 
   // Atualiza quando houver publicação/atualização no localStorage
@@ -300,7 +308,8 @@ export default function ChooseUrCharacter() {
             const gender = form.get('gender');
             const filtered = allProfiles.filter(p => {
               const matchQ = !q || [p.name, p.title, p.city, p.tags.join(' ')].join(' ').toLowerCase().includes(q);
-              const matchArea = area === 'all' || p.area === area;
+              // Agora "Área" usa o dataset JOB_TITLES; comparamos com o título do perfil
+              const matchArea = area === 'all' || String(p.title||'').toLowerCase() === String(area||'').toLowerCase();
               const matchCity = city === 'all' || p.city.toLowerCase() === String(city).toLowerCase();
               const matchExp = exp === 'all' || p.exp === exp;
               const matchGender = gender === 'all' || p.gender === gender;
@@ -328,8 +337,8 @@ export default function ChooseUrCharacter() {
                 <div className={styles.selectWrap}>
                   <select id="area" name="area" className={styles.select} defaultValue="all">
                     <option value="all">Todas</option>
-                    {AREAS.map(a => (
-                      <option key={a.value} value={a.value}>{a.label}</option>
+                    {JOB_TITLES.map((t, i) => (
+                      <option key={t + i} value={t}>{t}</option>
                     ))}
                   </select>
                 </div>
@@ -354,10 +363,9 @@ export default function ChooseUrCharacter() {
                 <div className={styles.selectWrap}>
                   <select id="exp" name="exp" className={styles.select} defaultValue="all">
                     <option value="all">Qualquer</option>
-                    <option value="junior">Júnior</option>
-                    <option value="mid">Pleno</option>
-                    <option value="senior">Sénior</option>
-                    <option value=">5">5+ anos</option>
+                    {EXPERIENCE_OPTIONS.map(o => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>

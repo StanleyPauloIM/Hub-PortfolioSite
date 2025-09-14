@@ -111,6 +111,7 @@ const defaultData = {
     title: '',
     location: '',
     gender: '',
+    experience: '',
     avatarUrl: '',
   },
   stats: { likes: 0, views: 0 },
@@ -201,6 +202,15 @@ export default function GenerateUrPortfolio() {
   ];
 
   const GENDER_OPTIONS = ['Masculino', 'Feminino', 'Não dizer'];
+  // import experiência do ChooseUrCharacter
+  // Nota: import evitado para não criar dependência circular de páginas; replicamos localmente via export nomeado
+  // Em produção, moveríamos para src/data/experience.js
+  const EXPERIENCE_OPTIONS = [
+    { value: 'junior', label: 'Júnior' },
+    { value: 'mid', label: 'Pleno' },
+    { value: 'senior', label: 'Sénior' },
+    { value: '5+', label: '5+ anos' },
+  ];
 
   // Helpers to update nested fields
   const setField = (path, value) => {
@@ -480,6 +490,19 @@ renderLeadingIcon={() => null}
                       value={data.profile.gender||''}
                       onChange={(val)=>setField(['profile','gender'], val)}
                       options={GENDER_OPTIONS}
+                      placeholder="Selecione"
+                      allowCustom={false}
+                      maxVisible={7}
+                      renderLeadingIcon={() => null}
+                    />
+                  </Field>
+                </div>
+                <div className={styles.field}><label>Experiência</label>
+                  <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerField>
+                    <AutocompleteSelect
+                      value={data.profile.experience||''}
+                      onChange={(val)=>setField(['profile','experience'], val)}
+                      options={EXPERIENCE_OPTIONS.map(o=>o.label)}
                       placeholder="Selecione"
                       allowCustom={false}
                       maxVisible={7}
