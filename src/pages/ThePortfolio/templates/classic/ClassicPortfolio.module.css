@@ -36,11 +36,11 @@
 .avatarWrap { width: 110px; height: 110px; border-radius: 50%; overflow: hidden; border: 2px solid var(--c-primary); display: grid; place-items: center; background: var(--p-surface-2); }
 .avatar { width: 100%; height: 100%; object-fit: cover; display: block; }
 .avatarPlaceholder { font-size: 28px; font-weight: 800; color: var(--c-primary); }
-.headerText { display: grid; gap: 4px; }
-.name { margin: 0; }
-.title { color: var(--c-secondary); }
-.metaRow { display: flex; flex-wrap: wrap; gap: 10px; color: var(--c-secondary); font-size: 0.9rem; }
-.metaItem { opacity: 0.9; }
+.headerText { display: grid; gap: 4px; min-width: 0; }
+.name { margin: 0; line-height: 1.1; overflow-wrap: anywhere; word-break: break-word; }
+.title { color: var(--c-secondary); overflow-wrap: anywhere; word-break: break-word; }
+.metaRow { display: flex; flex-wrap: wrap; gap: 10px; color: var(--c-secondary); font-size: 0.9rem; min-width: 0; }
+.metaItem { opacity: 0.9; overflow-wrap: anywhere; word-break: break-word; }
 .socialRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .socialLink { color: var(--c-text); text-decoration: none; background: var(--p-surface-3); border: 1px solid var(--p-border); padding: 4px 8px; border-radius: 999px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
 .socialLink:hover { color: var(--c-primary); border-color: var(--p-border); }
@@ -52,7 +52,7 @@
 
 .section { margin-top: 12px; }
 .sectionTitle { margin: 0 0 6px; font-size: 1.05rem; color: var(--c-text); }
-.about { color: var(--c-text); opacity: 0.95; }
+.about { color: var(--c-text); opacity: 0.95; overflow-wrap: anywhere; word-break: break-word; white-space: normal; }
 
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .chip { background: var(--p-surface-3); border: 1px solid var(--p-border); color: var(--c-text); padding: 2px 8px; border-radius: 999px; font-size: 12px; }
@@ -78,8 +78,8 @@
 .imgPreview img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .cardBody { padding: 10px; display: grid; gap: 6px; }
-.cardTitle { margin: 0; font-size: 1rem; }
-.cardText { margin: 0; color: var(--c-secondary); }
+.cardTitle { margin: 0; font-size: 1rem; overflow-wrap: anywhere; word-break: break-word; }
+.cardText { margin: 0; color: var(--c-secondary); overflow-wrap: anywhere; word-break: break-word; }
 .cardLinks { display: flex; gap: 10px; }
 .cardLinks a { color: var(--c-primary); text-decoration: none; }
 .linkBtn { color: var(--c-primary); text-decoration: none; font-weight: 700; }
