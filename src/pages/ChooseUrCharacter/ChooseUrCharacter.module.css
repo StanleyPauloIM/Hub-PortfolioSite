@@ -191,13 +191,16 @@
 .cardAvatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
 .cardName { font-weight: 800; }
 .cardMeta { color: var(--secondary); font-size: 0.9rem; }
-.cardTags { display: flex; gap: 6px; flex-wrap: wrap; }
+.cardTags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tagAnim { animation: tagFadeIn 320ms ease both; }
+@keyframes tagFadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+.morePill { background: var(--surface-3); border: 1px dashed var(--border); color: var(--secondary); padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 .tag { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text); padding: 2px 8px; border-radius: 999px; font-size: 12px; }
-.cardFooter { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cardFooter { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .cardStats { display: inline-flex; align-items: center; gap: 10px; color: var(--secondary); }
 .stat { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 999px; font-weight: 700; white-space: nowrap; overflow-wrap: normal; }
 .stat svg { width: 16px; height: 16px; color: var(--icon); }
-.viewBtn { width: auto; }
+.viewBtn { width: auto; white-space: nowrap; min-width: max-content; }
 
 /* Mobile / tablet */
 .mobileMenuBtn { display: none; background: transparent; border: 1px solid rgba(255,255,255,0.14); color: var(--text); border-radius: 8px; width: 40px; height: 36px; }

@@ -122,6 +122,32 @@ const readPublishedAsProfile = () => {
   } catch { return null; }
 };
 
+// Rotating tags: show up to 3, and a +N pill if there are more.
+// The words rotate every few seconds with a smooth fade.
+function useTagRotator(allTags, intervalMs = 2600) {
+  const [tick, setTick] = React.useState(0);
+  React.useEffect(() => {
+    if (!allTags || allTags.length <= 3) return; // no need to rotate
+    const id = setInterval(() => setTick(t => t + 1), intervalMs);
+    return () => clearInterval(id);
+  }, [allTags, intervalMs]);
+  const base = Array.isArray(allTags) ? allTags : [];
+  if (base.length <= 3) return base;
+  const offset = tick % base.length;
+  // pick 3 distinct tags sliding through the list
+  const chosen = [];
+  for (let i = 0; i < 3; i++) {
+    chosen.push(base[(offset + i) % base.length]);
+  }
+  return [...chosen, '__MORE__'];
+}
+
+function renderRotatingTags(tags) {
+  const t = useTagRotator(tags);
+  if (Array.isArray(t)) return t;
+  return Array.isArray(tags) ? tags.slice(0, 3) : [];
+}
+
 export default function ChooseUrCharacter() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -383,7 +409,11 @@ export default function ChooseUrCharacter() {
                   </div>
                 </header>
                 <div className={styles.cardTags}>
-                  {p.tags.map(tag => (<span key={tag} className={styles.tag}>#{tag}</span>))}
+                  {renderRotatingTags(p.tags).map((tag, i) => (
+                    tag === '__MORE__'
+                      ? <span key={`more-${p.id}`} className={styles.morePill}>+{Math.max(0, (p.tags?.length||0)-3)}</span>
+                      : <span key={`${tag}-${i}`} className={`${styles.tag} ${styles.tagAnim}`}>#{tag}</span>
+                  ))}
                 </div>
                 <footer className={styles.cardFooter}>
                   <div className={styles.cardStats}>
