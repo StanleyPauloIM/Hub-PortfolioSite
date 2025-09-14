@@ -82,7 +82,8 @@ const Icon = {
 
 // BACKEND: exemplo de dados de perfis; substituir por dados vindos da API
 const mockProfiles = [
-  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['Figma', 'UX', 'UI'], likes: 1540, views: 23890 },
+  // Exemplo com mais de 3 skills para demonstrar a rotação e o +N
+  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'Python', 'PowerBI', 'React', 'TensorFlow'], likes: 1540, views: 23890 },
   { id: '2', name: 'João Santos', title: 'Frontend Engineer', city: 'Porto', area: 'frontend', exp: 'mid', gender: 'male', avatar: accountIcon, tags: ['React', 'Vite', 'TypeScript'], likes: 870, views: 125000 },
   { id: '3', name: 'Marta Lima', title: 'Data Analyst', city: 'Luanda', area: 'data', exp: 'junior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'PowerBI', 'Python'], likes: 112, views: 4820 },
 ];
