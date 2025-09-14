@@ -10,7 +10,7 @@ const templates = [
     slug: 'classic',
     name: 'Classic Template',
     subtitle: 'Layout versátil e elegante',
-    rating: 5.0,
+    likes: 128,
     uses: 569,
     preview: 'classic',
     disabled: false,
@@ -19,7 +19,7 @@ const templates = [
     slug: 'minimalist',
     name: 'Minimalist Template',
     subtitle: 'Foco total no conteúdo',
-    rating: 4.8,
+    likes: 76,
     uses: 214,
     preview: 'minimalist',
     disabled: true,
@@ -67,8 +67,14 @@ export default function TemplatesGallery() {
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Escolhe um template</h1>
-        <NavLink className={styles.link} to="/generateurportfolio">Ir para criação</NavLink>
+        <div className={styles.headLeft}>
+          <h1 className={styles.title}>Escolhe um template</h1>
+          <p className={styles.subtitle}>Explora modelos compatíveis com o nosso tema. Escolhe, pré‑visualiza e começa a personalizar.</p>
+        </div>
+        <div className={styles.headRight}>
+          <span className={styles.countPill}>{templates.length} modelos</span>
+          <NavLink className={styles.link} to="/generateurportfolio">Ir para criação</NavLink>
+        </div>
       </header>
 
       <div className={styles.grid}>

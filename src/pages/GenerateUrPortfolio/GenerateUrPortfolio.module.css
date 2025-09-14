@@ -3,11 +3,12 @@
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 14px;
+  min-width: 0;
 }
 .formColumn { display: grid; gap: 12px; align-content: start; }
-.previewColumn { position: sticky; top: 90px; align-self: start; display: grid; gap: 8px; }
+.previewColumn { position: sticky; top: 90px; align-self: start; display: grid; gap: 8px; min-width: 0; }
 .previewHeader { color: var(--secondary); font-weight: 700; }
-.previewBox { background: rgba(12,12,12,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 10px; height: calc(100vh - 140px); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; }
+.previewBox { background: rgba(12,12,12,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 10px; height: calc(100vh - 140px); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; max-width: 100%; }
 .previewBox::-webkit-scrollbar { width: 10px; }
 .previewBox::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 10px; }
 .previewBox::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
@@ -20,11 +21,11 @@
   padding: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
-.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; min-width: 0; }
 .sectionHeader h2 { margin: 0; font-size: 1.1rem; }
 .sectionHint { color: var(--secondary); font-size: 0.9rem; }
 
-.field { display: flex; flex-direction: column; gap: 6px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .fieldFull { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; }
 .field label { color: var(--secondary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .codeSelect { appearance: none; -webkit-appearance: none; background: rgba(12,12,12,0.6); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; padding: 4px 8px; font-size: 12px; }
@@ -38,15 +39,16 @@
 .inputIcon { width: 16px; height: 16px; color: var(--icon); justify-self: center; }
 .inputWrap input { background: transparent; border: none; color: var(--text); outline: none; padding: 6px 0; }
 
-.field input, .field textarea, .field select { background: rgba(12,12,12,0.6); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px 10px; }
+.field input, .field textarea, .field select { background: rgba(12,12,12,0.6); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px 10px; width: 100%; box-sizing: border-box; min-width: 0; }
 .textarea { background: rgba(12,12,12,0.6); color: var(--text); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 12px; resize: vertical; min-height: 84px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.25); }
 .textarea:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.grid2 > *, .grid3 > * { min-width: 0; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
-.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; min-width: 0; }
 .radioCard { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 8px 10px; cursor: pointer; }
 .radioCard input { accent-color: var(--primary); }
 .radioContent { display: grid; }

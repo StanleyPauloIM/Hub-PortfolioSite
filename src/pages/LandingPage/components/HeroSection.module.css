@@ -16,7 +16,9 @@
   background-attachment: fixed;
   color: var(--text);
   position: relative;
-overflow: hidden;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Light theme: lighter background image + bright overlay */

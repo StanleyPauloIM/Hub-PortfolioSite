@@ -44,7 +44,7 @@ export default function SidebarLayout({ initialCollapsed = true, children }) {
     <SidebarLayoutContext.Provider value={ctx}>
       <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-        <main className={layoutStyles.content}>
+        <main className={layoutStyles.content} style={{minWidth:'0'}}>
           {typeof children === 'function' ? children(ctx) : children}
         </main>
         {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}

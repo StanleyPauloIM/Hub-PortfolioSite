@@ -34,14 +34,56 @@ export default function ClassicPortfolio({ data }) {
     diplomas = [],
     links = [],
     media = [],
+    languages = [],
   } = data || {};
 
-  const cssVars = {
-    '--c-primary': theme.primary || '#1e90ff',
-    '--c-secondary': theme.secondary || '#b0b8c1',
-    '--c-bg': theme.background || '#0b0b0b',
-    '--c-text': theme.text || '#ffffff',
-  };
+  const cssVars = (() => {
+    const primary = theme.primary || '#1e90ff';
+    const secondary = theme.secondary || '#b0b8c1';
+    const bg = theme.background || '#0b0b0b';
+    const text = theme.text || '#ffffff';
+
+    const toRGB = (hex) => {
+      try {
+        const h = String(hex).trim();
+        const m = /^#?([\da-f]{3}|[\da-f]{6})$/i.exec(h);
+        if (!m) return null;
+        let v = m[1].toLowerCase();
+        if (v.length === 3) v = v.split('').map(c => c + c).join('');
+        const num = parseInt(v, 16);
+        return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+      } catch { return null; }
+    };
+    const rgb = toRGB(bg) || { r: 11, g: 11, b: 11 };
+    const luminance = (0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b) / 255;
+    const dark = luminance < 0.5;
+    const darkVars = {
+      '--p-surface-1': 'rgba(20,20,20,0.98)',
+      '--p-surface-2': 'rgba(12,12,12,0.60)',
+      '--p-surface-3': 'rgba(255,255,255,0.06)',
+      '--p-border': 'rgba(255,255,255,0.12)',
+      '--p-border-soft': 'rgba(255,255,255,0.08)',
+      '--p-shadow': 'rgba(0,0,0,0.35)',
+      '--p-icon': '#b0b8c1',
+    };
+    const lightVars = {
+      '--p-surface-1': 'rgba(255,255,255,0.98)',
+      '--p-surface-2': 'rgba(255,255,255,0.75)',
+      '--p-surface-3': 'rgba(0,0,0,0.04)',
+      '--p-border': 'rgba(0,0,0,0.14)',
+      '--p-border-soft': 'rgba(0,0,0,0.08)',
+      '--p-shadow': 'rgba(0,0,0,0.15)',
+      '--p-icon': '#64748b',
+    };
+
+    return {
+      '--c-primary': primary,
+      '--c-secondary': secondary,
+      '--c-bg': bg,
+      '--c-text': text,
+      ...(dark ? darkVars : lightVars),
+    };
+  })();
 
   const hasAny = (arr) => Array.isArray(arr) && arr.length > 0;
 
@@ -66,9 +108,10 @@ export default function ClassicPortfolio({ data }) {
           <div className={styles.headerText}>
             <h1 className={styles.name}>{profile.name || 'Your Name'}</h1>
             <div className={styles.title}>{profile.title || 'Your Role / Title'}</div>
-            {(profile.location || contact.email || socials.github || socials.linkedin) && (
+            {(profile.location || profile.gender || contact.email || socials.github || socials.linkedin) && (
               <div className={styles.metaRow}>
                 {profile.location && <span className={styles.metaItem}>📍 {profile.location}</span>}
+{profile.gender && (()=>{ const g=String(profile.gender||'').toLowerCase(); const icon = g.startsWith('masc') ? '♂' : (g.startsWith('fem') ? '♀' : '—'); return (<span className={styles.metaItem}>{icon} {profile.gender}</span>); })()}
                 {contact.email && <span className={styles.metaItem}>✉️ {contact.email}</span>}
               </div>
             )}
@@ -327,6 +370,21 @@ export default function ClassicPortfolio({ data }) {
             </Section>
           )}
         </div>
+      )}
+
+      {/* Languages */}
+      {hasAny(languages) && (
+        <Section title="Línguas">
+          <div className={styles.langGrid}>
+            {languages.map((l, i) => (
+              <div key={i} className={styles.langPill}>
+                <span className={styles.langName}>{l.language || '—'}</span>
+                {l.fluency && <span className={styles.langDot} />}
+                {l.fluency && <span className={styles.langLevel}>{l.fluency}</span>}
+              </div>
+            ))}
+          </div>
+        </Section>
       )}
 
       {/* Links */}

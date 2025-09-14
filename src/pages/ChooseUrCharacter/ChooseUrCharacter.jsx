@@ -9,6 +9,7 @@ import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
+import { JOB_TITLES } from '../../data/jobTitles';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -82,17 +83,19 @@ const Icon = {
 
 // BACKEND: exemplo de dados de perfis; substituir por dados vindos da API
 const mockProfiles = [
-  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['Figma', 'UX', 'UI'], likes: 1540, views: 23890 },
+  // Exemplo com mais de 3 skills para demonstrar a rotação e o +N
+  { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'Python', 'PowerBI', 'React', 'TensorFlow'], likes: 1540, views: 23890 },
   { id: '2', name: 'João Santos', title: 'Frontend Engineer', city: 'Porto', area: 'frontend', exp: 'mid', gender: 'male', avatar: accountIcon, tags: ['React', 'Vite', 'TypeScript'], likes: 870, views: 125000 },
   { id: '3', name: 'Marta Lima', title: 'Data Analyst', city: 'Luanda', area: 'data', exp: 'junior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'PowerBI', 'Python'], likes: 112, views: 4820 },
 ];
 
 // Formata contagens para 'K' quando >= 1000 (arredonda para inteiro)
+// e garante exibição compacta em uma linha (ex.: 12K)
 const formatCount = (n) => {
   const value = Math.max(0, Number(n) || 0);
   if (value < 1000) return String(value);
   const k = Math.round(value / 1000);
-  return `${k}K`;
+  return `${k}\u00A0K`; // NBSP entre número e K evita quebra feia
 };
 
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
@@ -121,6 +124,32 @@ const readPublishedAsProfile = () => {
   } catch { return null; }
 };
 
+// Rotating tags: show up to 3, and a +N pill if there are more.
+// The words rotate every few seconds with a smooth fade.
+function useTagRotator(allTags, intervalMs = 2600) {
+  const [tick, setTick] = React.useState(0);
+  React.useEffect(() => {
+    if (!allTags || allTags.length <= 3) return; // no need to rotate
+    const id = setInterval(() => setTick(t => t + 1), intervalMs);
+    return () => clearInterval(id);
+  }, [allTags, intervalMs]);
+  const base = Array.isArray(allTags) ? allTags : [];
+  if (base.length <= 3) return base;
+  const offset = tick % base.length;
+  // pick 3 distinct tags sliding through the list
+  const chosen = [];
+  for (let i = 0; i < 3; i++) {
+    chosen.push(base[(offset + i) % base.length]);
+  }
+  return [...chosen, '__MORE__'];
+}
+
+function renderRotatingTags(tags) {
+  const t = useTagRotator(tags);
+  if (Array.isArray(t)) return t;
+  return Array.isArray(tags) ? tags.slice(0, 3) : [];
+}
+
 export default function ChooseUrCharacter() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -137,6 +166,14 @@ export default function ChooseUrCharacter() {
     const pub = readPublishedAsProfile();
     return pub ? [...mockProfiles, pub] : [...mockProfiles];
   });
+
+  // Dataset partilhado para experiência
+  const EXPERIENCE_OPTIONS = [
+    { value: 'junior', label: 'Júnior' },
+    { value: 'mid', label: 'Pleno' },
+    { value: 'senior', label: 'Sénior' },
+    { value: '5+', label: '5+ anos' },
+  ];
   const [profiles, setProfiles] = useState(() => allProfiles);
 
   // Atualiza quando houver publicação/atualização no localStorage
@@ -271,7 +308,8 @@ export default function ChooseUrCharacter() {
             const gender = form.get('gender');
             const filtered = allProfiles.filter(p => {
               const matchQ = !q || [p.name, p.title, p.city, p.tags.join(' ')].join(' ').toLowerCase().includes(q);
-              const matchArea = area === 'all' || p.area === area;
+              // Agora "Área" usa o dataset JOB_TITLES; comparamos com o título do perfil
+              const matchArea = area === 'all' || String(p.title||'').toLowerCase() === String(area||'').toLowerCase();
               const matchCity = city === 'all' || p.city.toLowerCase() === String(city).toLowerCase();
               const matchExp = exp === 'all' || p.exp === exp;
               const matchGender = gender === 'all' || p.gender === gender;
@@ -299,11 +337,9 @@ export default function ChooseUrCharacter() {
                 <div className={styles.selectWrap}>
                   <select id="area" name="area" className={styles.select} defaultValue="all">
                     <option value="all">Todas</option>
-                    <option value="design">Design</option>
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="data">Data</option>
-                    <option value="marketing">Marketing</option>
+                    {JOB_TITLES.map((t, i) => (
+                      <option key={t + i} value={t}>{t}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -327,10 +363,9 @@ export default function ChooseUrCharacter() {
                 <div className={styles.selectWrap}>
                   <select id="exp" name="exp" className={styles.select} defaultValue="all">
                     <option value="all">Qualquer</option>
-                    <option value="junior">Júnior</option>
-                    <option value="mid">Pleno</option>
-                    <option value="senior">Sénior</option>
-                    <option value=">5">5+ anos</option>
+                    {EXPERIENCE_OPTIONS.map(o => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -382,7 +417,11 @@ export default function ChooseUrCharacter() {
                   </div>
                 </header>
                 <div className={styles.cardTags}>
-                  {p.tags.map(tag => (<span key={tag} className={styles.tag}>#{tag}</span>))}
+                  {renderRotatingTags(p.tags).map((tag, i) => (
+                    tag === '__MORE__'
+                      ? <span key={`more-${p.id}`} className={styles.morePill}>+{Math.max(0, (p.tags?.length||0)-3)}</span>
+                      : <span key={`${tag}-${i}`} className={`${styles.tag} ${styles.tagAnim}`}>#{tag}</span>
+                  ))}
                 </div>
                 <footer className={styles.cardFooter}>
                   <div className={styles.cardStats}>

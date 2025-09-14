@@ -12,9 +12,41 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
 ---
 
 ## 🚀 Status do Projeto
-✅ Projeto iniciado com **React (Vite + SWC)**.  
-✅ Ambiente pronto para desenvolvimento.  
-🔜 **Próximos passos**: Estrutura de pastas, integração com Firebase (Auth, Firestore).
+✅ Projeto com **React (Vite + SWC)** e UI modular (CSS Modules).  
+✅ Layouts e navegação padronizados.  
+✅ Ambientes prontos para desenvolvimento e deploy.  
+🔜 **Próximos passos**: Template Minimalist completo e integração real com backend.
+
+## 🧩 Funcionalidades Principais
+
+- Templates Gallery
+  - Cards com pré‑visualização (Classic, Minimalist – em breve), likes, contagem de uso e ações Ver/Escolher.
+  - Layout responsivo com respiro para a navbar.
+
+- Generate Your Portfolio (gerador)
+  - Formulário completo: perfil, tema, skills, projetos, certificados, diplomas, media e links.
+  - Guarda rascunho (localStorage) e permite publicar para visualização read‑only.
+  - Pré‑visualização ao vivo do template Classic com tokens de tema.
+  - Upload local com preview (FileInput) e stacks para escolher/remoção.
+  - Sticky actions (Guardar/Publicar). Back button e sidebar universais.
+
+- The Portfolio (visualização read‑only)
+  - Cabeçalho unificado (Voltar, título+badge, Partilhar, Notificações, Definições, Perfil).
+  - Linha "Gostou do perfil? Deixe seu like" com persistência por email no localStorage.
+  - Abas Preview | Comentários com painel lateral animado (fade/slide) e preview expandindo quando fechado.
+  - Input de comentários fixo; scroll discreto; dropdowns fecham ao clicar fora/Escape.
+
+- Navbar + Sidebar
+  - Navbar superior responsiva (conta, notificações, partilha, tema).
+  - Sidebar universal (SideNav) reutilizada nas páginas com itens padrão: Início, ChooseUrCharacter, GenerateUrPortfolio, ThePortfolio, Templates e Ajuda.
+  - SidebarLayout centraliza comportamento (collapsed por padrão, blur no mobile e backdrop global).
+
+- Choose Your Character
+  - Exploração de perfis mock com filtros e cards.
+  - Usa os mesmos padrões de layout/UX do restante do site.
+
+- Componentes reutilizáveis
+  - GlowButton, Icons, FileInput, ChipsInput, ColorSwatches, YearSelect, PdfThumb.
 
 ## 🔁 CI/CD – Build e Deploy no Firebase
 
@@ -37,9 +69,14 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
 - Se a tua branch principal não for `main`, altera em `on.push.branches` no arquivo do workflow.
 
 ### 🧭 Estado do repositório
-- Branch principal detectada: `main`.
-- `main` atualizada via fast-forward a partir de `origin/main`.
-- Merge da branch `cursor/configurar-workflow-de-deploy-para-firebase-3b2a` em `main`: sem diferenças; push ao `origin` já estava atualizado.
+- Branch principal: `main`
+- Branches de trabalho frequentes: `Fixing`, `feature/Portfolio_Template`
+- Layout e sidebar unificados via `SidebarLayout` e `SideNav`.
+
+## 🎨 Tema e Acessibilidade
+- Variáveis CSS de tema (dark/light) aplicadas a superfícies, bordas e sombras.
+- Foco visível; botões com aria-label; dropdowns fecham com outside click/Escape.
+- Scrollbar discreta global (Firefox e WebKit).
 
 ## 🔐 Variáveis de ambiente (.env) com Vite
 
@@ -60,6 +97,28 @@ VITE_FIREBASE_APP_ID=...
 VITE_FIREBASE_MEASUREMENT_ID=...
 ```
 
+## Rotas
+- `/templates` – Galeria de templates
+- `/templates/:slug` – Pré‑visualização do template (TemplateExample)
+- `/generateurportfolio` – Gerador de portfólio
+- `/theportfolio` – Visualização read‑only
+- `/chooseurcharacter` – Exploração de perfis (mock)
 
+## 📌 Futuras implementações (sem garantia)
 
+- Submissão de templates pela comunidade
+  - MVP (HTML + CSS, sem JavaScript)
+    - Contrato de dados do portfólio com placeholders em HTML (ex.: {{profile.name}}, {{projects[0].title}}).
+    - Pacote do template (ZIP): manifest.json (nome, autor, versão, licença), index.html, styles.css e assets/.
+    - Renderização segura: sanitização (DOMPurify) + iframe com sandbox e CSP restrita.
+    - UI: card "Adicionar seu template" na galeria; validação do pacote; upload e registo (screenshot, autor, tags, licença).
+  - Avançado (opcional, para o futuro): template como plugin React/ESM carregado dinamicamente.
+    - Bundle (esbuild/SWC), isolamento via iframe/CSP/Trusted Types e revisão manual.
+  - Híbrido: HTML+CSS aberto a todos; plugins JS só para parceiros aprovados.
 
+- Próximos passos sugeridos quando for implementar
+  1. Definir o PortfolioSchema (contrato de dados).
+  2. Criar um template exemplo e guia de criação.
+  3. Implementar o renderer HTML+CSS em iframe sandbox.
+  4. Página de upload com validação e armazenamento do registo.
+  5. Galeria com screenshot automático e gestão de estados (pendente/aprovado).

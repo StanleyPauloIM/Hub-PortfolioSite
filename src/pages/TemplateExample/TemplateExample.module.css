@@ -33,7 +33,7 @@
 .countPill { background: var(--surface-3, rgba(255,255,255,0.06)); border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px; font-size: 12px; color: var(--secondary); }
 
 /* Layout for preview + comments side-by-side (no inner scroll) */
-.exampleGrid { display:grid; grid-template-columns: minmax(0,1fr) minmax(280px, 420px); gap: 16px; align-items: start; max-width: 1200px; margin: 8px auto 0; transition: grid-template-columns 220ms ease, gap 220ms ease; }
+.exampleGrid { display:grid; grid-template-columns: minmax(0,1fr) minmax(280px, 420px); gap: 16px; align-items: start; max-width: 1200px; margin: 8px auto 0; transition: grid-template-columns 220ms ease, gap 220ms ease; min-width: 0; }
 .gridWithSide { grid-template-columns: minmax(0,1fr) minmax(280px, 420px); gap: 16px; }
 .gridNoSide { grid-template-columns: minmax(0,1fr) 0px; gap: 0; }
 @media (max-width: 1100px){ .exampleGrid, .gridWithSide, .gridNoSide { grid-template-columns: 1fr; } }
