@@ -156,7 +156,7 @@ export default function ThePortfolio() {
       if (raw) {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed)
-          ? parsed.map(c => ({ likes: 0, liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
+? parsed.map(c => ({ liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
           : [];
       }
       return [];
