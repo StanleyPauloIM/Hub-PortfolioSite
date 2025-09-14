@@ -584,6 +584,7 @@ renderLeadingIcon={() => null}
                   value={data.skills}
                   onChange={(skills)=> setData(d=>({ ...d, skills }))}
                   placeholder="Ex.: React, UX, TypeScript"
+                  minInputWidth={320}
                   suggestions={[
                     'React','TypeScript','JavaScript','Vite','Next.js','Node.js','Express','HTML','CSS','SASS','Tailwind','Figma','UX','UI','Design Systems','Git','GitHub','CI/CD','Docker','Kubernetes','AWS','GCP','Azure','Firebase','Firestore','Storage','MongoDB','PostgreSQL','MySQL','Python','Django','Flask','TensorFlow','PyTorch','Data Analysis','PowerBI','Tableau','Go','Rust','Java','Spring','Kotlin','Swift','C#','.NET','PHP','Laravel','SEO','Marketing','Scrum','Agile'
                   ]}

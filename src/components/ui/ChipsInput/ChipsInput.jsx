@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './ChipsInput.module.css';
 
-export default function ChipsInput({ value = [], onChange, placeholder = 'Adicionar skill…', suggestions = [], max = 50 }) {
+export default function ChipsInput({ value = [], onChange, placeholder = 'Adicionar skill…', suggestions = [], max = 50, minInputWidth = 240 }) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -78,6 +78,7 @@ export default function ChipsInput({ value = [], onChange, placeholder = 'Adicio
         <input
           ref={inputRef}
           className={styles.input}
+          style={{ minWidth: Math.max(160, Number(minInputWidth)||240) }}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onKeyDown={onKeyDown}
