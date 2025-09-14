@@ -9,6 +9,7 @@ import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
+import { AREAS } from '../../data/areas';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -327,11 +328,9 @@ export default function ChooseUrCharacter() {
                 <div className={styles.selectWrap}>
                   <select id="area" name="area" className={styles.select} defaultValue="all">
                     <option value="all">Todas</option>
-                    <option value="design">Design</option>
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="data">Data</option>
-                    <option value="marketing">Marketing</option>
+                    {AREAS.map(a => (
+                      <option key={a.value} value={a.value}>{a.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>
