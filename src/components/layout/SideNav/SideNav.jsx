@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import layoutStyles from '../../../pages/ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../../assets/HubGlobe.png';
 import { useAuth } from '../../../auth/AuthProvider';
-import { NavLink } from 'react-router-dom';
 import { useI18n } from '../../../i18n/I18nProvider';
 
 // Inline icons (to avoid cross-deps). Keep consistent with pages.
