@@ -615,7 +615,7 @@ renderLeadingIcon={() => null}
                       <div className={[styles.fileStack, (previews.stacks?.projects?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                         {(previews.stacks?.projects?.[idx]||[]).map((it, si) => (
                           <div key={si} className={[styles.stackItem, (previews.projects?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, projects:{...(p.projects||{}), [idx]: it.url}})); updateArrayItem('projects', idx, { imageUrl: it.url }); }}>
-                            <img src={it.url} alt="" />
+                            {it?.url ? <img src={it.url} alt="" /> : null}
                             <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.projects?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.projects?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.projects?.[idx]||''); const nextStacks = { ...(p.stacks||{}), projects:{ ...(p.stacks?.projects||{}), [idx]: list } }; const nextProj = { ...(p.projects||{}), [idx]: nextSel }; updateArrayItem('projects', idx, { imageUrl: nextSel }); return { ...p, stacks: nextStacks, projects: nextProj }; }); }}>×</button>
                           </div>
                         ))}
@@ -720,7 +720,7 @@ allowCustom={true}
                       <div className={[styles.fileStack, (previews.stacks?.certificates?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                         {(previews.stacks?.certificates?.[idx]||[]).map((it, si) => (
                           <div key={si} className={[styles.stackItem, (previews.certificates?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, certificates:{...(p.certificates||{}), [idx]: it.url}})); updateArrayItem('certificates', idx, { fileUrl: it.url, fileType: it.type, fileName: it.name }); }}>
-                            {it.type==='image' ? (<img src={it.url} alt="" />) : (<div className={styles.stackPdf}>PDF</div>)}
+                            {it.type==='image' ? (it?.url ? <img src={it.url} alt="" /> : null) : (<div className={styles.stackPdf}>PDF</div>)}
                             <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.certificates?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.certificates?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.certificates?.[idx]||''); const nextStacks = { ...(p.stacks||{}), certificates:{ ...(p.stacks?.certificates||{}), [idx]: list } }; const nextC = { ...(p.certificates||{}), [idx]: nextSel }; const nextItem = list.length? list[list.length-1]: null; updateArrayItem('certificates', idx, { fileUrl: nextSel, fileType: nextItem?.type||'', fileName: nextItem?.name||'' }); return { ...p, stacks: nextStacks, certificates: nextC }; }); }}>×</button>
                           </div>
                         ))}
@@ -865,7 +865,7 @@ allowCustom={true}
                         <div className={[styles.fileStack, (previews.stacks?.media?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                           {(previews.stacks?.media?.[idx]||[]).map((it, si) => (
                             <div key={si} className={[styles.stackItem, (previews.media?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, media:{...(p.media||{}), [idx]: it.url}})); updateArrayItem('media', idx, { url: it.url }); }}>
-                              <img src={it.url} alt="" />
+                              {it?.url ? <img src={it.url} alt="" /> : null}
                               <button type="button" className={styles.closeSm} onClick={(e)=>{ e.stopPropagation(); setPreviews(p=>{ const list=[...((p.stacks?.media?.[idx])||[])]; const [removed]=list.splice(si,1); revoke(removed?.url); const nextSel = (p.media?.[idx]||'')===removed?.url ? (list[list.length-1]?.url||'') : (p.media?.[idx]||''); const nextStacks = { ...(p.stacks||{}), media:{ ...(p.stacks?.media||{}), [idx]: list } }; const nextMedia = { ...(p.media||{}), [idx]: nextSel }; updateArrayItem('media', idx, { url: nextSel }); return { ...p, stacks: nextStacks, media: nextMedia }; }); }}>×</button>
                             </div>
                           ))}

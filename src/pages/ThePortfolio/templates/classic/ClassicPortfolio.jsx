@@ -401,7 +401,7 @@ export default function ClassicPortfolio({ data }) {
                     {isImg ? (
                       <img className={styles.linkThumbLg} src={l.url} alt="thumb" />
                     ) : (
-                      <img className={styles.favicon} src={fav} alt="" />
+                      fav ? <img className={styles.favicon} src={fav} alt="" /> : null
                     )}
                     <a href={l.url} target="_blank" rel="noreferrer" className={styles.linkAnchor}>{l.label || host || l.url}</a>
                   </div>

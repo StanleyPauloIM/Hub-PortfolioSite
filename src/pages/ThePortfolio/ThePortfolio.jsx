@@ -12,6 +12,7 @@ import ClassicPortfolio from './templates/classic/ClassicPortfolio';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
+import { useAuth } from '../../auth/AuthProvider';
 
 const Icon = {
   home: (props) => (
@@ -56,6 +57,7 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function ThePortfolio() {
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   // Sidebar appears minimized by default
   const [collapsed, setCollapsed] = useState(true);
@@ -242,7 +244,7 @@ export default function ThePortfolio() {
                   <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
                   <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
                   <hr className={layoutStyles.accountDivider} />
-                  <button className={layoutStyles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                  <button className={layoutStyles.accountLink} onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
                     Sair
                   </button>
@@ -289,7 +291,7 @@ export default function ThePortfolio() {
                 <div className={exStyles.sideBody}>
                   <div className={`${exStyles.commentForm} ${exStyles.commentFormSticky}`}>
                     <div className={exStyles.commentRow}>
-                      <img className={exStyles.commentAvatar} src={loggedAvatar} alt="" />
+                      {loggedAvatar ? <img className={exStyles.commentAvatar} src={loggedAvatar} alt="" /> : null}
                       <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={exStyles.commentInput} placeholder="Escreve um comentário…"/>
                       <GlowButton variant="icon" onClick={post} aria-label="Publicar"><UIIcon.arrowRight/></GlowButton>
                     </div>
@@ -297,7 +299,7 @@ export default function ThePortfolio() {
                   <div className={exStyles.comments}>
                     {comments.map((c,i)=> (
                       <div key={i} className={exStyles.commentItem}>
-                        <img className={exStyles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
+                        {(c.avatar || avatarPool[1]) ? <img className={exStyles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" /> : null}
                         <div>
                           <div className={exStyles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
                           <div>{c.text}</div>

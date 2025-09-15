@@ -1,6 +1,10 @@
 // Configura e exporta a instância do Firebase
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
+import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,6 +18,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// Auth
+const auth = getAuth(app);
+try { auth.languageCode = 'pt'; } catch {}
+
+// Firestore
+const db = getFirestore(app);
+
+// Storage
+const storage = getStorage(app);
+
 // Inicializa analytics apenas quando suportado para evitar erros em dev/ambientes sem window
 let analytics = null;
 try {
@@ -22,5 +36,26 @@ try {
   }
 } catch {}
 
-export { analytics };
+// App Check opcional (reCAPTCHA v3) — só liga se a key estiver definida
+let appCheck = null;
+try {
+  if (typeof window !== 'undefined') {
+    const siteKey = import.meta.env.VITE_APP_CHECK_SITE_KEY;
+    if (siteKey) {
+      appCheck = initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(siteKey),
+        isTokenAutoRefreshEnabled: true,
+      });
+    }
+  }
+} catch {}
+
+// Helper para aplicar persistência baseada em "Lembrar-me"
+async function applyAuthPersistence(remember) {
+  try {
+    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+  } catch {}
+}
+
+export { analytics, auth, db, storage, appCheck, applyAuthPersistence };
 export default app;

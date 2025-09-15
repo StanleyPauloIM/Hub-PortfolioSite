@@ -198,7 +198,7 @@ export default function TemplateExample() {
       if (raw) {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed)
-          ? parsed.map(c => ({ likes: 0, liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
+          ? parsed.map(c => ({ liked: false, avatar: avatarPool[1], ...c, likes: Number(c?.likes || 0) }))
           : [];
       }
       return [
@@ -296,7 +296,7 @@ export default function TemplateExample() {
               <div className={styles.sideBody}>
                 <div className={`${styles.commentForm} ${styles.commentFormSticky}`}>
                   <div className={styles.commentRow}>
-                    <img className={styles.commentAvatar} src={loggedAvatar} alt="" />
+                    {loggedAvatar ? <img className={styles.commentAvatar} src={loggedAvatar} alt="" /> : null}
                     <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={styles.commentInput} placeholder="Escreve um comentário…"/>
                     <GlowButton variant="icon" onClick={post} aria-label="Publicar"><Icon.arrowRight/></GlowButton>
                   </div>
@@ -304,7 +304,7 @@ export default function TemplateExample() {
                 <div className={styles.comments}>
                   {comments.map((c,i)=> (
                     <div key={i} className={styles.commentItem}>
-                      <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" />
+                      {(c.avatar || avatarPool[1]) ? <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" /> : null}
                       <div>
                         <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
                         <div>{c.text}</div>

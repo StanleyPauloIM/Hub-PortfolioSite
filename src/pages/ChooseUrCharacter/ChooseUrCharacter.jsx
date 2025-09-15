@@ -7,6 +7,7 @@ import accountIcon from '../../assets/images/account_ex.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
+import { useAuth } from '../../auth/AuthProvider';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import { JOB_TITLES } from '../../data/jobTitles';
@@ -151,6 +152,7 @@ function renderRotatingTags(tags) {
 }
 
 export default function ChooseUrCharacter() {
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -279,7 +281,7 @@ export default function ChooseUrCharacter() {
                   <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
                   <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
                   <hr className={styles.accountDivider} />
-                  <button className={styles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                  <button className={styles.accountLink} onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }} role="menuitem">
                     <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
                     Sair
                   </button>

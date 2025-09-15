@@ -5,8 +5,10 @@ import styles from './Navbar.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
+import { useAuth } from '../../auth/AuthProvider';
 
 export default function Navbar() {
+  const { signOut } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -157,7 +159,7 @@ export default function Navbar() {
               <button className={`btn btn--small btn--full ${styles.themeBtn}`} disabled={theme === 'dark'} onClick={() => setTheme('dark')}>Tema: Escuro</button>
               <button className={`btn btn--small btn--full ${styles.themeBtn}`} disabled={theme === 'light'} onClick={() => setTheme('light')}>Tema: Claro</button>
               <hr className={styles.accountDivider} />
-              <button className={styles.accountLink} onClick={() => console.log('Sair')}>
+              <button className={styles.accountLink} onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }}>
                 <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
                 Sair
               </button>
