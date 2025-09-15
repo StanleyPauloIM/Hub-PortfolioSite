@@ -10,7 +10,7 @@ import { useI18n } from '../../i18n/I18nProvider';
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -80,6 +80,8 @@ export default function Navbar() {
     { label: t('nav.aboutMission'), href: '#missao' },
     { label: t('nav.aboutContact'), href: '#contato' },
   ];
+  const aboutLabel = t('nav.about');
+  const aboutText = (aboutLabel && aboutLabel !== 'nav.about') ? aboutLabel : (locale === 'en' ? 'About' : 'Sobre‑nós');
 
   const currentPath = location.pathname.toLowerCase();
   const isCurrent = (path) => currentPath === path.toLowerCase();
@@ -128,7 +130,7 @@ export default function Navbar() {
             {/* Sobre‑nós dropdown */}
             <li className={`${styles.menuItem} ${styles.dropdown}`}>
               <button type="button" className={styles.dropdownTrigger}>
-                {t('nav.about')} <span className={styles.caret}>›</span>
+                {aboutText} <span className={styles.caret}>›</span>
               </button>
               <ul className={styles.dropdownMenu}>
                 {aboutItems.map((a) => (
@@ -190,7 +192,7 @@ export default function Navbar() {
             </div>
 
             <div className={styles.mobileGroup}>
-              <div className={styles.mobileGroupTitle}>Sobre‑nós</div>
+              <div className={styles.mobileGroupTitle}>{aboutText}</div>
               <ul className={styles.mobileList}>
                 {aboutItems.map((a) => (
                   <li key={a.label}><a href={a.href} className={styles.dropdownLink}>{a.label}</a></li>
