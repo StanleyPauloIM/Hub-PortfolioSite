@@ -8,6 +8,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import bgImage from '../../assets/Hub_Background2.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import app from '../../firebase/firebase';
+import { useI18n } from '../../i18n/I18nProvider';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 
 const SignInUp = () => {
@@ -15,6 +16,7 @@ const SignInUp = () => {
   const initial = params.get('mode') === 'signup' ? 'signup' : 'signin';
   const [mode, setMode] = useState(initial);
   const { signInWithGoogle } = useAuth();
+  const { t } = useI18n();
 
   const isSignup = mode === 'signup';
 
@@ -108,8 +110,8 @@ const SignInUp = () => {
           <header className={styles.header}>
             <img className={styles.logo} src={HubGlobe} alt="HUB logo" />
             <div>
-              <h1 id="signin-title" className={styles.title}>Bem-vindo de volta!</h1>
-              <p className={styles.subtitle}>Sentimos sua falta. Entre com seus dados.</p>
+              <h1 id="signin-title" className={styles.title}>{t('auth.signinTitle')}</h1>
+              <p className={styles.subtitle}>{t('auth.signinSubtitle')}</p>
             </div>
           </header>
 
@@ -119,13 +121,13 @@ const SignInUp = () => {
                 {signInError}
               </div>
             )}
-            <label className={styles.label} htmlFor="email">Email</label>
+            <label className={styles.label} htmlFor="email">{t('auth.email')}</label>
             <div className={styles.inputWrap}>
               <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/></svg>
 <input id="email" name="email" type="email" required placeholder="Digite o seu email" className={styles.input} maxLength={120} />
             </div>
 
-            <label className={styles.label} htmlFor="password">Password</label>
+            <label className={styles.label} htmlFor="password">{t('auth.password')}</label>
 <div className={`${styles.inputWrap} ${styles.inputWithAction}`}>
               <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
 <input id="password" name="password" type={showSignInPwd ? 'text' : 'password'} required placeholder="Digite a sua password" className={styles.input} minLength={8} maxLength={72} />
@@ -141,17 +143,17 @@ const SignInUp = () => {
             <div className={styles.rowBetween}>
               <label className={styles.checkboxLabel}>
                 <input type="checkbox" name="remember" />
-                <span>Lembrar-me</span>
+                <span>{t('auth.remember')}</span>
               </label>
-              <a href="#" className={styles.mutedLink}>Esqueceu a password?</a>
+              <a href="#" className={styles.mutedLink}>{t('auth.forgot')}</a>
             </div>
 
-            <button type="submit" className={`btn ${styles.primaryBtn}`} disabled={signInBusy}>{signInBusy ? 'Entrando…' : 'Entrar'}</button>
+            <button type="submit" className={`btn ${styles.primaryBtn}`} disabled={signInBusy}>{signInBusy ? `${t('auth.enter')}…` : t('auth.enter')}</button>
 
-            <div className={styles.orSeparator}><span>ou</span></div>
+            <div className={styles.orSeparator}><span>{t('auth.or')}</span></div>
 
             <div className={styles.socialRow}>
-              <GoogleButton className="btn btn--full" onClick={async ()=>{
+              <GoogleButton className="btn btn--full" label={t('auth.google')} onClick={async ()=>{
                 try {
                   setSignInError('');
                   setSignInBusy(true);
@@ -171,8 +173,8 @@ const SignInUp = () => {
             </div>
 
             <p className={styles.switchText}>
-              Não tem uma conta?{` `}
-              <button type="button" className={styles.linkButton} onClick={() => setMode('signup')}>Sign up</button>
+              {t('auth.signupPrompt')}{` `}
+              <button type="button" className={styles.linkButton} onClick={() => setMode('signup')}>{t('auth.signupBtn')}</button>
             </p>
           </form>
         </section>
@@ -183,8 +185,8 @@ const SignInUp = () => {
             <div className={styles.header}>
               <img className={styles.logo} src={HubGlobe} alt="HUB logo" />
               <div>
-                <h2 id="signup-title" className={styles.panelTitle}>Criar Conta</h2>
-                <p className={styles.panelSubtitle}>Leva menos de um minuto.</p>
+                <h2 id="signup-title" className={styles.panelTitle}>{t('auth.signupTitle')}</h2>
+                <p className={styles.panelSubtitle}>{t('auth.signupSubtitle')}</p>
               </div>
             </div>
           </header>
@@ -202,14 +204,14 @@ const SignInUp = () => {
             )}
             <div className={styles.grid2}>
               <div>
-                <label className={styles.label} htmlFor="firstName">Primeiro Nome</label>
+                <label className={styles.label} htmlFor="firstName">{t('auth.firstName')}</label>
                 <div className={styles.inputWrap}>
                   <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 <input id="firstName" name="firstName" type="text" required placeholder="Ex.: Ana" className={styles.input} maxLength={40} />
                 </div>
               </div>
               <div>
-                <label className={styles.label} htmlFor="lastName">Último Nome</label>
+                <label className={styles.label} htmlFor="lastName">{t('auth.lastName')}</label>
                 <div className={styles.inputWrap}>
                   <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 <input id="lastName" name="lastName" type="text" required placeholder="Ex.: Silva" className={styles.input} maxLength={60} />

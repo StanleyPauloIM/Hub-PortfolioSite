@@ -14,6 +14,7 @@ import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import { useAuth } from '../../auth/AuthProvider';
 import { timeAgoShort } from '../../utils/timeAgo';
+import { useI18n } from '../../i18n/I18nProvider';
 
 const Icon = {
   home: (props) => (
@@ -59,6 +60,7 @@ const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function ThePortfolio() {
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   // Sidebar appears minimized by default
   const [collapsed, setCollapsed] = useState(true);
@@ -191,24 +193,24 @@ export default function ThePortfolio() {
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
-            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              Voltar
+              {t('common.back')}
             </button>
-            <h1 className={layoutStyles.title}>The Portfolio</h1>
-            <div className={layoutStyles.badge}>read‑only</div>
+            <h1 className={layoutStyles.title}>{t('portfolio.title')}</h1>
+            <div className={layoutStyles.badge}>{t('portfolio.readOnly')}</div>
           </div>
           <div className={layoutStyles.topActions}>
             {/* Partilhar */}
             <div className={layoutStyles.shareWrap} ref={shareRef}>
-              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label="Partilhar"><UIIcon.share/> Partilhar</GlowButton>
+              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label={t('common.share')}><UIIcon.share/> {t('common.share')}</GlowButton>
               {shareOpen && (
                 <div className={layoutStyles.shareDropdown} role="menu">
                   <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">WhatsApp</a>
                   <a className={layoutStyles.shareLink} role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">Facebook</a>
                   <a className={layoutStyles.shareLink} role="menuitem" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent('Meu portfólio no HUB')}`} target="_blank" rel="noreferrer">X (Twitter)</a>
-                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} window.open('https://www.instagram.com/', '_blank'); }}>Instagram</button>
-                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} setShareOpen(false); }}>Copiar link</button>
+                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} window.open('https://www.instagram.com/', '_blank'); }}>{t('common.instagram')}</button>
+                  <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} setShareOpen(false); }}>{t('common.copyLink')}</button>
                 </div>
               )}
             </div>
@@ -272,9 +274,9 @@ export default function ThePortfolio() {
 
             {/* Tabs */}
             <div className={exStyles.tabs}>
-              <button className={`${exStyles.tabBtn} ${exStyles.tabBtnActive}`}>Preview</button>
+              <button className={`${exStyles.tabBtn} ${exStyles.tabBtnActive}`}>{t('common.preview')}</button>
               <button className={`${exStyles.tabBtn} ${commentsOpen?exStyles.tabBtnActive:''}`} aria-pressed={commentsOpen} onClick={()=>setCommentsOpen(v=>!v)}>
-                <span className={`${exStyles.tabDot} ${commentsOpen?exStyles.tabDotOn:''}`} /> Comentários <span className={exStyles.countPill}>{comments.length}</span>
+                <span className={`${exStyles.tabDot} ${commentsOpen?exStyles.tabDotOn:''}`} /> {t('common.comments')} <span className={exStyles.countPill}>{comments.length}</span>
               </button>
             </div>
 
@@ -286,8 +288,8 @@ export default function ThePortfolio() {
 
               <aside className={`${exStyles.sidePanel} ${commentsOpen ? exStyles.sideOpen : exStyles.sideClosed}`} aria-hidden={!commentsOpen}>
                 <div className={exStyles.sideHeader}>
-                  <h2 className={exStyles.sideTitle}>Comentários</h2>
-                  <button className={exStyles.sideClose} onClick={()=>setCommentsOpen(false)}>Fechar</button>
+                  <h2 className={exStyles.sideTitle}>{t('common.comments')}</h2>
+                  <button className={exStyles.sideClose} onClick={()=>setCommentsOpen(false)}>{t('common.close')}</button>
                 </div>
                 <div className={exStyles.sideBody}>
                   <div className={`${exStyles.commentForm} ${exStyles.commentFormSticky}`}>

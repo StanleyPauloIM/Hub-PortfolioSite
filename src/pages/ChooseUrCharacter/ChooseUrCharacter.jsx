@@ -8,6 +8,7 @@ import HubGlobe from '../../assets/HubGlobe.png';
 import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import SidebarLayout from '../../components/layout/SidebarLayout/SidebarLayout';
 import { useAuth } from '../../auth/AuthProvider';
+import { useI18n } from '../../i18n/I18nProvider';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import { JOB_TITLES } from '../../data/jobTitles';
@@ -153,6 +154,7 @@ function renderRotatingTags(tags) {
 
 export default function ChooseUrCharacter() {
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -239,17 +241,17 @@ export default function ChooseUrCharacter() {
             <span className={styles.hamburger} />
           </button>
           <div className={styles.pageTitleRow}>
-            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              Voltar
+              {t('common.back')}
             </button>
-            <h1 className={styles.title}>Choose Your Character</h1>
+            <h1 className={styles.title}>{t('choose.title')}</h1>
             <div className={styles.badge}>beta</div>
           </div>
           <div className={styles.topActions}>
             {/* BACKEND: abrir dropdown com notificações reais do utilizador */}
             <div className={styles.bellWrap} ref={notifRef}>
-              <button type="button" className={styles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
+              <button type="button" className={styles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
               <span className={styles.bellDot} />

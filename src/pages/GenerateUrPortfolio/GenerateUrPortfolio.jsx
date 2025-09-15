@@ -10,6 +10,7 @@ import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
 import { useAuth } from '../../auth/AuthProvider';
+import { useI18n } from '../../i18n/I18nProvider';
 import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
@@ -141,6 +142,7 @@ const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function GenerateUrPortfolio() {
   const { user } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -364,11 +366,11 @@ export default function GenerateUrPortfolio() {
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
-            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label="Voltar">
+            <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              Voltar
+              {t('common.back')}
             </button>
-            <h1 className={layoutStyles.title}>Generate Your Portfolio</h1>
+            <h1 className={layoutStyles.title}>{t('generate.title')}</h1>
             <div className={layoutStyles.badge}>classic</div>
           </div>
           <div className={layoutStyles.topActions}>
@@ -380,8 +382,8 @@ export default function GenerateUrPortfolio() {
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
                   <div className={layoutStyles.notifItem} role="menuitem">
-                    <div className={layoutStyles.notifTitle}>Dica</div>
-                    <div className={layoutStyles.notifMeta}>podes alterar as cores no painel de Tema</div>
+                    <div className={layoutStyles.notifTitle}>{t('generate.tip')}</div>
+                    <div className={layoutStyles.notifMeta}>{t('generate.tipMeta')}</div>
                   </div>
                   <div className={layoutStyles.notifFooter}>Ver todas</div>
                 </div>

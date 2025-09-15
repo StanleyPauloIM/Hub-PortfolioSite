@@ -12,11 +12,11 @@ function GoogleIcon() {
   );
 }
 
-export default function GoogleButton({ onClick, className = '' }) {
+export default function GoogleButton({ onClick, className = '', label = 'Continuar com Google' }) {
   return (
-    <button type="button" onClick={onClick} className={`${className}`} aria-label="Continuar com Google">
+    <button type="button" onClick={onClick} className={`${className}`} aria-label={label}>
       <GoogleIcon />
-      <span style={{ marginLeft: 8 }}>Continuar com Google</span>
+      <span style={{ marginLeft: 8 }}>{label}</span>
     </button>
   );
 }
