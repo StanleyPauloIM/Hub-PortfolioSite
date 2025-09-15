@@ -26,8 +26,8 @@ desktop.ini
 .tmp/
 *.swp
 
-# âœ… Arquivos de ambiente
-# .env (permitido para funcionar out-of-the-box)
+# ✅ Arquivos de ambiente
+# Mantemos .env committed vazio como fallback, mas .env.local contém chaves reais e deve ser ignorado
 .env.local
 .env.development.local
 .env.test.local
