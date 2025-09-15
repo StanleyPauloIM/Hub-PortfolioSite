@@ -9,7 +9,8 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { auth, applyAuthPersistence } from '../firebase/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, applyAuthPersistence, db } from '../firebase/firebase';
 import { sendEmailVerification as sendEmailVerificationDirect } from 'firebase/auth';
 
 const AuthContext = createContext(null);
@@ -41,8 +42,27 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
+      try {
+        if (u) {
+          const ref = doc(db, 'users', u.uid);
+          const snap = await getDoc(ref);
+          if (!snap.exists()) {
+            await setDoc(ref, {
+              uid: u.uid,
+              email: u.email || '',
+              displayName: u.displayName || '',
+              photoURL: u.photoURL || '',
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+            });
+          } else {
+            // update last login/update timestamp minimally (optional)
+            await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
+          }
+        }
+      } catch {}
       setLoading(false);
     });
     return () => unsub();
@@ -53,6 +73,17 @@ export function AuthProvider({ children }) {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName) { try { await updateProfile(cred.user, { displayName }); } catch {} }
       try { await sendEmailVerification(cred.user); } catch {}
+      try {
+        const ref = doc(db, 'users', cred.user.uid);
+        await setDoc(ref, {
+          uid: cred.user.uid,
+          email: cred.user.email || email,
+          displayName: cred.user.displayName || displayName || '',
+          photoURL: cred.user.photoURL || '',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      } catch {}
       return { ok: true, user: cred.user };
     } catch (err) {
       return { ok: false, error: mapAuthError(err) };
