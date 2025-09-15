@@ -13,5 +13,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+
+// Inicializa analytics apenas quando suportado para evitar erros em dev/ambientes sem window
+let analytics = null;
+try {
+  if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
+    analytics = getAnalytics(app);
+  }
+} catch {}
+
+export { analytics };
 export default app;
