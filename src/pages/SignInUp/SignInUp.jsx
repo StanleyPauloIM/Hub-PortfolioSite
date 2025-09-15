@@ -7,7 +7,7 @@ import LinkedInButton from './components/LinkedInButton';
 import bgImage from '../../assets/Hub_Background2.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import app from '../../firebase/firebase';
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 
 const SignInUp = () => {
   const [params] = useSearchParams();
@@ -21,17 +21,39 @@ const SignInUp = () => {
   const [showSignUpPwd, setShowSignUpPwd] = useState(false);
   const [showSignUpConfirm, setShowSignUpConfirm] = useState(false);
 
-  // Feedback de signup
+  // Feedback de signin/signup
+  const [signInBusy, setSignInBusy] = useState(false);
+  const [signInError, setSignInError] = useState('');
   const [signUpBusy, setSignUpBusy] = useState(false);
   const [signUpError, setSignUpError] = useState('');
   const [signUpInfo, setSignUpInfo] = useState('');
 
-  // Handlers (placeholder para Sign in — faremos depois)
-  const handleSignIn = (e) => {
+  // Sign in real com Firebase
+  const handleSignIn = async (e) => {
     e.preventDefault();
+    setSignInError('');
+    setSignInBusy(true);
     const form = new FormData(e.currentTarget);
     const data = Object.fromEntries(form.entries());
-    console.log('Sign in submit', data);
+    try {
+      const auth = getAuth(app);
+      await setPersistence(auth, data.remember ? browserLocalPersistence : browserSessionPersistence);
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      setSignInBusy(false);
+      // Navegar para uma página que já existe e sabemos que renderiza
+      // Pode ajustar para onde fará sentido no seu fluxo
+      window.location.assign('/generateurportfolio');
+    } catch (err) {
+      const code = err?.code || '';
+      const map = {
+        'auth/invalid-email': 'Email inválido.',
+        'auth/user-not-found': 'Utilizador não encontrado.',
+        'auth/wrong-password': 'Email ou password incorretos.',
+        'auth/too-many-requests': 'Muitas tentativas. Tente novamente em instantes.',
+      };
+      setSignInBusy(false);
+      setSignInError(map[code] || 'Falha ao entrar. Tente novamente.');
+    }
   };
 
   // Signup real com Firebase
@@ -90,6 +112,11 @@ const SignInUp = () => {
           </header>
 
           <form className={styles.form} onSubmit={handleSignIn} autoComplete="on">
+            {signInError && (
+              <div style={{background:'rgba(255,75,75,0.12)', border:'1px solid rgba(255,75,75,0.4)', color:'#ff4b4b', padding:'8px 10px', borderRadius:8, marginBottom:8}} role="alert">
+                {signInError}
+              </div>
+            )}
             <label className={styles.label} htmlFor="email">Email</label>
             <div className={styles.inputWrap}>
               <svg className={styles.inputIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/></svg>
@@ -117,7 +144,7 @@ const SignInUp = () => {
               <a href="#" className={styles.mutedLink}>Esqueceu a password?</a>
             </div>
 
-            <button type="submit" className={`btn ${styles.primaryBtn}`}>Entrar</button>
+            <button type="submit" className={`btn ${styles.primaryBtn}`} disabled={signInBusy}>{signInBusy ? 'Entrando…' : 'Entrar'}</button>
 
             <div className={styles.orSeparator}><span>ou</span></div>
 
