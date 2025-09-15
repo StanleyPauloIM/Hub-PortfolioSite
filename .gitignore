@@ -26,8 +26,8 @@ desktop.ini
 .tmp/
 *.swp
 
-# ✅ Arquivos de ambiente
-.env
+# âœ… Arquivos de ambiente
+# .env (permitido para funcionar out-of-the-box)
 .env.local
 .env.development.local
 .env.test.local
