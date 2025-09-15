@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import styles from './SignInUp.module.css';
 import GoogleButton from './components/GoogleButton';
 import LinkedInButton from './components/LinkedInButton';
+import { useAuth } from '../../auth/AuthProvider';
 import bgImage from '../../assets/Hub_Background2.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
 import app from '../../firebase/firebase';
@@ -13,6 +14,7 @@ const SignInUp = () => {
   const [params] = useSearchParams();
   const initial = params.get('mode') === 'signup' ? 'signup' : 'signin';
   const [mode, setMode] = useState(initial);
+  const { signInWithGoogle } = useAuth();
 
   const isSignup = mode === 'signup';
 
@@ -149,7 +151,22 @@ const SignInUp = () => {
             <div className={styles.orSeparator}><span>ou</span></div>
 
             <div className={styles.socialRow}>
-              <GoogleButton className="btn btn--full" />
+              <GoogleButton className="btn btn--full" onClick={async ()=>{
+                try {
+                  setSignInError('');
+                  setSignInBusy(true);
+                  const res = await signInWithGoogle({ remember: true });
+                  setSignInBusy(false);
+                  if (!res.ok && !res.redirect) {
+                    setSignInError(res.error || 'Falha ao entrar com Google.');
+                    return;
+                  }
+                  window.location.assign('/generateurportfolio');
+                } catch {
+                  setSignInBusy(false);
+                  setSignInError('Falha ao entrar com Google.');
+                }
+              }} />
               <LinkedInButton className="btn btn--full" />
             </div>
 

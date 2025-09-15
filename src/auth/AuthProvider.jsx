@@ -8,6 +8,9 @@ import {
   updateProfile,
   sendEmailVerification,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, applyAuthPersistence, db } from '../firebase/firebase';
@@ -32,7 +35,9 @@ function mapAuthError(err) {
     'auth/user-not-found': 'Utilizador não encontrado.',
     'auth/wrong-password': 'Email ou password incorretos.',
     'auth/too-many-requests': 'Muitas tentativas. Tente novamente em instantes.',
-    'auth/popup-closed-by-user': 'Operação cancelada pelo utilizador.',
+'auth/popup-closed-by-user': 'Operação cancelada pelo utilizador.',
+    'auth/account-exists-with-different-credential': 'Já existe uma conta com este email por outro provedor. Entre pelo provedor associado e ligue contas nas definições.',
+    'auth/popup-blocked': 'O navegador bloqueou a janela. Tente novamente ou use outro navegador.',
   };
   return map[code] || 'Falha na autenticação. Tente novamente.';
 }
@@ -104,6 +109,28 @@ export function AuthProvider({ children }) {
 
   async function signOut() { try { await firebaseSignOut(auth); } catch {} }
 
+  async function signInWithGoogle({ remember = true } = {}) {
+    try {
+      await applyAuthPersistence(!!remember);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const cred = await signInWithPopup(auth, provider);
+      return { ok: true, user: cred.user };
+    } catch (err) {
+      if (err?.code === 'auth/popup-blocked' || err?.code === 'auth/cancelled-popup-request') {
+        try {
+          const provider = new GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: 'select_account' });
+          await signInWithRedirect(auth, provider);
+          return { ok: true, redirect: true };
+        } catch (e2) {
+          return { ok: false, error: mapAuthError(e2), code: e2?.code };
+        }
+      }
+      return { ok: false, error: mapAuthError(err), code: err?.code };
+    }
+  }
+
   async function resetPassword(email) {
     try { await sendPasswordResetEmail(auth, email); return { ok: true }; }
     catch (err) { return { ok: false, error: mapAuthError(err) }; }
@@ -119,7 +146,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const value = useMemo(() => ({ user, loading, signIn, signUp, signOut, resetPassword, resendVerification }), [user, loading]);
+  const value = useMemo(() => ({ user, loading, signIn, signUp, signOut, resetPassword, resendVerification, signInWithGoogle }), [user, loading]);
 
   return (
     <AuthContext.Provider value={value}>
