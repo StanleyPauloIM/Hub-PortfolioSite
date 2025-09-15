@@ -12,14 +12,16 @@ const Terms = lazy(() => import('../pages/Terms/Terms'));
 const TemplatesGallery = lazy(() => import('../pages/TemplatesGallery/TemplatesGallery'));
 const TemplateExample = lazy(() => import('../pages/TemplateExample/TemplateExample'));
 
+import ProtectedRoute from '../auth/ProtectedRoute';
+
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/signin" element={<SignInUp />} />
-      <Route path="/chooseurcharacter" element={<ChooseUrCharacter />} />
-      <Route path="/generateurportfolio" element={<GenerateUrPortfolio />} />
-      <Route path="/theportfolio" element={<ThePortfolio />} />
+      <Route path="/chooseurcharacter" element={<ProtectedRoute><ChooseUrCharacter /></ProtectedRoute>} />
+      <Route path="/generateurportfolio" element={<ProtectedRoute requireVerified><GenerateUrPortfolio /></ProtectedRoute>} />
+      <Route path="/theportfolio" element={<ProtectedRoute><ThePortfolio /></ProtectedRoute>} />
       <Route path="/templates" element={<TemplatesGallery />} />
       <Route path="/templates/:slug" element={<TemplateExample />} />
       <Route path="/terms" element={<Terms />} />
