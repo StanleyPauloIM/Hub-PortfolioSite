@@ -91,7 +91,7 @@ export default function SideNav({ collapsed, setCollapsed, mobileOpen, setMobile
     <aside className={[layoutStyles.sidebar, layoutStyles.mobilePanel, collapsed ? layoutStyles.collapsed : '', mobileOpen ? layoutStyles.mobileOpen : ''].join(' ')}>
       <div className={layoutStyles.sidebarHeader}>
         <div className={layoutStyles.brandRow}>
-          <img className={layoutStyles.brandLogo} src={user?.photoURL || HubGlobe} alt="HUB logo" />
+          <img className={layoutStyles.brandLogo} src={HubGlobe} alt="HUB logo" />
           {/* Em mobile, mostrar apenas ícone/logo; esconder texto quando mobileOpen */}
           {!collapsed && <div className={layoutStyles.brandText}>HUB</div>}
         </div>
