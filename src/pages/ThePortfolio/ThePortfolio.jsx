@@ -13,6 +13,7 @@ import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import { useAuth } from '../../auth/AuthProvider';
+import { timeAgoShort } from '../../utils/timeAgo';
 
 const Icon = {
   home: (props) => (
@@ -301,7 +302,7 @@ export default function ThePortfolio() {
                       <div key={i} className={exStyles.commentItem}>
                         {(c.avatar || avatarPool[1]) ? <img className={exStyles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" /> : null}
                         <div>
-                          <div className={exStyles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                          <div className={exStyles.commentMeta}>{c.author} • {timeAgoShort(c.at)}</div>
                           <div>{c.text}</div>
                         </div>
                         <button className={`${exStyles.commentLike} ${c.liked?exStyles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><UIIcon.heart/> {c.likes}</button>

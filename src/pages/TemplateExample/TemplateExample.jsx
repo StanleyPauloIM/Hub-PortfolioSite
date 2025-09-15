@@ -126,6 +126,7 @@ import GlowButton from '../../components/ui/GlowButton/GlowButton';
 import defaultAvatar from '../../assets/images/account_ex.jpg';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
+import { timeAgoShort } from '../../utils/timeAgo';
 
 function useLocalNumber(key, initial) {
   const [n, setN] = React.useState(() => {
@@ -306,7 +307,7 @@ export default function TemplateExample() {
                     <div key={i} className={styles.commentItem}>
                       {(c.avatar || avatarPool[1]) ? <img className={styles.commentAvatar} src={c.avatar||avatarPool[1]} alt="" /> : null}
                       <div>
-                        <div className={styles.commentMeta}>{c.author} • {new Date(c.at).toLocaleString()}</div>
+                        <div className={styles.commentMeta}>{c.author} • {timeAgoShort(c.at)}</div>
                         <div>{c.text}</div>
                       </div>
                       <button className={`${styles.commentLike} ${c.liked?styles.commentLiked:''}`} onClick={()=>toggleCommentLike(i)}><Icon.heart/> {c.likes}</button>
