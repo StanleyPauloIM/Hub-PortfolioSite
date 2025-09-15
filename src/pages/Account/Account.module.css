@@ -1,0 +1,9 @@
+.wrapper { max-width: 720px; margin: 40px auto; padding: 16px; }
+.row { display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center; margin: 12px 0; }
+.input { width: 100%; padding: 10px 12px; border: 1px solid var(--p-border, rgba(0,0,0,0.14)); border-radius: 8px; background: var(--p-surface-1, rgba(255,255,255,0.98)); color: var(--text); }
+.avatarRow { display: flex; gap: 12px; align-items: center; }
+.avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.placeholder { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--p-surface-2, rgba(0,0,0,0.1)); color: var(--text); }
+.actions { margin-top: 16px; }
+.error { background: rgba(255,75,75,0.12); border: 1px solid rgba(255,75,75,0.4); color: #ff4b4b; padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; }
+.info { background: rgba(30,144,255,0.12); border: 1px solid rgba(30,144,255,0.4); color: var(--text); padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; }

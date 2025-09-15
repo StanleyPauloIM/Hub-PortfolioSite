@@ -11,6 +11,7 @@ const ThePortfolio = lazy(() => import('../pages/ThePortfolio/ThePortfolio'));
 const Terms = lazy(() => import('../pages/Terms/Terms'));
 const TemplatesGallery = lazy(() => import('../pages/TemplatesGallery/TemplatesGallery'));
 const TemplateExample = lazy(() => import('../pages/TemplateExample/TemplateExample'));
+const AccountLazy = lazy(() => import('../pages/Account/Account'));
 
 import ProtectedRoute from '../auth/ProtectedRoute';
 
@@ -24,6 +25,7 @@ const AppRoutes = () => {
       <Route path="/theportfolio" element={<ProtectedRoute><ThePortfolio /></ProtectedRoute>} />
       <Route path="/templates" element={<TemplatesGallery />} />
       <Route path="/templates/:slug" element={<TemplateExample />} />
+      <Route path="/account" element={<ProtectedRoute><React.Suspense fallback={null}><AccountLazy /></React.Suspense></ProtectedRoute>} />
       <Route path="/terms" element={<Terms />} />
     </Routes>
   );
