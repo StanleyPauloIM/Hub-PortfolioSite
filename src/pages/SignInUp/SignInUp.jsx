@@ -6,6 +6,8 @@ import GoogleButton from './components/GoogleButton';
 import LinkedInButton from './components/LinkedInButton';
 import bgImage from '../../assets/Hub_Background2.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
+import app from '../../firebase/firebase';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 
 const SignInUp = () => {
   const [params] = useSearchParams();
@@ -19,7 +21,12 @@ const SignInUp = () => {
   const [showSignUpPwd, setShowSignUpPwd] = useState(false);
   const [showSignUpConfirm, setShowSignUpConfirm] = useState(false);
 
-  // Handlers (placeholders)
+  // Feedback de signup
+  const [signUpBusy, setSignUpBusy] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
+  const [signUpInfo, setSignUpInfo] = useState('');
+
+  // Handlers (placeholder para Sign in — faremos depois)
   const handleSignIn = (e) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -27,11 +34,42 @@ const SignInUp = () => {
     console.log('Sign in submit', data);
   };
 
-  const handleSignUp = (e) => {
+  // Signup real com Firebase
+  const handleSignUp = async (e) => {
     e.preventDefault();
+    setSignUpError('');
+    setSignUpInfo('');
+    setSignUpBusy(true);
     const form = new FormData(e.currentTarget);
     const data = Object.fromEntries(form.entries());
-    console.log('Sign up submit', data);
+
+    // Validação simples
+    if ((data.password || '') !== (data.confirmPassword || '')) {
+      setSignUpBusy(false);
+      setSignUpError('As passwords não coincidem.');
+      return;
+    }
+
+    const auth = getAuth(app);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const displayName = [data.firstName || '', data.lastName || ''].filter(Boolean).join(' ').trim();
+      if (displayName) { try { await updateProfile(cred.user, { displayName }); } catch {} }
+      try { await sendEmailVerification(cred.user); } catch {}
+      setSignUpBusy(false);
+      setSignUpInfo('Conta criada! Verifique o seu e‑mail para ativar a conta.');
+      // Opcional: limpar formulário
+      try { (e.currentTarget).reset(); } catch {}
+    } catch (err) {
+      const code = err?.code || '';
+      const map = {
+        'auth/invalid-email': 'Email inválido.',
+        'auth/weak-password': 'Password fraca. Use no mínimo 8 caracteres.',
+        'auth/email-already-in-use': 'Este email já está em uso.',
+      };
+      setSignUpBusy(false);
+      setSignUpError(map[code] || 'Falha no registo. Tente novamente.');
+    }
   };
 
   const wrapperStyle = useMemo(() => ({
@@ -108,6 +146,16 @@ const SignInUp = () => {
           </header>
 
           <form className={styles.panelForm} onSubmit={handleSignUp} autoComplete="on">
+            {signUpError && (
+              <div style={{background:'rgba(255,75,75,0.12)', border:'1px solid rgba(255,75,75,0.4)', color:'#ff4b4b', padding:'8px 10px', borderRadius:8, marginBottom:8}} role="alert">
+                {signUpError}
+              </div>
+            )}
+            {signUpInfo && (
+              <div style={{background:'rgba(30,144,255,0.12)', border:'1px solid rgba(30,144,255,0.4)', color:'var(--text)', padding:'8px 10px', borderRadius:8, marginBottom:8}}>
+                {signUpInfo}
+              </div>
+            )}
             <div className={styles.grid2}>
               <div>
                 <label className={styles.label} htmlFor="firstName">Primeiro Nome</label>
@@ -170,7 +218,7 @@ const SignInUp = () => {
               <span>Li e aceito os <Link to="/terms" className={styles.inlineLink}>Termos e Condições</Link></span>
             </label>
 
-            <button type="submit" className={`btn ${styles.primaryBtn}`}>Criar conta</button>
+            <button type="submit" className={`btn ${styles.primaryBtn}`} disabled={signUpBusy}>{signUpBusy ? 'A criar…' : 'Criar conta'}</button>
 
             <div className={styles.socialRow}>
               <GoogleButton className="btn btn--full" />
