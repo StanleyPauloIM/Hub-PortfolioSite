@@ -419,9 +419,9 @@ export default function ClassicPortfolio({ data }) {
             {(expanded.med ? media : media.slice(0,5)).map((m, i) => (
               <div key={i} className={styles.mediaItem}>
                 {m.type === 'video' ? (
-                  <video src={m.url} controls />
+                  m.url ? <video src={m.url} controls /> : null
                 ) : (
-                  <img src={m.url} alt="Media" />
+                  m.url ? <img src={m.url} alt="Media" /> : null
                 )}
               </div>
             ))}
