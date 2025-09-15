@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import layoutStyles from '../../../pages/ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../../assets/HubGlobe.png';
 import { useAuth } from '../../../auth/AuthProvider';
+import { NavLink } from 'react-router-dom';
+import { useI18n } from '../../../i18n/I18nProvider';
 
 // Inline icons (to avoid cross-deps). Keep consistent with pages.
 const Icon = {
@@ -79,6 +81,7 @@ function ButtonItem({ onClick, icon, label, collapsed }){
 
 export default function SideNav({ collapsed, setCollapsed, mobileOpen, setMobileOpen }){
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const pages = [
     { label:'Início', path:'/', icon:<Icon.home />, exact:true },
     { label:'ChooseUrCharacter', path:'/chooseurcharacter', icon:<Icon.search /> },
@@ -102,15 +105,15 @@ export default function SideNav({ collapsed, setCollapsed, mobileOpen, setMobile
       </div>
 
       <nav>
-        <NavSection title="Páginas">
+        <NavSection title={t('nav.pages')}>
           {pages.map(p => (
             <PageLink key={p.path} to={p.path} icon={p.icon} label={p.label} exact={p.exact} collapsed={collapsed} />
           ))}
         </NavSection>
 
-        <NavSection title="Conta">
+        <NavSection title={t('settings.account')}>
           <ButtonItem onClick={() => alert('Notificações')} icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>} label="Notificações" collapsed={collapsed} />
-          <ButtonItem onClick={() => alert('Definições')} icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8.6 4.6a1.65 1.65 0 0 0 1-.33V4a2 2 0 1 1 4 0v.09c.36.14.69.34 1 .59.3.25.55.56.74.9.18.34.29.73.33 1.12.04.39 0 .78-.12 1.16"/></svg>} label="Definições" collapsed={collapsed} />
+          <PageLink to="/settings" icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8.6 4.6a1.65 1.65 0 0 0 1-.33V4a2 2 0 1 1 4 0v.09c.36.14.69.34 1 .59.3.25.55.56.74.9.18.34.29.73.33 1.12.04.39 0 .78-.12 1.16"/></svg>} label={t('nav.settings')} collapsed={collapsed} />
           <ButtonItem onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }} icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>} label="Sair" collapsed={collapsed} />
         </NavSection>
 

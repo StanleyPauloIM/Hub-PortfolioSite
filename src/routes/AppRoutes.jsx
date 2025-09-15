@@ -10,8 +10,9 @@ const GenerateUrPortfolio = lazy(() => import('../pages/GenerateUrPortfolio/Gene
 const ThePortfolio = lazy(() => import('../pages/ThePortfolio/ThePortfolio'));
 const Terms = lazy(() => import('../pages/Terms/Terms'));
 const TemplatesGallery = lazy(() => import('../pages/TemplatesGallery/TemplatesGallery'));
-const TemplateExample = lazy(() => import('../pages/TemplateExample/TemplateExample'));
+const TemplateExample = lazy (() => import('../pages/TemplateExample/TemplateExample'));
 const AccountLazy = lazy(() => import('../pages/Account/Account'));
+const SettingsLazy = lazy(() => import('../pages/Settings/Settings'));
 
 import ProtectedRoute from '../auth/ProtectedRoute';
 
@@ -26,6 +27,7 @@ const AppRoutes = () => {
       <Route path="/templates" element={<TemplatesGallery />} />
       <Route path="/templates/:slug" element={<TemplateExample />} />
       <Route path="/account" element={<ProtectedRoute><React.Suspense fallback={null}><AccountLazy /></React.Suspense></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><React.Suspense fallback={null}><SettingsLazy /></React.Suspense></ProtectedRoute>} />
       <Route path="/terms" element={<Terms />} />
     </Routes>
   );

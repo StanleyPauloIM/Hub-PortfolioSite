@@ -4,10 +4,13 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import { AuthProvider } from './auth/AuthProvider';
+import { I18nProvider } from './i18n/I18nProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <AuthProvider>
-    <App />
-  </AuthProvider>
+  <I18nProvider>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </I18nProvider>
 );
