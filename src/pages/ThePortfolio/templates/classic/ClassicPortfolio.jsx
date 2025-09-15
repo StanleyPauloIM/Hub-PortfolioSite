@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import styles from './ClassicPortfolio.module.css';
 import PdfThumb from '../../../../components/ui/PdfThumb/PdfThumb';
+import { useI18n } from '../../../../i18n/I18nProvider';
 
 function Section({ title, children }) {
   if (!children) return null;
@@ -21,6 +22,7 @@ const fmtK = (n) => {
 };
 
 export default function ClassicPortfolio({ data }) {
+  const { t } = useI18n();
   if (!data) return null;
   const {
     theme = {},
@@ -100,14 +102,14 @@ export default function ClassicPortfolio({ data }) {
         <div className={styles.headerLeft}>
           <div className={styles.avatarWrap}>
             {profile.avatarUrl ? (
-              <img className={styles.avatar} src={profile.avatarUrl} alt="Avatar" />
+              <img className={styles.avatar} src={profile.avatarUrl} alt={t('portfolio.alt.avatar')} />
             ) : (
               <div className={styles.avatarPlaceholder}>{(profile.name || 'U')[0]}</div>
             )}
           </div>
           <div className={styles.headerText}>
-            <h1 className={styles.name}>{profile.name || 'Your Name'}</h1>
-            <div className={styles.title}>{profile.title || 'Your Role / Title'}</div>
+            <h1 className={styles.name}>{profile.name || t('portfolio.fallback.name')}</h1>
+            <div className={styles.title}>{profile.title || t('portfolio.fallback.role')}</div>
             {(profile.location || profile.gender || contact.email || socials.github || socials.linkedin) && (
               <div className={styles.metaRow}>
                 {profile.location && <span className={styles.metaItem}>📍 {profile.location}</span>}
@@ -117,11 +119,11 @@ export default function ClassicPortfolio({ data }) {
             )}
             {/* Stats: likes & views */}
             <div className={styles.statsRow}>
-              <span className={styles.stat} title="Likes">
+              <span className={styles.stat} title={t('portfolio.stats.likes')}>
                 <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 {fmtK(data?.stats?.likes ?? 0)}
               </span>
-              <span className={styles.stat} title="Views">
+              <span className={styles.stat} title={t('portfolio.stats.views')}>
                 <svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 {fmtK(data?.stats?.views ?? 0)}
               </span>
@@ -164,14 +166,14 @@ export default function ClassicPortfolio({ data }) {
 
       {/* About */}
       {(about.summary || about.bio) && (
-        <Section title="Sobre">
+        <Section title={t('portfolio.section.about')}>
           <p className={styles.about}>{about.summary || about.bio}</p>
         </Section>
       )}
 
       {/* Skills */}
       {hasAny(skills) && (
-        <Section title="Skills">
+        <Section title={t('portfolio.section.skills')}>
           <div className={styles.chips}>
             {skills.map((s, i) => (
               <span key={String(s)+i} className={styles.chip}>#{s}</span>
@@ -182,22 +184,22 @@ export default function ClassicPortfolio({ data }) {
 
       {/* Projects */}
       {hasAny(projects) && (
-        <Section title="Projetos">
+        <Section title={t('portfolio.section.projects')}>
           <div className={styles.grid}>
             {(expanded.proj ? projects : projects.slice(0,5)).map((p, i) => (
               <article key={i} className={styles.card}>
                 {p.imageUrl && (
                   <div className={styles.cardMedia}>
-                    <img src={p.imageUrl} alt="Project" />
+                    <img src={p.imageUrl} alt={t('portfolio.alt.project')} />
                   </div>
                 )}
                 <div className={styles.cardBody}>
-                  <h4 className={styles.cardTitle}>{p.title || 'Projeto'}</h4>
+                  <h4 className={styles.cardTitle}>{p.title || t('portfolio.fallback.project')}</h4>
                   {p.description && <p className={styles.cardText}>{p.description}</p>}
                   {(p.link || p.videoUrl) && (
                     <div className={styles.cardLinks}>
-                      {p.link && <a href={p.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Visitar</a>}
-                      {p.videoUrl && <a href={p.videoUrl} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vídeo</a>}
+                      {p.link && <a href={p.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>{t('portfolio.cta.visit')}</a>}
+                      {p.videoUrl && <a href={p.videoUrl} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>{t('portfolio.cta.video')}</a>}
                     </div>
                   )}
                 </div>
@@ -206,10 +208,10 @@ export default function ClassicPortfolio({ data }) {
           </div>
           <div className={styles.moreWrap}>
             {media.length > 5 && !expanded.med && (
-              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:true}))}>Ver mais…</button>
+              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:true}))}>{t('portfolio.cta.more')}</button>
             )}
             {expanded.med && (
-              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:false}))}>Ocultar</button>
+              <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, med:false}))}>{t('portfolio.cta.less')}</button>
             )}
           </div>
         </Section>
@@ -219,7 +221,7 @@ export default function ClassicPortfolio({ data }) {
       {(hasAny(certificates) || hasAny(diplomas)) && (
         <div className={styles.twoCol}>
           {hasAny(certificates) && (
-            <Section title="Certificados">
+            <Section title={t('portfolio.section.certificates')}>
               <div className={styles.grid}>
                 {(expanded.cert ? certificates : certificates.slice(0,5)).map((c, i) => {
                   const isImgLink = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(c.link||''));
@@ -237,7 +239,7 @@ export default function ClassicPortfolio({ data }) {
                               <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                               <span className={styles.imgName}>{fname}</span>
                             </div>
-                            <div className={styles.imgPreview}><img src={c.fileUrl} alt="Certificado"/></div>
+                            <div className={styles.imgPreview}><img src={c.fileUrl} alt={t('portfolio.alt.certificate')}/></div>
                           </div>
                         )})()}
 {hasPdfFile && (()=>{ const fname = c.fileName || nameFromUrl(c.link||''); return (
@@ -255,7 +257,7 @@ export default function ClassicPortfolio({ data }) {
                               <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                               <span className={styles.imgName}>{fname}</span>
                             </div>
-                            <div className={styles.imgPreview}><img src={c.link} alt="Certificado"/></div>
+                            <div className={styles.imgPreview}><img src={c.link} alt={t('portfolio.alt.certificate')}/></div>
                           </div>
                         )})()}
 {!hasImgFile && !hasPdfFile && isPdfLink && (()=>{ const fname = nameFromUrl(c.link); return (
@@ -276,7 +278,7 @@ export default function ClassicPortfolio({ data }) {
                         )}
                         {c.link && (
                           <div className={styles.cardLinks}>
-                            <a href={c.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a>
+                            <a href={c.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>{t('portfolio.cta.view')}</a>
                           </div>
                         )}
                       </div>
@@ -286,16 +288,16 @@ export default function ClassicPortfolio({ data }) {
               </div>
               <div className={styles.moreWrap}>
                 {certificates.length > 5 && !expanded.cert && (
-                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:true}))}>Ver mais…</button>
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:true}))}>{t('portfolio.cta.more')}</button>
                 )}
                 {expanded.cert && (
-                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:false}))}>Ocultar</button>
+                  <button type="button" className={styles.moreBtn} onClick={()=>setExpanded(e=>({...e, cert:false}))}>{t('portfolio.cta.less')}</button>
                 )}
               </div>
             </Section>
           )}
           {hasAny(diplomas) && (
-            <Section title="Diplomas">
+            <Section title={t('portfolio.section.diplomas')}>
               <div className={styles.grid}>
                 {(expanded.dip ? diplomas : diplomas.slice(0,5)).map((d, i) => {
                   const isImgLink = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(d.link||''));
@@ -312,7 +314,7 @@ export default function ClassicPortfolio({ data }) {
                               <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                               <span className={styles.imgName}>{fname}</span>
                             </div>
-                            <div className={styles.imgPreview}><img src={d.fileUrl} alt="Diploma"/></div>
+                            <div className={styles.imgPreview}><img src={d.fileUrl} alt={t('portfolio.alt.diploma')}/></div>
                           </div>
                         )})()}
 {hasPdfFile && (()=>{ const fname = d.fileName || nameFromUrl(d.link||''); return (
@@ -330,7 +332,7 @@ export default function ClassicPortfolio({ data }) {
                               <svg className={styles.imgIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                               <span className={styles.imgName}>{fname}</span>
                             </div>
-                            <div className={styles.imgPreview}><img src={d.link} alt="Diploma"/></div>
+                            <div className={styles.imgPreview}><img src={d.link} alt={t('portfolio.alt.diploma')}/></div>
                           </div>
                         )})()}
 {!hasImgFile && !hasPdfFile && isPdfLink && (()=>{ const fname = nameFromUrl(d.link); return (
@@ -351,7 +353,7 @@ export default function ClassicPortfolio({ data }) {
                         )}
                         {d.link && (
                           <div className={styles.cardLinks}>
-                            <a href={d.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>Ver</a>
+                            <a href={d.link} target="_blank" rel="noreferrer"><svg className={styles.statIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 1 0 7.07 7.07l1.71-1.71"/></svg>{t('portfolio.cta.view')}</a>
                           </div>
                         )}
                       </div>
@@ -374,7 +376,7 @@ export default function ClassicPortfolio({ data }) {
 
       {/* Languages */}
       {hasAny(languages) && (
-        <Section title="Línguas">
+        <Section title={t('portfolio.section.languages')}>
           <div className={styles.langGrid}>
             {languages.map((l, i) => (
               <div key={i} className={styles.langPill}>
@@ -389,7 +391,7 @@ export default function ClassicPortfolio({ data }) {
 
       {/* Links */}
       {hasAny(links) && (
-        <Section title="Links">
+        <Section title={t('portfolio.section.links')}>
           <ul className={styles.list}>
             {links.map((l, i) => {
               const isImg = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(String(l.url||''));
@@ -414,14 +416,14 @@ export default function ClassicPortfolio({ data }) {
 
       {/* Media */}
       {hasAny(media) && (
-        <Section title="Galeria">
+        <Section title={t('portfolio.section.gallery')}>
           <div className={styles.mediaGrid}>
             {(expanded.med ? media : media.slice(0,5)).map((m, i) => (
               <div key={i} className={styles.mediaItem}>
                 {m.type === 'video' ? (
                   m.url ? <video src={m.url} controls /> : null
                 ) : (
-                  m.url ? <img src={m.url} alt="Media" /> : null
+                  m.url ? <img src={m.url} alt={t('portfolio.alt.media')} /> : null
                 )}
               </div>
             ))}
@@ -431,7 +433,7 @@ export default function ClassicPortfolio({ data }) {
 
       {/* Contact */}
       {(contact.email || contact.phone || contact.phoneCode) && (
-        <Section title="Contato">
+        <Section title={t('portfolio.section.contact')}>
           <div className={styles.contactBox}>
             {contact.email && <div>📧 {contact.email}</div>}
             {(contact.phone || contact.phoneCode) && <div>📞 {(contact.phoneCode||'') + (contact.phone? ' ' + contact.phone : '')}</div>}

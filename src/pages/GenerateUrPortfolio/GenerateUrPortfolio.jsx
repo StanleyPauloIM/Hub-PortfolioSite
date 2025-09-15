@@ -169,13 +169,13 @@ export default function GenerateUrPortfolio() {
 
   // Persist draft on each change (debounced)
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       try {
         const serialized = JSON.stringify(data, (k, v) => (typeof v === 'string' && /^blob:/.test(v) ? '' : v));
         localStorage.setItem(STORAGE_DRAFT, serialized);
       } catch {}
     }, 250);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timeoutId);
   }, [data]);
 
   // Pulse gradient border on the templates box from time to time
@@ -205,15 +205,15 @@ export default function GenerateUrPortfolio() {
     { label: 'ThePortfolio', path: '/theportfolio' },
   ];
 
-  const GENDER_OPTIONS = ['Masculino', 'Feminino', 'Não dizer'];
+      const GENDER_OPTIONS = [t('common.gender.male'), t('common.gender.female'), t('common.gender.other')];
   // import experiência do ChooseUrCharacter
   // Nota: import evitado para não criar dependência circular de páginas; replicamos localmente via export nomeado
   // Em produção, moveríamos para src/data/experience.js
   const EXPERIENCE_OPTIONS = [
-    { value: 'junior', label: 'Júnior' },
-    { value: 'mid', label: 'Pleno' },
-    { value: 'senior', label: 'Sénior' },
-    { value: '5+', label: '5+ anos' },
+    { value: 'junior', label: t('common.experience.junior') },
+    { value: 'mid', label: t('common.experience.mid') },
+    { value: 'senior', label: t('common.experience.senior') },
+    { value: '5+', label: t('common.experience.fivePlus') },
   ];
 
   // Helpers to update nested fields
@@ -246,8 +246,8 @@ export default function GenerateUrPortfolio() {
 
   const handleAvatarFile = (file) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) return setMessage('Arquivo inválido. Escolhe uma imagem.');
-    if (file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
+    if (!file.type.startsWith('image/')) return setMessage(t('generate.msg.imageOnly'));
+    if (file.size > 3 * 1024 * 1024) return setMessage(t('generate.msg.imageTooLarge'));
     const url = URL.createObjectURL(file);
     setPreviews((p) => {
       const list = [...(p.stacks?.avatar || [])];
@@ -260,8 +260,8 @@ export default function GenerateUrPortfolio() {
 
   const handleProjectImageFile = (idx, file) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) return setMessage('Escolhe uma imagem.');
-    if (file.size > 3 * 1024 * 1024) return setMessage('Imagem de projeto muito grande (máx. 3MB).');
+    if (!file.type.startsWith('image/')) return setMessage(t('generate.msg.imageOnly'));
+    if (file.size > 3 * 1024 * 1024) return setMessage(t('generate.msg.imageTooLarge'));
     const url = URL.createObjectURL(file);
     setPreviews((p) => {
       const proj = p.stacks?.projects?.[idx] || [];
@@ -275,11 +275,11 @@ export default function GenerateUrPortfolio() {
   const handleMediaFile = (idx, file, type) => {
     if (!file) return;
     if (type === 'video') {
-      if (!file.type.startsWith('video/')) return setMessage('Escolhe um vídeo.');
-      if (file.size > 20 * 1024 * 1024) return setMessage('Vídeo muito grande (máx. 20MB).');
+      if (!file.type.startsWith('video/')) return setMessage(t('generate.msg.videoOnly'));
+      if (file.size > 20 * 1024 * 1024) return setMessage(t('generate.msg.videoTooLarge'));
     } else {
-      if (!file.type.startsWith('image/')) return setMessage('Escolhe uma imagem.');
-      if (file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
+      if (!file.type.startsWith('image/')) return setMessage(t('generate.msg.imageOnly'));
+      if (file.size > 3 * 1024 * 1024) return setMessage(t('generate.msg.imageTooLarge'));
     }
     const url = URL.createObjectURL(file);
     setPreviews((p) => {
@@ -298,9 +298,9 @@ export default function GenerateUrPortfolio() {
   const handleCertFile = (idx, file) => {
     if (!file) return;
     const type = isPdf(file) ? 'pdf' : (file.type.startsWith('image/') ? 'image' : '');
-    if (!type) return setMessage('Anexa uma imagem ou PDF.');
-    if (type === 'pdf' && file.size > 10 * 1024 * 1024) return setMessage('PDF muito grande (máx. 10MB).');
-    if (type === 'image' && file.size > 3 * 1024 * 1024) return setMessage('Imagem muito grande (máx. 3MB).');
+    if (!type) return setMessage(t('generate.msg.invalidFile'));
+    if (type === 'pdf' && file.size > 10 * 1024 * 1024) return setMessage(t('generate.msg.pdfTooLarge'));
+    if (type === 'image' && file.size > 3 * 1024 * 1024) return setMessage(t('generate.msg.imageTooLarge'));
     const url = URL.createObjectURL(file);
     setPreviews((p) => {
       const cert = p.stacks?.certificates?.[idx] || [];
@@ -331,7 +331,7 @@ export default function GenerateUrPortfolio() {
     try {
       const serialized = JSON.stringify(data, (k, v) => (typeof v === 'string' && /^blob:/.test(v) ? '' : v));
       localStorage.setItem(STORAGE_DRAFT, serialized);
-      setMessage('Rascunho guardado.');
+      setMessage(t('generate.msg.draftSaved'));
       setTimeout(() => setMessage(''), 1500);
     } catch {}
   };
@@ -343,7 +343,7 @@ export default function GenerateUrPortfolio() {
       localStorage.setItem(STORAGE_PUBLISHED, serialized);
       // dispara evento manual para outras abas/componentes (fallback em single‑page)
       try { window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_PUBLISHED, newValue: serialized })); } catch {}
-      setMessage('Publicado!');
+      setMessage(t('generate.msg.published'));
       setTimeout(() => setMessage(''), 800);
       navigate('/theportfolio');
     } catch {}
@@ -362,7 +362,7 @@ export default function GenerateUrPortfolio() {
         <>
         {/* Top bar */}
         <div className={layoutStyles.topBar}>
-          <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
+          <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label={t('common.openMenu')}>
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
@@ -375,7 +375,7 @@ export default function GenerateUrPortfolio() {
           </div>
           <div className={layoutStyles.topActions}>
             <div className={layoutStyles.bellWrap} ref={notifRef}>
-              <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
+              <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
               <span className={layoutStyles.bellDot} />
@@ -385,30 +385,30 @@ export default function GenerateUrPortfolio() {
                     <div className={layoutStyles.notifTitle}>{t('generate.tip')}</div>
                     <div className={layoutStyles.notifMeta}>{t('generate.tipMeta')}</div>
                   </div>
-                  <div className={layoutStyles.notifFooter}>Ver todas</div>
+                  <div className={layoutStyles.notifFooter}>{t('common.viewAll')}</div>
                 </div>
               )}
             </div>
-            <button type="button" className={layoutStyles.iconBtn} onClick={() => navigate('/settings')} aria-label="Definições"><Icon.settings /></button>
+            <button type="button" className={layoutStyles.iconBtn} onClick={() => navigate('/settings')} aria-label={t('nav.settings')}><Icon.settings /></button>
               <div className={layoutStyles.accountWrap} ref={accountRef}>
-                <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
+                <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label={t('common.profile')}><img src={user?.photoURL || accountIcon} alt={user?.displayName ? t('common.profileOf',{name:user.displayName}) : t('common.profile')} /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
-                    Perfil
+                    {t('common.profile')}
                   </NavLink>
                   <NavLink to="/generateurportfolio" className={layoutStyles.accountLink} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
-                    Criar Portfólio
+                    {t('common.createPortfolio')}
                   </NavLink>
                   <hr className={layoutStyles.accountDivider} />
-                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
-                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>{t('settings.theme')}: {t('settings.dark')}</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>{t('settings.theme')}: {t('settings.light')}</button>
                   <hr className={layoutStyles.accountDivider} />
-                  <button className={layoutStyles.accountLink} onClick={() => console.log('Sair')} role="menuitem">
+                  <button className={layoutStyles.accountLink} onClick={() => console.log(t('auth.signOut'))} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
-                    Sair
+                    {t('auth.signOut')}
                   </button>
                 </div>
               )}
@@ -425,25 +425,25 @@ export default function GenerateUrPortfolio() {
             {/* Template */}
             <div className={[styles.formCard, styles.templateBox, styles.templateGlow, highlightTemplates ? styles.templateGlowActive : ''].join(' ')}>
             <div className={styles.sectionHeader}>
-              <h2>Template</h2>
-              <span className={styles.sectionHint}>Associe ao Classic Portfolio</span>
+              <h2>{t('generate.template.title')}</h2>
+              <span className={styles.sectionHint}>{t('generate.template.associateHint')}</span>
               <button type="button" className={styles.templatesCta} onClick={() => navigate('/templates')}>
-                Ver galeria
+                {t('generate.template.viewGallery')}
               </button>
             </div>
               <div className={styles.row}>
                 <label className={styles.radioCard}>
                   <input type="radio" name="template" checked={data.template === 'classic'} onChange={() => setField('template','classic')} />
                   <div className={styles.radioContent}>
-                    <div className={styles.radioTitle}>Classic Portfolio</div>
-                    <div className={styles.radioDesc}>Layout versátil e elegante</div>
+                    <div className={styles.radioTitle}>{t('generate.template.classicTitle')}</div>
+                    <div className={styles.radioDesc}>{t('generate.template.classicDesc')}</div>
                   </div>
                 </label>
-                <label className={`${styles.radioCard} ${styles.disabled}`} title="Brevemente">
+                <label className={`${styles.radioCard} ${styles.disabled}`} title={t('generate.template.comingSoon')}>
                   <input type="radio" name="template" disabled />
                   <div className={styles.radioContent}>
-                    <div className={styles.radioTitle}>Minimalist (em breve)</div>
-                    <div className={styles.radioDesc}>Foco total no conteúdo</div>
+                    <div className={styles.radioTitle}>{t('generate.template.minimalistTitle')}</div>
+                    <div className={styles.radioDesc}>{t('generate.template.minimalistDesc')}</div>
                   </div>
                 </label>
               </div>
@@ -451,64 +451,64 @@ export default function GenerateUrPortfolio() {
 
             {/* Perfil */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Perfil</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.profile.title')}</h2></div>
               <div className={styles.grid2}>
-<div className={styles.field}><label>Nome</label>
+<div className={styles.field}><label>{t('generate.profile.name.label')}</label>
 <FieldInput
                   icon={<Icon.user className={styles.inputIcon} />}
                   spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words"
                   maxLength={80}
                   value={data.profile.name}
                   onChange={(e)=>setField(['profile','name'], e.target.value)}
-                  placeholder="Ex.: Ana Silva"
+                  placeholder={t('generate.profile.name.placeholder')}
                 />
                 </div>
-<div className={styles.field}><label>Título</label>
+<div className={styles.field}><label>{t('generate.profile.titleField.label')}</label>
                   <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
                     <AutocompleteSelect
                     value={data.profile.title}
                     onChange={(val)=>setField(['profile','title'], val)}
                     options={JOB_TITLES}
-                    placeholder="Ex.: Frontend Engineer"
+                    placeholder={t('generate.profile.titleField.placeholder')}
                     allowCustom={true}
                     maxVisible={7}
 renderLeadingIcon={() => null}
                     />
                   </Field>
                 </div>
-                <div className={styles.field}><label>Localização</label>
+                <div className={styles.field}><label>{t('generate.profile.location.label')}</label>
                   <Field icon={<Icon.mapPin className={styles.inputIcon} />} dropdown noInnerField>
                     <AutocompleteSelect
                     value={data.profile.location}
                     onChange={(val)=>setField(['profile','location'], val)}
                     options={COUNTRIES}
-                    placeholder="País"
+                    placeholder={t('generate.profile.location.placeholder')}
                     allowCustom={true}
                     maxVisible={7}
                     renderLeadingIcon={() => null}
                     />
                   </Field>
                 </div>
-                <div className={styles.field}><label>Gênero</label>
+                <div className={styles.field}><label>{t('generate.profile.gender.label')}</label>
                   <Field icon={<Icon.user className={styles.inputIcon} />} dropdown noInnerField>
                     <AutocompleteSelect
                       value={data.profile.gender||''}
                       onChange={(val)=>setField(['profile','gender'], val)}
                       options={GENDER_OPTIONS}
-                      placeholder="Selecione"
+                      placeholder={t('generate.profile.gender.placeholder')}
                       allowCustom={false}
                       maxVisible={7}
                       renderLeadingIcon={() => null}
                     />
                   </Field>
                 </div>
-                <div className={styles.field}><label>Experiência</label>
+                <div className={styles.field}><label>{t('generate.profile.experience.label')}</label>
                   <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerField>
                     <AutocompleteSelect
                       value={data.profile.experience||''}
                       onChange={(val)=>setField(['profile','experience'], val)}
                       options={EXPERIENCE_OPTIONS.map(o=>o.label)}
-                      placeholder="Selecione"
+                      placeholder={t('generate.profile.experience.placeholder')}
                       allowCustom={false}
                       maxVisible={7}
                       renderLeadingIcon={() => null}
@@ -516,10 +516,10 @@ renderLeadingIcon={() => null}
                   </Field>
                 </div>
                 <div className={styles.field}>
-                  <label>Avatar URL</label>
-<FieldInput icon={<Icon.image className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={400} disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder="https://..." />
-                  <div className={styles.orDivider}><span>OU</span></div>
-                  <FileInput disabled={Boolean((data.profile.avatarUrl||'').trim())} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB. Apenas pré‑visualização local." onChange={(file)=>handleAvatarFile(file)} />
+                  <label>{t('generate.profile.avatarUrl.label')}</label>
+<FieldInput icon={<Icon.image className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={400} disabled={(previews.stacks?.avatar||[]).length>0} value={data.profile.avatarUrl} onChange={(e)=>setField(['profile','avatarUrl'], e.target.value)} placeholder={t('generate.profile.avatarUrl.placeholder')} />
+                  <div className={styles.orDivider}><span>{t('common.orUpper')}</span></div>
+                  <FileInput disabled={Boolean((data.profile.avatarUrl||'').trim())} accept="image/*" label={t('generate.profile.selectImage')} hint={t('generate.profile.imageLocalHint')} onChange={(file)=>handleAvatarFile(file)} />
                   <div className={[styles.fileStack, (previews.stacks?.avatar||[]).length>3 ? styles.stacked : ''].join(' ')}>
                     {(previews.stacks?.avatar||[]).map((it, si) => (
                       <div key={si} className={[styles.stackItem, previews.profileAvatar===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, profileAvatar: it.url})); setField(['profile','avatarUrl'], it.url); }}>
@@ -530,8 +530,8 @@ renderLeadingIcon={() => null}
                   </div>
                   <div className={styles.previewRow}>
                     {previews.profileAvatar ? (
-                      <img className={styles.avatarPreview} src={previews.profileAvatar} alt="Avatar preview" />
-                    ) : (isImageUrl(data.profile.avatarUrl) && <img className={styles.avatarPreview} src={data.profile.avatarUrl} alt="Avatar preview" />)}
+                      <img className={styles.avatarPreview} src={previews.profileAvatar} alt={t('generate.profile.avatarPreviewAlt')} />
+                    ) : (isImageUrl(data.profile.avatarUrl) && <img className={styles.avatarPreview} src={data.profile.avatarUrl} alt={t('generate.profile.avatarPreviewAlt')} />)}
                   </div>
                 </div>
               </div>
@@ -539,42 +539,42 @@ renderLeadingIcon={() => null}
 
             {/* Sobre */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Sobre</h2></div>
-<div className={styles.field}><label>Resumo</label><textarea spellCheck={true} className={styles.textarea} rows={4} value={data.about.summary} onChange={(e)=>setField(['about','summary'], e.target.value)} placeholder="Breve apresentação"/></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.about.title')}</h2></div>
+<div className={styles.field}><label>{t('generate.about.summaryLabel')}</label><textarea spellCheck={true} className={styles.textarea} rows={4} value={data.about.summary} onChange={(e)=>setField(['about','summary'], e.target.value)} placeholder={t('generate.about.summaryPlaceholder')}/></div>
             </div>
 
             {/* Contatos e Sociais */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Contato & Sociais</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.contact.title')}</h2></div>
               <div className={styles.grid2}>
-<div className={styles.field}><label>Email</label>
+<div className={styles.field}><label>{t('generate.contact.email')}</label>
 <FieldInput icon={<Icon.mail className={styles.inputIcon} />} type="email" spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={120} value={data.contact.email} onChange={(e)=>setField(['contact','email'], e.target.value)} placeholder="nome@dominio.com" />
                 </div>
                 <div className={styles.field}>
                   <label>
-                    Telefone
+                    {t('generate.contact.phone')}
                     <select className={styles.codeSelect} value={data.contact.phoneCode || '+258'} onChange={(e)=>setField(['contact','phoneCode'], e.target.value)}>
                       {CALLING_CODES.map(({name, code}) => (
                         <option key={name+code} value={code}>{name} ({code})</option>
                       ))}
                     </select>
                   </label>
-<FieldInput icon={<Icon.phone className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={32} value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder="Número" />
+<FieldInput icon={<Icon.phone className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={32} value={data.contact.phone} onChange={(e)=>setField(['contact','phone'], e.target.value)} placeholder={t('generate.contact.phonePlaceholder')} />
                 </div>
                 <div className={styles.field}>
-                  <label>Website</label>
+                  <label>{t('generate.contact.website')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={data.contact.website} onChange={(e)=>setField(['contact','website'], e.target.value)} placeholder="https://..." />
                 </div>
-<div className={styles.field}><label>GitHub</label>
+<div className={styles.field}><label>{t('generate.contact.github')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3"/><path d="M15 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 18 3.77 5.07 5.07 0 0 0 17.91 1S16.73.65 13 2.48a13.38 13.38 0 0 0-8 0C1.27.65.09 1 .09 1A5.07 5.07 0 0 0 0 3.77 5.44 5.44 0 0 0 1.5 7.9c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 7 18.13V22"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={data.socials.github} onChange={(e)=>setField(['socials','github'], e.target.value)} placeholder="https://github.com/..." />
                 </div>
-<div className={styles.field}><label>LinkedIn</label>
+<div className={styles.field}><label>{t('generate.contact.linkedin')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="9" width="20" height="13" rx="2"/><path d="M7 9V5a5 5 0 0 1 10 0v4"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={data.socials.linkedin} onChange={(e)=>setField(['socials','linkedin'], e.target.value)} placeholder="https://linkedin.com/in/..." />
                 </div>
-<div className={styles.field}><label>Twitter/X</label>
+<div className={styles.field}><label>{t('generate.contact.twitter')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.5c1.6 12-14 12-18 6 2 0 4-1 5-2-2-1-3-4-1-6 2 2 4 3 7 3-1-5 6-7 9-3z"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={data.socials.twitter} onChange={(e)=>setField(['socials','twitter'], e.target.value)} placeholder="https://x.com/..." />
                 </div>
-<div className={styles.field}><label>Instagram</label>
+<div className={styles.field}><label>{t('generate.contact.instagram')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={data.socials.instagram} onChange={(e)=>setField(['socials','instagram'], e.target.value)} placeholder="https://instagram.com/..." />
                 </div>
               </div>
@@ -582,40 +582,39 @@ renderLeadingIcon={() => null}
 
             {/* Skills */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Skills</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.skills.title')}</h2></div>
               <div className={styles.field}> 
-                <label>Adiciona como no LinkedIn (Enter para confirmar)</label>
+                <label>{t('generate.skills.hint')}</label>
                 <ChipsInput
                   value={data.skills}
                   onChange={(skills)=> setData(d=>({ ...d, skills }))}
-                  placeholder="Ex.: React, UX, TypeScript"
+                  placeholder={t('generate.skills.placeholder')}
                   minInputWidth={320}
                   suggestions={[
                     'React','TypeScript','JavaScript','Vite','Next.js','Node.js','Express','HTML','CSS','SASS','Tailwind','Figma','UX','UI','Design Systems','Git','GitHub','CI/CD','Docker','Kubernetes','AWS','GCP','Azure','Firebase','Firestore','Storage','MongoDB','PostgreSQL','MySQL','Python','Django','Flask','TensorFlow','PyTorch','Data Analysis','PowerBI','Tableau','Go','Rust','Java','Spring','Kotlin','Swift','C#','.NET','PHP','Laravel','SEO','Marketing','Scrum','Agile'
                   ]}
                 />
-                <small className={styles.helper}>Evita duplicados; máximo 50 skills.</small>
+                <small className={styles.helper}>{t('generate.skills.helper')}</small>
               </div>
             </div>
 
             {/* Projetos */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Projetos</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.projects.title')}</h2></div>
               {(data.projects||[]).map((p, idx) => (
                 <div key={idx} className={styles.groupCard}>
-                  <div className={styles.groupHeader}><strong>Projeto #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('projects', idx)}>Remover</button></div>
+                  <div className={styles.groupHeader}><strong>{t('generate.projects.itemTitle',{n: idx+1})}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('projects', idx)}>{t('common.remove')}</button></div>
                   <div className={styles.grid2}>
-<div className={styles.field}><label>Título</label>
+<div className={styles.field}><label>{t('generate.projects.titleLabel')}</label>
 <FieldInput icon={<Icon.text className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" maxLength={80} value={p.title||''} onChange={(e)=>updateArrayItem('projects', idx, { title: e.target.value })} />
                     </div>
-<div className={styles.field}><label>Link</label>
+<div className={styles.field}><label>{t('generate.projects.linkLabel')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" maxLength={200} value={p.link||''} onChange={(e)=>updateArrayItem('projects', idx, { link: e.target.value })} placeholder="https://..." />
                     </div>
-                    <div className={styles.field}>
-                      <label>Imagem URL</label>
+<div className={styles.field}><label>{t('generate.projects.imageUrlLabel')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={(previews.stacks?.projects?.[idx]||[]).length>0} value={p.imageUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { imageUrl: e.target.value })} placeholder="https://..." />
-                      <div className={styles.orDivider}><span>OU</span></div>
-                      <FileInput disabled={Boolean(p.imageUrl && !/^blob:/.test(p.imageUrl))} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB" onChange={(file)=>handleProjectImageFile(idx, file)} />
+                      <div className={styles.orDivider}><span>{t('common.orUpper')}</span></div>
+                      <FileInput disabled={Boolean(p.imageUrl && !/^blob:/.test(p.imageUrl))} accept="image/*" label={t('generate.projects.selectImageLabel')} hint={t('generate.projects.imageHint')} onChange={(file)=>handleProjectImageFile(idx, file)} />
                       <div className={[styles.fileStack, (previews.stacks?.projects?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                         {(previews.stacks?.projects?.[idx]||[]).map((it, si) => (
                           <div key={si} className={[styles.stackItem, (previews.projects?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, projects:{...(p.projects||{}), [idx]: it.url}})); updateArrayItem('projects', idx, { imageUrl: it.url }); }}>
@@ -626,11 +625,11 @@ renderLeadingIcon={() => null}
                       </div>
                       <div className={styles.previewRow}>
                         {previews.projects?.[idx] ? (
-                          <img className={styles.thumb} src={previews.projects[idx]} alt="Preview" />
-                        ) : (isImageUrl(p.imageUrl) && <img className={styles.thumb} src={p.imageUrl} alt="Preview" />)}
+                          <img className={styles.thumb} src={previews.projects[idx]} alt={t('generate.projects.previewAlt')} />
+                        ) : (isImageUrl(p.imageUrl) && <img className={styles.thumb} src={p.imageUrl} alt={t('generate.projects.previewAlt')} />)}
                       </div>
                     </div>
-<div className={styles.field}><label>Vídeo URL</label>
+<div className={styles.field}><label>{t('generate.projects.videoUrlLabel')}</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={p.videoUrl||''} onChange={(e)=>updateArrayItem('projects', idx, { videoUrl: e.target.value })} placeholder="https://..." />
                     </div>
 <div className={styles.fieldFull}><label>Descrição</label><textarea spellCheck={true} className={styles.textarea} rows={3} value={p.description||''} onChange={(e)=>updateArrayItem('projects', idx, { description: e.target.value })} /></div>
@@ -638,36 +637,36 @@ renderLeadingIcon={() => null}
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('projects', { title:'', description:'', link:'', imageUrl:'', videoUrl:'' })}>+ Adicionar projeto</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('projects', { title:'', description:'', link:'', imageUrl:'', videoUrl:'' })}>{t('generate.projects.add')}</button>
               </div>
             </div>
 
             {/* Línguas */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Línguas</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.languages.title')}</h2></div>
               {(data.languages||[]).map((l, idx) => (
                 <div key={idx} className={styles.groupCard}>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>Língua</label>
+                    <div className={styles.field}><label>{t('generate.languages.languageLabel')}</label>
                       <Field icon={<Icon.wand className={styles.inputIcon} />} dropdown noInnerFrame>
                         <AutocompleteSelect
                           value={l.language||''}
                           onChange={(val)=>updateArrayItem('languages', idx, { language: val })}
                           options={LANGUAGES}
-                          placeholder="Ex.: Português"
+                          placeholder={t('generate.languages.examplePlaceholder')}
                           allowCustom={true}
                           maxVisible={7}
                           renderLeadingIcon={() => null}
                         />
                       </Field>
                     </div>
-                    <div className={styles.field}><label>Fluência</label>
+                    <div className={styles.field}><label>{t('generate.languages.fluencyLabel')}</label>
                       <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
                         <AutocompleteSelect
                           value={l.fluency||''}
                           onChange={(val)=>updateArrayItem('languages', idx, { fluency: val })}
                           options={FLUENCY_OPTIONS}
-                          placeholder="Selecione"
+                          placeholder={t('generate.languages.selectPlaceholder')}
                           allowCustom={true}
                           maxVisible={7}
                           renderLeadingIcon={() => null}
@@ -675,52 +674,52 @@ renderLeadingIcon={() => null}
                       </Field>
                     </div>
                     <div className={styles.field}><label>&nbsp;</label>
-                      <button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('languages', idx)}>Remover</button>
+                      <button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('languages', idx)}>{t('common.remove')}</button>
                     </div>
                   </div>
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('languages', { language:'', fluency:'' })}>+ Adicionar língua</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('languages', { language:'', fluency:'' })}>{t('generate.languages.add')}</button>
               </div>
             </div>
 
             {/* Certificados & Diplomas */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Certificados</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.certificates.title')}</h2></div>
               {(data.certificates||[]).map((c, idx) => (
                 <div key={idx} className={styles.groupCard}>
-                  <div className={styles.groupHeader}><strong>Certificado #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>Remover</button></div>
+                  <div className={styles.groupHeader}><strong>{t('generate.certificates.itemTitle',{n: idx+1})}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('certificates', idx)}>{t('common.remove')}</button></div>
                   <div className={styles.grid3}>
-<div className={styles.field}><label>Nome</label>
+<div className={styles.field}><label>{t('generate.certificates.nameLabel')}</label>
 <FieldInput icon={<Icon.text className={styles.inputIcon} />} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="words" value={c.name||''} onChange={(e)=>updateArrayItem('certificates', idx, { name: e.target.value })} />
                     </div>
-<div className={styles.field}><label>Entidade</label>
+<div className={styles.field}><label>{t('generate.certificates.issuerLabel')}</label>
                       <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
                         <AutocompleteSelect
                           value={c.issuer||''}
                           onChange={(val)=>updateArrayItem('certificates', idx, { issuer: val })}
                           options={INSTITUTION_SUGGESTIONS}
-                          placeholder="Ex.: UEM, Coursera"
+                          placeholder={t('generate.certificates.issuerPlaceholder')}
 allowCustom={true}
                           maxVisible={7}
                           renderLeadingIcon={() => null}
                         />
                       </Field>
                     </div>
-<div className={styles.field}><label>Ano</label>
+<div className={styles.field}><label>{t('generate.certificates.yearLabel')}</label>
                       <Field icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>} dropdown>
                         <YearSelect embedded value={c.year||''} onChange={(y)=>updateArrayItem('certificates', idx, { year: y })} />
                       </Field>
                     </div>
                     <div className={styles.fieldFull}>
-                      <label>Link</label>
+                      <label>{t('generate.certificates.linkLabel')}</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={Boolean(c.fileUrl)} value={c.link||''} onChange={(e)=>updateArrayItem('certificates', idx, { link: e.target.value })} placeholder="https://..." />
                     </div>
-                    <div className={styles.orDivider}><span>OU</span></div>
+                    <div className={styles.orDivider}><span>{t('common.orUpper')}</span></div>
                     <div className={styles.fieldFull}>
-                      <label>Ficheiro (PDF/Imagem)</label>
-                      <FileInput disabled={Boolean((c.link||'').trim())} accept="image/*,application/pdf" label="Anexar ficheiro" hint="PDF até 10MB ou imagem até 3MB" onChange={(file)=>handleCertFile(idx, file)} />
+                      <label>{t('generate.certificates.fileLabel')}</label>
+                      <FileInput disabled={Boolean((c.link||'').trim())} accept="image/*,application/pdf" label={t('generate.certificates.attachFileLabel')} hint={t('generate.certificates.fileHint')} onChange={(file)=>handleCertFile(idx, file)} />
                       <div className={[styles.fileStack, (previews.stacks?.certificates?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                         {(previews.stacks?.certificates?.[idx]||[]).map((it, si) => (
                           <div key={si} className={[styles.stackItem, (previews.certificates?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, certificates:{...(p.certificates||{}), [idx]: it.url}})); updateArrayItem('certificates', idx, { fileUrl: it.url, fileType: it.type, fileName: it.name }); }}>
@@ -732,8 +731,8 @@ allowCustom={true}
                       <div className={styles.previewRow}>
                         { (c.fileType||'') === 'image' ? (
                           previews.certificates?.[idx] ? (
-                            <img className={styles.thumb} src={previews.certificates[idx]} alt="Certificado" />
-                          ) : (isImageUrl(c.fileUrl) && <img className={styles.thumb} src={c.fileUrl} alt="Certificado" />)
+                            <img className={styles.thumb} src={previews.certificates[idx]} alt={t('generate.certificates.certAlt')} />
+                          ) : (isImageUrl(c.fileUrl) && <img className={styles.thumb} src={c.fileUrl} alt={t('generate.certificates.certAlt')} />)
                         ) : ( (c.fileType||'') === 'pdf' ? (
                           <div className={styles.docThumb}>📄 PDF</div>
                         ) : null) }
@@ -743,17 +742,17 @@ allowCustom={true}
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('certificates', { name:'', issuer:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>+ Adicionar certificado</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('certificates', { name:'', issuer:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>{t('generate.certificates.add')}</button>
               </div>
             </div>
 
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Diplomas</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.diplomas.title')}</h2></div>
               {(data.diplomas||[]).map((d, idx) => (
                 <div key={idx} className={styles.groupCard}>
-                  <div className={styles.groupHeader}><strong>Diploma #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('diplomas', idx)}>Remover</button></div>
+                  <div className={styles.groupHeader}><strong>{t('generate.diplomas.itemTitle',{n: idx+1})}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('diplomas', idx)}>{t('common.remove')}</button></div>
                   <div className={styles.grid3}>
-<div className={styles.field}><label>Instituição</label>
+<div className={styles.field}><label>{t('generate.diplomas.schoolLabel')}</label>
                       <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
                         <AutocompleteSelect
                           value={d.school||''}
@@ -766,32 +765,32 @@ allowCustom={true}
                         />
                       </Field>
                     </div>
-<div className={styles.field}><label>Grau</label>
+<div className={styles.field}><label>{t('generate.diplomas.degreeLabel')}</label>
                       <Field icon={<Icon.briefcase className={styles.inputIcon} />} dropdown noInnerFrame>
                         <AutocompleteSelect
                           value={d.degree||''}
                           onChange={(val)=>updateArrayItem('diplomas', idx, { degree: val })}
                           options={DEGREE_OPTIONS}
-                          placeholder="Selecione o grau"
+                          placeholder={t('generate.diplomas.degreePlaceholder')}
                           allowCustom={true}
                           maxVisible={7}
                           renderLeadingIcon={() => null}
                         />
                       </Field>
                     </div>
-                    <div className={styles.field}><label>Ano</label>
+                    <div className={styles.field}><label>{t('generate.diplomas.yearLabel')}</label>
                       <Field icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>} dropdown>
                         <YearSelect embedded value={d.year||''} onChange={(y)=>updateArrayItem('diplomas', idx, { year: y })} />
                       </Field>
                     </div>
 <div className={styles.fieldFull}>
-                      <label>Link</label>
+                      <label>{t('generate.diplomas.linkLabel')}</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={Boolean(d.fileUrl)} value={d.link||''} onChange={(e)=>updateArrayItem('diplomas', idx, { link: e.target.value })} placeholder="https://..." />
                     </div>
-                    <div className={styles.orDivider}><span>OU</span></div>
+                    <div className={styles.orDivider}><span>{t('common.orUpper')}</span></div>
                     <div className={styles.fieldFull}>
-                      <label>Ficheiro (PDF/Imagem)</label>
-                      <FileInput disabled={Boolean((d.link||'').trim())} accept="image/*,application/pdf" label="Anexar ficheiro" hint="PDF até 10MB ou imagem até 3MB" onChange={(file)=>handleDiplomaFile(idx, file)} />
+                      <label>{t('generate.diplomas.fileLabel')}</label>
+                      <FileInput disabled={Boolean((d.link||'').trim())} accept="image/*,application/pdf" label={t('generate.diplomas.attachFileLabel')} hint={t('generate.diplomas.fileHint')} onChange={(file)=>handleDiplomaFile(idx, file)} />
                       <div className={[styles.fileStack, (previews.stacks?.diplomas?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
                         {(previews.stacks?.diplomas?.[idx]||[]).map((it, si) => (
                           <div key={si} className={[styles.stackItem, (previews.diplomas?.[idx]||'')===it.url ? styles.selected : ''].join(' ')} onClick={()=>{ setPreviews(p=>({...p, diplomas:{...(p.diplomas||{}), [idx]: it.url}})); updateArrayItem('diplomas', idx, { fileUrl: it.url, fileType: it.type, fileName: it.name }); }}>
@@ -803,8 +802,8 @@ allowCustom={true}
                       <div className={styles.previewRow}>
                         { (d.fileType||'') === 'image' ? (
                           previews.diplomas?.[idx] ? (
-                            <img className={styles.thumb} src={previews.diplomas[idx]} alt="Diploma" />
-                          ) : (isImageUrl(d.fileUrl) && <img className={styles.thumb} src={d.fileUrl} alt="Diploma" />)
+                            <img className={styles.thumb} src={previews.diplomas[idx]} alt={t('generate.diplomas.diplomaAlt')} />
+                          ) : (isImageUrl(d.fileUrl) && <img className={styles.thumb} src={d.fileUrl} alt={t('generate.diplomas.diplomaAlt')} />)
                         ) : ( (d.fileType||'') === 'pdf' ? (
                           <div className={styles.docThumb}>📄 PDF</div>
                         ) : null) }
@@ -814,56 +813,56 @@ allowCustom={true}
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('diplomas', { school:'', degree:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>+ Adicionar diploma</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('diplomas', { school:'', degree:'', year:'', link:'', fileUrl:'', fileType:'', fileName:'' })}>{t('generate.diplomas.add')}</button>
               </div>
             </div>
 
             {/* Links */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Links</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.links.title')}</h2></div>
               {(data.links||[]).map((l, idx) => (
                 <div key={idx} className={styles.groupCard}>
-                  <div className={styles.groupHeader}><strong>Link #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('links', idx)}>Remover</button></div>
+                  <div className={styles.groupHeader}><strong>{t('generate.links.itemTitle',{n: idx+1})}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('links', idx)}>{t('common.remove')}</button></div>
                   <div className={styles.grid2}>
-<div className={styles.field}><label>Rótulo</label>
+<div className={styles.field}><label>{t('generate.links.labelLabel')}</label>
                       <FieldInput icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 16c1.333-4 6.667-4 8 0"/><path d="M8 8c1.333-2 6.667-2 8 0"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" value={l.label||''} onChange={(e)=>updateArrayItem('links', idx, { label: e.target.value })} />
                     </div>
                     <div className={styles.field}>
-                      <label>URL</label>
+                      <label>{t('generate.links.urlLabel')}</label>
 <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" value={l.url||''} onChange={(e)=>updateArrayItem('links', idx, { url: e.target.value })} placeholder="https://..." />
                       <div className={styles.previewRow}>
-                        {isImageUrl(l.url) && <img className={styles.thumb} src={l.url} alt="Preview" />}
+                        {isImageUrl(l.url) && <img className={styles.thumb} src={l.url} alt={t('generate.media.previewAlt')} />}
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('links', { label:'', url:'' })}>+ Adicionar link</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('links', { label:'', url:'' })}>{t('generate.links.add')}</button>
               </div>
             </div>
 
             {/* Mídias */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Galeria</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.media.title')}</h2></div>
               {(data.media||[]).map((m, idx) => (
                 <div key={idx} className={styles.groupCard}>
-                  <div className={styles.groupHeader}><strong>Item #{idx+1}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('media', idx)}>Remover</button></div>
+                  <div className={styles.groupHeader}><strong>{t('generate.media.itemTitle',{n: idx+1})}</strong><button type="button" className={styles.linkBtn} onClick={()=>removeArrayItem('media', idx)}>{t('common.remove')}</button></div>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>Tipo</label>
+                    <div className={styles.field}><label>{t('generate.media.typeLabel')}</label>
                       <select value={m.type||'image'} onChange={(e)=>updateArrayItem('media', idx, { type: e.target.value })}>
-                        <option value="image">Imagem</option>
-                        <option value="video">Vídeo</option>
+                        <option value="image">{t('generate.media.typeImage')}</option>
+                        <option value="video">{t('generate.media.typeVideo')}</option>
                       </select>
                     </div>
 <div className={styles.field} style={{gridColumn:'span 2'}}>
-                      <label>URL</label>
+                      <label>{t('generate.media.urlLabel')}</label>
                       <FieldInput icon={<svg className={styles.urlIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>} spellCheck={false} autoComplete="off" autoCorrect="off" autoCapitalize="off" disabled={(m.type||'image')==='image' && (previews.stacks?.media?.[idx]||[]).length>0} value={m.url||''} onChange={(e)=>updateArrayItem('media', idx, { url: e.target.value })} placeholder="https://..." />
-                      <div className={styles.orDivider}><span>OU</span></div>
+                      <div className={styles.orDivider}><span>{t('common.orUpper')}</span></div>
                       { (m.type||'image') === 'image' ? (
-                        <FileInput disabled={Boolean(m.url && !/^blob:/.test(m.url))} accept="image/*" label="Selecionar imagem" hint="Imagem até 3MB" onChange={(file)=>handleMediaFile(idx, file, 'image')} />
+                        <FileInput disabled={Boolean(m.url && !/^blob:/.test(m.url))} accept="image/*" label={t('generate.media.selectImageLabel')} hint={t('generate.media.imageHint')} onChange={(file)=>handleMediaFile(idx, file, 'image')} />
                       ) : (
-                        <FileInput accept="video/*" label="Selecionar vídeo" hint="Vídeo até 20MB" onChange={(file)=>handleMediaFile(idx, file, 'video')} />
+                        <FileInput accept="video/*" label={t('generate.media.selectVideoLabel')} hint={t('generate.media.videoHint')} onChange={(file)=>handleMediaFile(idx, file, 'video')} />
                       ) }
                       {(m.type||'image') === 'image' && (
                         <div className={[styles.fileStack, (previews.stacks?.media?.[idx]||[]).length>3 ? styles.stacked : ''].join(' ')}>
@@ -878,8 +877,8 @@ allowCustom={true}
                       <div className={styles.previewRow}>
                         { (m.type||'image') === 'image' ? (
                           previews.media?.[idx] ? (
-                            <img className={styles.thumb} src={previews.media[idx]} alt="Preview" />
-                          ) : (isImageUrl(m.url) && <img className={styles.thumb} src={m.url} alt="Preview" />)
+                            <img className={styles.thumb} src={previews.media[idx]} alt={t('generate.media.previewAlt')} />
+                          ) : (isImageUrl(m.url) && <img className={styles.thumb} src={m.url} alt={t('generate.media.previewAlt')} />)
                         ) : (
                           previews.media?.[idx] ? (
                             <video className={styles.videoThumb} src={previews.media[idx]} controls />
@@ -891,29 +890,29 @@ allowCustom={true}
                 </div>
               ))}
               <div className={styles.actionsRow}>
-                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('media', { type:'image', url:'' })}>+ Adicionar mídia</button>
+                <button type="button" className={`btn ${styles.addBtn}`} onClick={()=>addArrayItem('media', { type:'image', url:'' })}>{t('generate.media.add')}</button>
               </div>
             </div>
 
             {/* Tema */}
             <div className={styles.formCard}>
-              <div className={styles.sectionHeader}><h2>Tema (cores por quadradinhos)</h2></div>
+              <div className={styles.sectionHeader}><h2>{t('generate.theme.title')}</h2></div>
               <div className={styles.grid2}>
                 <div className={styles.field}>
-                  <ColorSwatches label="Primária" value={data.theme.primary} onChange={(c)=>setField(['theme','primary'], c)} />
+                  <ColorSwatches label={t('generate.theme.primary')} value={data.theme.primary} onChange={(c)=>setField(['theme','primary'], c)} />
                 </div>
                 <div className={styles.field}>
-                  <ColorSwatches label="Secundária" value={data.theme.secondary} onChange={(c)=>setField(['theme','secondary'], c)} />
+                  <ColorSwatches label={t('generate.theme.secondary')} value={data.theme.secondary} onChange={(c)=>setField(['theme','secondary'], c)} />
                 </div>
                 <div className={styles.field}>
-                  <ColorSwatches label="Fundo" value={data.theme.background} onChange={(c)=>setField(['theme','background'], c)} />
+                  <ColorSwatches label={t('generate.theme.background')} value={data.theme.background} onChange={(c)=>setField(['theme','background'], c)} />
                 </div>
                 <div className={styles.field}>
-                  <ColorSwatches label="Texto" value={data.theme.text} onChange={(c)=>setField(['theme','text'], c)} />
+                  <ColorSwatches label={t('generate.theme.text')} value={data.theme.text} onChange={(c)=>setField(['theme','text'], c)} />
                 </div>
               </div>
-              <div className={styles.quickPalettesWrap}>
-                <div className={styles.quickTitle}>Paletas rápidas</div>
+                <div className={styles.quickPalettesWrap}>
+                <div className={styles.quickTitle}>{t('generate.theme.quickPalettes')}</div>
                 <div className={styles.quickGrid}>
                   {(() => {
                     const mode = document.documentElement.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
