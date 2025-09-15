@@ -42,27 +42,29 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
+    const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      try {
-        if (u) {
-          const ref = doc(db, 'users', u.uid);
-          const snap = await getDoc(ref);
-          if (!snap.exists()) {
-            await setDoc(ref, {
-              uid: u.uid,
-              email: u.email || '',
-              displayName: u.displayName || '',
-              photoURL: u.photoURL || '',
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp(),
-            });
-          } else {
-            // update last login/update timestamp minimally (optional)
-            await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
+      // Do not block UI while ensuring the user doc exists
+      (async () => {
+        try {
+          if (u) {
+            const ref = doc(db, 'users', u.uid);
+            const snap = await getDoc(ref);
+            if (!snap.exists()) {
+              await setDoc(ref, {
+                uid: u.uid,
+                email: u.email || '',
+                displayName: u.displayName || '',
+                photoURL: u.photoURL || '',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+              });
+            } else {
+              await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
+            }
           }
-        }
-      } catch {}
+        } catch {}
+      })();
       setLoading(false);
     });
     return () => unsub();

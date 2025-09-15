@@ -2,7 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
@@ -22,8 +22,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 try { auth.languageCode = 'pt'; } catch {}
 
-// Firestore
-const db = getFirestore(app);
+// Firestore (tentar evitar problemas de rede com auto-deteção de long polling)
+const db = initializeFirestore(app, {
+  ignoreUndefinedProperties: true,
+  experimentalAutoDetectLongPolling: true,
+});
 
 // Storage
 const storage = getStorage(app);

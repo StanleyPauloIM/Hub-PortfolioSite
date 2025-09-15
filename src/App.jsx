@@ -53,7 +53,7 @@ function AppInner() {
     if (location.pathname !== lastPath.current) {
       lastPath.current = location.pathname;
       setRouteLoading(true);
-      const t = setTimeout(() => setRouteLoading(false), 420); // sensação de suavidade
+      const t = setTimeout(() => setRouteLoading(false), 160); // reduzir atraso para tornar mais ágil
       return () => clearTimeout(t);
     }
   }, [location.pathname]);
