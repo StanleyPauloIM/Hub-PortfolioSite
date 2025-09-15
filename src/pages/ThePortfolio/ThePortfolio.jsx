@@ -228,7 +228,7 @@ export default function ThePortfolio() {
                 </div>
               )}
             </div>
-            <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
+            <button type="button" className={layoutStyles.iconBtn} onClick={() => navigate('/settings')} aria-label="Definições"><Icon.settings /></button>
             <div className={layoutStyles.accountWrap} ref={accountRef}>
               <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
               {accountOpen && (

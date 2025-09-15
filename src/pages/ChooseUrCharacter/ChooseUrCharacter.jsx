@@ -264,7 +264,7 @@ export default function ChooseUrCharacter() {
                 </div>
               )}
             </div>
-            <button type="button" className={styles.iconBtn} aria-label="Definições"><Icon.settings /></button>
+            <button type="button" className={styles.iconBtn} onClick={() => setMobileOpen(false) || navigate('/settings')} aria-label="Definições"><Icon.settings /></button>
             <div className={styles.accountWrap} ref={accountRef}>
               <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
               {accountOpen && (

@@ -6,9 +6,11 @@ import styles from './Navbar.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
+import { useI18n } from '../../i18n/I18nProvider';
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -67,16 +69,16 @@ export default function Navbar() {
   }, [location.pathname]);
 
   const pages = [
-    { label: 'Início', path: '/' },
+    { label: t('nav.home'), path: '/' },
     { label: 'ChooseUrCharacter', path: '/chooseurcharacter' },
     { label: 'GenerateUrPortfolio', path: '/generateurportfolio' },
     { label: 'ThePortfolio', path: '/theportfolio' },
   ];
 
   const aboutItems = [
-    { label: 'Quem somos', href: '#sobre-nos' },
-    { label: 'Missão', href: '#missao' },
-    { label: 'Contato', href: '#contato' },
+    { label: t('nav.aboutWho'), href: '#sobre-nos' },
+    { label: t('nav.aboutMission'), href: '#missao' },
+    { label: t('nav.aboutContact'), href: '#contato' },
   ];
 
   const currentPath = location.pathname.toLowerCase();
@@ -108,7 +110,7 @@ export default function Navbar() {
             {/* Páginas dropdown */}
             <li className={`${styles.menuItem} ${styles.dropdown}`}>
               <button type="button" className={styles.dropdownTrigger}>
-                Páginas <span className={styles.caret}>›</span>
+                {t('nav.pages')} <span className={styles.caret}>›</span>
               </button>
               <ul className={styles.dropdownMenu}>
                 {pages.map((p) => (
@@ -126,7 +128,7 @@ export default function Navbar() {
             {/* Sobre‑nós dropdown */}
             <li className={`${styles.menuItem} ${styles.dropdown}`}>
               <button type="button" className={styles.dropdownTrigger}>
-                Sobre‑nós <span className={styles.caret}>›</span>
+                {t('nav.about')} <span className={styles.caret}>›</span>
               </button>
               <ul className={styles.dropdownMenu}>
                 {aboutItems.map((a) => (
@@ -140,7 +142,7 @@ export default function Navbar() {
         </li>
 
         {/* Right actions */}
-        <li><NavLink to="/signin" className={`btn ${styles.joinBtn}`}>Juntar‑se</NavLink></li>
+        <li><NavLink to="/signin" className={`btn ${styles.joinBtn}`}>{t('nav.join')}</NavLink></li>
         <li className={styles.accountWrap} ref={accountRef}>
           <div className={styles.profilePic} title="Conta" onClick={() => setAccountOpen((v) => !v)}>
             <img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} />
