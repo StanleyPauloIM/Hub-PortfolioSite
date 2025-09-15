@@ -57,7 +57,7 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function ThePortfolio() {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   // Sidebar appears minimized by default
   const [collapsed, setCollapsed] = useState(true);
@@ -229,7 +229,7 @@ export default function ThePortfolio() {
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
             <div className={layoutStyles.accountWrap} ref={accountRef}>
-              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">

@@ -8,7 +8,7 @@ import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
 
 export default function Navbar() {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -143,7 +143,7 @@ export default function Navbar() {
         <li><NavLink to="/signin" className={`btn ${styles.joinBtn}`}>Juntar‑se</NavLink></li>
         <li className={styles.accountWrap} ref={accountRef}>
           <div className={styles.profilePic} title="Conta" onClick={() => setAccountOpen((v) => !v)}>
-            <img src={accountIcon} alt="Account Icon" />
+            <img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} />
           </div>
           {accountOpen && (
             <div className={styles.accountMenu}>

@@ -152,7 +152,7 @@ function renderRotatingTags(tags) {
 }
 
 export default function ChooseUrCharacter() {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -266,7 +266,7 @@ export default function ChooseUrCharacter() {
             </div>
             <button type="button" className={styles.iconBtn} aria-label="Definições"><Icon.settings /></button>
             <div className={styles.accountWrap} ref={accountRef}>
-              <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
               {accountOpen && (
                 <div className={styles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={styles.accountLink} role="menuitem">
