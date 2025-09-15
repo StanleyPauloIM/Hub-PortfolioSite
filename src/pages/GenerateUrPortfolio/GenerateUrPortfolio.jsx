@@ -9,6 +9,7 @@ import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import layoutStyles from '../ChooseUrCharacter/ChooseUrCharacter.module.css';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
+import { useAuth } from '../../auth/AuthProvider';
 import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import ColorSwatches from '../../components/ui/ColorSwatches/ColorSwatches';
 import ChipsInput from '../../components/ui/ChipsInput/ChipsInput';
@@ -139,6 +140,7 @@ const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
 
 export default function GenerateUrPortfolio() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -386,8 +388,8 @@ export default function GenerateUrPortfolio() {
               )}
             </div>
             <button type="button" className={layoutStyles.iconBtn} aria-label="Definições"><Icon.settings /></button>
-            <div className={layoutStyles.accountWrap} ref={accountRef}>
-              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={accountIcon} alt="Perfil" /></div>
+              <div className={layoutStyles.accountWrap} ref={accountRef}>
+                <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">
