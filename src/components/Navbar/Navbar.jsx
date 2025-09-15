@@ -1,11 +1,11 @@
 // Barra de navegação do topo
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useAuth } from '../../auth/AuthProvider';
 import styles from './Navbar.module.css';
 import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import HubGlobe from '../../assets/HubGlobe.png';
 import accountIcon from '../../assets/images/account_ex.jpg';
-import { useAuth } from '../../auth/AuthProvider';
 
 export default function Navbar() {
   const { signOut } = useAuth();
