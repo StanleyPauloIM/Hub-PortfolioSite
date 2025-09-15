@@ -3,8 +3,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './HeroSection.module.css';
 import Minimalist from '../../../assets/images/Minimalist.png'; // 👈 importa a imagem
+import { useI18n } from '../../../i18n/I18nProvider';
 
 const HeroSection = () => {
+  const { t } = useI18n();
   return (
     <section id="hero" className={styles.heroSection}>
       {/* Partículas flutuantes de fundo */}
@@ -29,39 +31,37 @@ const HeroSection = () => {
         {/* Coluna de texto */}
         <div className={styles.heroContent}>
           {/* Badge/Eyebrow */}
-          <div className={styles.badge}>Novo • Construtor de Portfólios</div>
+          <div className={styles.badge}>{t('landing.hero.badge')}</div>
 
           <h1 className={styles.heroTitle}>
-            <span className={styles.titleGradient}>Constrói o teu</span>
+            <span className={styles.titleGradient}>{t('landing.hero.title1')}</span>
             <br />
-            <span className={styles.titleGradient}>portfólio com estilo</span>
+            <span className={styles.titleGradient}>{t('landing.hero.title2')}</span>
           </h1>
           
           <p className={styles.heroSubtitle}>
-            O espaço perfeito para mostrares o teu trabalho. 
-            Cria, personaliza e partilha o teu portfólio profissional 
-            com ferramentas avançadas e design moderno.
+            {t('landing.hero.subtitle')}
           </p>
 
           {/* Chips com destaques */}
           <ul className={styles.chipList}>
-            <li className={styles.chip}>Templates modernos</li>
-            <li className={styles.chip}>Edição em tempo real</li>
-            <li className={styles.chip}>Partilha instantânea</li>
+            <li className={styles.chip}>{t('landing.hero.chip1')}</li>
+            <li className={styles.chip}>{t('landing.hero.chip2')}</li>
+            <li className={styles.chip}>{t('landing.hero.chip3')}</li>
           </ul>
 
           <div className={styles.ctaButtons}>
             <button className={styles.primaryButton}>
-              Começar Agora
+              {t('landing.hero.ctaPrimary')}
             </button>
             <NavLink to="/templates" className="btn">
-              Ver Exemplos
+              {t('landing.hero.ctaSecondary')}
             </NavLink>
           </div>
 
           {/* Trust bar */}
           <div className={styles.trustBar}>
-            <span className={styles.trustText}>Usado por criativos e estudantes</span>
+            <span className={styles.trustText}>{t('landing.hero.trustText')}</span>
             <div className={styles.trustLogos}>
               <img src="https://cdn.simpleicons.org/behance/ffffff" alt="Behance" />
               <img src="https://cdn.simpleicons.org/figma/ffffff" alt="Figma" />

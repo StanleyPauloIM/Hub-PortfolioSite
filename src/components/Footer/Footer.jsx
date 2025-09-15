@@ -5,8 +5,10 @@ import GitHubLogo from "../../assets/images/GitHub-Logo.png";
 import LinkedInLogo from "../../assets/images/LinkedIn-Logo.png";
 import XLogo from "../../assets/images/X-Logo.png";
 import InstagramLogo from "../../assets/images/Instagram-Logo.png";
+import { useI18n } from "../../i18n/I18nProvider";
 
 export default function Footer() {
+  const { t } = useI18n();
   const [visitorCount, setVisitorCount] = useState(0);
   const [currentYear] = useState(new Date().getFullYear());
 
@@ -24,11 +26,8 @@ export default function Footer() {
         <div className={styles.topSection}>
           <div className={styles.subscribeCard}>
             <div className={styles.subscribeArea}>
-              <h3 className={styles.subscribeTitle}>Subscreve-te às novidades</h3>
-              <p className={styles.subscribeDescription}>
-                Recebe por email as principais atualizações do HUB — novos recursos, melhorias e conteúdos úteis.
-                Sem spam. Podes cancelar quando quiseres.
-              </p>
+              <h3 className={styles.subscribeTitle}>{t('footer.subscribeTitle')}</h3>
+              <p className={styles.subscribeDescription}>{t('footer.subscribeDesc')}</p>
             </div>
             <form className={styles.subscribeForm} onSubmit={(e) => e.preventDefault()}>
               <div className={styles.inputGroup}>
@@ -38,11 +37,9 @@ export default function Footer() {
                   aria-label="Email para receber novidades"
                   className={styles.emailInput}
                 />
-                <button type="submit" className={`btn ${styles.subscribeButton}`}>Subscrever</button>
+                <button type="submit" className={`btn ${styles.subscribeButton}`}>{t('footer.subscribeButton')}</button>
               </div>
-              <small className={styles.subscribeHint}>
-                Ao subscrever, concordas em receber emails ocasionais sobre novidades do site.
-              </small>
+              <small className={styles.subscribeHint}>{t('footer.subscribeHint')}</small>
             </form>
           </div>
         </div>
@@ -80,7 +77,7 @@ export default function Footer() {
           <div className={styles.linksGrid}>
             {/* About */}
             <div className={styles.linkGroup}>
-              <h4>About</h4>
+              <h4>{t('footer.about')}</h4>
               <ul>
                 <li>• Planning</li>
                 <li>• Research</li>
@@ -91,18 +88,18 @@ export default function Footer() {
 
             {/* Menu */}
             <div className={styles.linkGroup}>
-              <h4>Menu</h4>
+              <h4>{t('footer.menu')}</h4>
               <ul>
-                <li>• <a href="/" className={styles.footerLink}>Home</a></li>
-                <li>• <a href="/signin" className={styles.footerLink}>Entrar</a></li>
-                <li>• <a href="#about" className={styles.footerLink}>Sobre</a></li>
-                <li>• <a href="#contact" className={styles.footerLink}>Contato</a></li>
+                <li>• <a href="/" className={styles.footerLink}>{t('footer.home')}</a></li>
+                <li>• <a href="/signin" className={styles.footerLink}>{t('footer.signIn')}</a></li>
+                <li>• <a href="#about" className={styles.footerLink}>{t('footer.aboutId')}</a></li>
+                <li>• <a href="#contact" className={styles.footerLink}>{t('footer.contactId')}</a></li>
               </ul>
             </div>
 
             {/* Services */}
             <div className={styles.linkGroup}>
-              <h4>Services</h4>
+              <h4>{t('footer.services')}</h4>
               <ul>
                 <li>• Logo</li>
                 <li>• Web Design</li>
@@ -114,18 +111,18 @@ export default function Footer() {
 
           {/* Contact + Map - Right */}
           <div className={styles.contactSection}>
-            <h4>Contact</h4>
+            <h4>{t('footer.contact')}</h4>
             <ul className={styles.contactList}>
               <li className={styles.contactRow}>
-                <span className={styles.contactLabel}>Call :</span>
+                <span className={styles.contactLabel}>{t('footer.call')}</span>
                 <span className={styles.contactValue}>+0258 85 264 2255</span>
               </li>
               <li className={styles.contactRow}>
-                <span className={styles.contactLabel}>Email:</span>
+                <span className={styles.contactLabel}>{t('footer.email')}</span>
                 <span className={styles.contactValue}>stanleypauloim@gmail.com</span>
               </li>
               <li className={styles.contactRow}>
-                <span className={styles.contactLabel}>Visits:</span>
+                <span className={styles.contactLabel}>{t('footer.visits')}</span>
                 <span className={styles.visitsBadge}>{visitorCount.toLocaleString()}</span>
               </li>
             </ul>
@@ -149,7 +146,7 @@ export default function Footer() {
 
         {/* Thank You Message - Center */}
         <div className={styles.thankYouSection}>
-          <p>Obrigado por visitar o Hub – The Portfolio Website!</p>
+          <p>{t('footer.thanks')}</p>
         </div>
       </div>
 
@@ -157,11 +154,11 @@ export default function Footer() {
       <div className={styles.bottomBar}>
         <div className={styles.bottomContent}>
           <div className={styles.bottomLinks}>
-            <a href="#">Privacy Policy</a>
+            <a href="#">{t('footer.privacy')}</a>
             <span>|</span>
-            <a href="#">Our History</a>
+            <a href="#">{t('footer.history')}</a>
             <span>|</span>
-            <a href="#">What We Do</a>
+            <a href="#">{t('footer.whatWeDo')}</a>
           </div>
           <div className={styles.copyright}>
             © {currentYear} Hub - Todos os direitos reservados. Feito com ❤️ e React.
