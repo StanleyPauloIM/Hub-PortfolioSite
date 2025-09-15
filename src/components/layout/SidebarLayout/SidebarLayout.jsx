@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useMemo } from 'react';
 import layoutStyles from '../../../pages/ChooseUrCharacter/ChooseUrCharacter.module.css';
 import SideNav from '../SideNav/SideNav';
+import { useAuth } from '../../../auth/AuthProvider';
 
 const SidebarLayoutContext = createContext({
   collapsed: true,
@@ -35,6 +36,8 @@ export function useSidebarLayout() {
  *   </SidebarLayout>
  */
 export default function SidebarLayout({ initialCollapsed = true, children }) {
+  // read auth to show email verification banner here if needed in future
+  useAuth();
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -44,7 +47,7 @@ export default function SidebarLayout({ initialCollapsed = true, children }) {
     <SidebarLayoutContext.Provider value={ctx}>
       <div className={[layoutStyles.layoutWrapper, collapsed ? layoutStyles.layoutCollapsed : ''].join(' ')}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-        <main className={layoutStyles.content} style={{minWidth:'0'}}>
+        <main className={layoutStyles.content} style={{minWidth:'0', position:'relative'}}>
           {typeof children === 'function' ? children(ctx) : children}
         </main>
         {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}

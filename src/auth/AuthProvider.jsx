@@ -10,6 +10,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth, applyAuthPersistence } from '../firebase/firebase';
+import { sendEmailVerification as sendEmailVerificationDirect } from 'firebase/auth';
 
 const AuthContext = createContext(null);
 
@@ -76,8 +77,13 @@ export function AuthProvider({ children }) {
   }
 
   async function resendVerification() {
-    try { if (!auth.currentUser) return { ok: false, error: 'Sessão expirada. Faça login novamente.' }; await sendEmailVerification(auth.currentUser); return { ok: true }; }
-    catch (err) { return { ok: false, error: mapAuthError(err) }; }
+    try {
+      if (!auth.currentUser) return { ok: false, error: 'Sessão expirada. Faça login novamente.' };
+      await sendEmailVerificationDirect(auth.currentUser);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: mapAuthError(err) };
+    }
   }
 
   const value = useMemo(() => ({ user, loading, signIn, signUp, signOut, resetPassword, resendVerification }), [user, loading]);
