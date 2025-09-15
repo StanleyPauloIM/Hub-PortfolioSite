@@ -173,10 +173,10 @@ export default function ChooseUrCharacter() {
 
   // Dataset partilhado para experiência
   const EXPERIENCE_OPTIONS = [
-    { value: 'junior', label: 'Júnior' },
-    { value: 'mid', label: 'Pleno' },
-    { value: 'senior', label: 'Sénior' },
-    { value: '5+', label: '5+ anos' },
+    { value: 'junior', label: t('common.experience.junior') },
+    { value: 'mid', label: t('common.experience.mid') },
+    { value: 'senior', label: t('common.experience.senior') },
+    { value: '5+', label: t('common.experience.fivePlus') },
   ];
   const [profiles, setProfiles] = useState(() => allProfiles);
 
@@ -237,7 +237,7 @@ export default function ChooseUrCharacter() {
           {/* Conteúdo principal */}
           <main className={styles.content}>
         <div className={styles.topBar}>
-          <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
+          <button className={styles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label={t('common.openMenu')}>
             <span className={styles.hamburger} />
           </button>
           <div className={styles.pageTitleRow}>
@@ -259,33 +259,33 @@ export default function ChooseUrCharacter() {
                 <div className={styles.notifDropdown} role="menu">
                   {/* BACKEND: mapear lista de notificações; exemplo abaixo */}
                   <div className={styles.notifItem} role="menuitem">
-                    <div className={styles.notifTitle}>Novo portfólio publicado</div>
-                    <div className={styles.notifMeta}>por @ana.silva • há 2h</div>
+                    <div className={styles.notifTitle}>{t('choose.notif.sampleTitle')}</div>
+                    <div className={styles.notifMeta}>{t('choose.notif.sampleMeta',{user:'@ana.silva', time:'2h'})}</div>
                   </div>
-                  <div className={styles.notifFooter}>Ver todas</div>
+                  <div className={styles.notifFooter}>{t('common.viewAll')}</div>
                 </div>
               )}
             </div>
-            <button type="button" className={styles.iconBtn} onClick={() => setMobileOpen(false) || navigate('/settings')} aria-label="Definições"><Icon.settings /></button>
+            <button type="button" className={styles.iconBtn} onClick={() => setMobileOpen(false) || navigate('/settings')} aria-label={t('nav.settings')}><Icon.settings /></button>
             <div className={styles.accountWrap} ref={accountRef}>
-              <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
+              <div className={styles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label={t('common.profile')}><img src={user?.photoURL || accountIcon} alt={user?.displayName ? t('common.profileOf',{name:user.displayName}) : t('common.profile')} /></div>
               {accountOpen && (
                 <div className={styles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={styles.accountLink} role="menuitem">
                     <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
-                    Perfil
+                    {t('common.profile')}
                   </NavLink>
                   <NavLink to="/generateurportfolio" className={styles.accountLink} role="menuitem">
                     <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
-                    Criar Portfólio
+                    {t('common.createPortfolio')}
                   </NavLink>
                   <hr className={styles.accountDivider} />
-                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
-                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('dark')}>{t('settings.theme')}: {t('settings.dark')}</button>
+                  <button className={`btn btn--small btn--full ${styles.themeBtn}`} onClick={() => setTheme('light')}>{t('settings.theme')}: {t('settings.light')}</button>
                   <hr className={styles.accountDivider} />
                   <button className={styles.accountLink} onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }} role="menuitem">
                     <img className={styles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
-                    Sair
+                    {t('auth.signOut')}
                   </button>
                 </div>
               )}
@@ -296,8 +296,8 @@ export default function ChooseUrCharacter() {
         {/* Cartão de introdução + filtros, inspirado no anexo */}
         <section className={styles.introCard}>
           <div className={styles.introText}>
-            <h2 className={styles.introTitle}>Bem‑vindo!</h2>
-            <p className={styles.introSub}>Encontre pessoas e portfólios publicados. Use a pesquisa e os filtros para refinar os resultados.</p>
+            <h2 className={styles.introTitle}>{t('choose.introTitle')}</h2>
+            <p className={styles.introSub}>{t('choose.introSub')}</p>
           </div>
 
           {/* Barra de pesquisa + filtros */}
@@ -323,11 +323,11 @@ export default function ChooseUrCharacter() {
           }}>
             {/* Linha 1: barra de pesquisa */}
             <div className={styles.searchBar}>
-              <label className={styles.srOnly} htmlFor="q">Pesquisa</label>
+              <label className={styles.srOnly} htmlFor="q">{t('choose.search.label')}</label>
               <div className={styles.searchBox}>
                 <Icon.search />
-                <input id="q" name="q" className={styles.searchInput} placeholder="Palavra‑chave (ex.: React, UX, Lisboa, @utilizador)" />
-                <GlowButton variant="icon" className={`${styles.searchBtn} ${styles.searchBtnInline}`} type="submit" aria-label="Pesquisar">
+                <input id="q" name="q" className={styles.searchInput} placeholder={t('choose.search.placeholder')} />
+                <GlowButton variant="icon" className={`${styles.searchBtn} ${styles.searchBtnInline}`} type="submit" aria-label={t('choose.search.label')}>
                   <Icon.search />
                 </GlowButton>
               </div>
@@ -337,10 +337,10 @@ export default function ChooseUrCharacter() {
             <div className={styles.filtersGrid}>
               {/* Área */}
               <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="area">Área</label>
+                <label className={styles.fieldLabel} htmlFor="area">{t('choose.filters.area')}</label>
                 <div className={styles.selectWrap}>
                   <select id="area" name="area" className={styles.select} defaultValue="all">
-                    <option value="all">Todas</option>
+                    <option value="all">{t('choose.filters.areaAll')}</option>
                     {JOB_TITLES.map((t, i) => (
                       <option key={t + i} value={t}>{t}</option>
                     ))}
@@ -349,24 +349,24 @@ export default function ChooseUrCharacter() {
               </div>
               {/* Cidade */}
               <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="city">Cidade</label>
+                <label className={styles.fieldLabel} htmlFor="city">{t('choose.filters.city')}</label>
                 <div className={styles.selectWrap}>
                   <select id="city" name="city" className={styles.select} defaultValue="all">
-                    <option value="all">Todas</option>
-                    <option value="lisboa">Lisboa</option>
-                    <option value="porto">Porto</option>
-                    <option value="maputo">Maputo</option>
-                    <option value="luanda">Luanda</option>
-                    <option value="remote">Remoto</option>
+                    <option value="all">{t('choose.filters.cityAll')}</option>
+                    <option value="lisboa">{t('choose.filters.cityNames.lisboa')}</option>
+                    <option value="porto">{t('choose.filters.cityNames.porto')}</option>
+                    <option value="maputo">{t('choose.filters.cityNames.maputo')}</option>
+                    <option value="luanda">{t('choose.filters.cityNames.luanda')}</option>
+                    <option value="remote">{t('choose.filters.cityNames.remote')}</option>
                   </select>
                 </div>
               </div>
               {/* Experiência */}
               <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="exp">Experiência</label>
+                <label className={styles.fieldLabel} htmlFor="exp">{t('choose.filters.exp')}</label>
                 <div className={styles.selectWrap}>
                   <select id="exp" name="exp" className={styles.select} defaultValue="all">
-                    <option value="all">Qualquer</option>
+                    <option value="all">{t('choose.filters.expAny')}</option>
                     {EXPERIENCE_OPTIONS.map(o => (
                       <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
@@ -375,13 +375,13 @@ export default function ChooseUrCharacter() {
               </div>
               {/* Género (opcional) */}
               <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="gender">Género</label>
+                <label className={styles.fieldLabel} htmlFor="gender">{t('choose.filters.gender')}</label>
                 <div className={styles.selectWrap}>
                   <select id="gender" name="gender" className={styles.select} defaultValue="all">
-                    <option value="all">Todos</option>
-                    <option value="female">Feminino</option>
-                    <option value="male">Masculino</option>
-                    <option value="other">Outro / Prefiro não dizer</option>
+                    <option value="all">{t('choose.filters.genderAll')}</option>
+                    <option value="female">{t('common.gender.female')}</option>
+                    <option value="male">{t('common.gender.male')}</option>
+                    <option value="other">{t('common.gender.other')}</option>
                   </select>
                 </div>
               </div>
@@ -389,7 +389,7 @@ export default function ChooseUrCharacter() {
               {/* Mais filtros (placeholder) */}
               <div className={`${styles.field} ${styles.actionsCol}`}>
                 {/* BACKEND: abrir painel lateral com filtros avançados */}
-                <button type="button" className={styles.iconSquareBtn} aria-label="Mais filtros" title="Mais filtros">
+                <button type="button" className={styles.iconSquareBtn} aria-label={t('choose.filters.more')} title={t('choose.filters.more')}>
                   <Icon.sliders />
                 </button>
               </div>
@@ -400,14 +400,14 @@ export default function ChooseUrCharacter() {
         {/* Resultados: cards de perfis */}
         {/* Cabeçalho da lista de resultados */}
         <div className={styles.resultsHeader}>
-          <h3 className={styles.resultsTitle}>Found Characters</h3>
+          <h3 className={styles.resultsTitle}>{t('choose.results.title')}</h3>
           <span className={styles.resultsCount}>{profiles.length}</span>
         </div>
 
         {profiles.length === 0 ? (
           <section className={styles.resultsEmpty}>
             <Icon.person />
-            <p>Sem resultados. Tenta ajustar os filtros.</p>
+            <p>{t('choose.results.empty')}</p>
           </section>
         ) : (
           <section className={styles.resultsGrid}>
@@ -433,7 +433,7 @@ export default function ChooseUrCharacter() {
                     <span className={styles.stat}><Icon.eye />{formatCount(p.views)}</span>
                   </div>
                   {/* BACKEND: ligar ao portfólio do utilizador */}
-                  <a className={`btn ${styles.viewBtn}`} href={`/theportfolio?user=${encodeURIComponent(p.name)}`}>Ver Portfólio</a>
+                  <a className={`btn ${styles.viewBtn}`} href={`/theportfolio?user=${encodeURIComponent(p.name)}`}>{t('choose.card.viewPortfolio')}</a>
                 </footer>
               </article>
             ))}

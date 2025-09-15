@@ -178,7 +178,7 @@ export default function ThePortfolio() {
     setText(val);
     try { el.style.height = 'auto'; const s = window.getComputedStyle(el); const lh = parseFloat(s.lineHeight || '20'); const maxH = lh * MAX_LINES; el.style.height = Math.min(el.scrollHeight, maxH) + 'px'; } catch {}
   };
-  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: 'Convidado', text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); try { if (textareaRef.current) { textareaRef.current.style.height = ''; } } catch {} };
+  const post = () => { const msg = text.trim(); if (!msg) return; const avatar = loggedAvatar || avatarPool[Math.floor(Math.random()*avatarPool.length)]; setComments(c => [{ author: t('portfolio.comments.guest'), text: msg, at: Date.now(), avatar, likes:0, liked:false }, ...c]); setText(''); try { if (textareaRef.current) { textareaRef.current.style.height = ''; } } catch {} };
   const toggleCommentLike = (idx) => setComments(cs => cs.map((c,i)=> { if (i !== idx) return c; const base = Number(c.likes || 0); const next = c.liked ? Math.max(0, base - 1) : base + 1; return { ...c, liked: !c.liked, likes: next }; }));
 
   return (
@@ -189,7 +189,7 @@ export default function ThePortfolio() {
           <main className={lay.content}>
         {/* Top bar */}
         <div className={layoutStyles.topBar}>
-          <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label="Abrir menu">
+          <button className={layoutStyles.mobileMenuBtn} onClick={() => setMobileOpen(true)} aria-label={t('common.openMenu')}>
             <span className={layoutStyles.hamburger} />
           </button>
           <div className={layoutStyles.pageTitleRow}>
@@ -206,9 +206,9 @@ export default function ThePortfolio() {
               <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label={t('common.share')}><UIIcon.share/> {t('common.share')}</GlowButton>
               {shareOpen && (
                 <div className={layoutStyles.shareDropdown} role="menu">
-                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">WhatsApp</a>
-                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">Facebook</a>
-                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent('Meu portfólio no HUB')}`} target="_blank" rel="noreferrer">X (Twitter)</a>
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">{t('portfolio.share.whatsapp')}</a>
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">{t('portfolio.share.facebook')}</a>
+                  <a className={layoutStyles.shareLink} role="menuitem" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(t('portfolio.share.twitterText'))}`} target="_blank" rel="noreferrer">{t('portfolio.share.twitter')}</a>
                   <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} window.open('https://www.instagram.com/', '_blank'); }}>{t('common.instagram')}</button>
                   <button type="button" className={layoutStyles.shareLink} role="menuitem" onClick={() => { try { navigator.clipboard.writeText(shareUrl); } catch {} setShareOpen(false); }}>{t('common.copyLink')}</button>
                 </div>
@@ -216,40 +216,40 @@ export default function ThePortfolio() {
             </div>
 
             <div className={layoutStyles.bellWrap} ref={notifRef}>
-              <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label="Notificações">
+              <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
               <span className={layoutStyles.bellDot} />
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
                   <div className={layoutStyles.notifItem} role="menuitem">
-                    <div className={layoutStyles.notifTitle}>Publicação</div>
-                    <div className={layoutStyles.notifMeta}>Esta é a versão não editável</div>
+                    <div className={layoutStyles.notifTitle}>{t('portfolio.notif.title')}</div>
+                    <div className={layoutStyles.notifMeta}>{t('portfolio.notif.meta')}</div>
                   </div>
-                  <div className={layoutStyles.notifFooter}>Ver todas</div>
+                  <div className={layoutStyles.notifFooter}>{t('common.viewAll')}</div>
                 </div>
               )}
             </div>
-            <button type="button" className={layoutStyles.iconBtn} onClick={() => navigate('/settings')} aria-label="Definições"><Icon.settings /></button>
+            <button type="button" className={layoutStyles.iconBtn} onClick={() => navigate('/settings')} aria-label={t('nav.settings')}><Icon.settings /></button>
             <div className={layoutStyles.accountWrap} ref={accountRef}>
-              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label="Conta"><img src={user?.photoURL || accountIcon} alt={user?.displayName ? `Perfil de ${user.displayName}` : 'Perfil'} /></div>
+              <div className={layoutStyles.avatar} onClick={() => setAccountOpen(v => !v)} role="button" aria-label={t('common.profile')}><img src={user?.photoURL || accountIcon} alt={user?.displayName ? t('common.profileOf',{name:user.displayName}) : t('common.profile')} /></div>
               {accountOpen && (
                 <div className={layoutStyles.accountMenu} role="menu">
                   <NavLink to="/theportfolio" className={layoutStyles.accountLink} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/user.png" alt="" />
-                    Perfil
+                    {t('common.profile')}
                   </NavLink>
                   <NavLink to="/generateurportfolio" className={layoutStyles.accountLink} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/resume.png" alt="" />
-                    Criar Portfólio
+                    {t('common.createPortfolio')}
                   </NavLink>
                   <hr className={layoutStyles.accountDivider} />
-                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>Tema: Escuro</button>
-                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>Tema: Claro</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('dark')}>{t('settings.theme')}: {t('settings.dark')}</button>
+                  <button className={`btn btn--small btn--full ${layoutStyles.themeBtn}`} onClick={() => setTheme('light')}>{t('settings.theme')}: {t('settings.light')}</button>
                   <hr className={layoutStyles.accountDivider} />
                   <button className={layoutStyles.accountLink} onClick={async () => { try { await signOut(); } catch {} window.location.assign('/signin'); }} role="menuitem">
                     <img className={layoutStyles.menuIcon} src="https://img.icons8.com/ios-glyphs/24/exit.png" alt="" />
-                    Sair
+                    {t('auth.signOut')}
                   </button>
                 </div>
               )}
@@ -259,15 +259,15 @@ export default function ThePortfolio() {
 
         {!data ? (
           <div className={styles.empty}>
-            <p>Nenhum portfólio publicado ainda.</p>
-            <NavLink to="/generateurportfolio" className={`btn ${styles.link}`}>Criar agora</NavLink>
+            <p>{t('portfolio.empty')}</p>
+            <NavLink to="/generateurportfolio" className={`btn ${styles.link}`}>{t('portfolio.createNow')}</NavLink>
           </div>
         ) : (
           <div className={styles.viewWrap} style={cssPreviewVars}>
             {/* Like prompt */}
             <div className={styles.likeRow}>
-              <span>Gostou do perfil? <strong>Deixe seu like</strong>.</span>
-              <GlowButton onClick={toggleLike} className={liked ? exStyles.likeActive : ''} aria-pressed={liked} aria-label="Gostei">
+              <span>{t('portfolio.like.promptPrefix')} <strong>{t('portfolio.like.promptCta')}</strong>.</span>
+              <GlowButton onClick={toggleLike} className={liked ? exStyles.likeActive : ''} aria-pressed={liked} aria-label={t('common.like')}>
                 <UIIcon.heart/> {likes}
               </GlowButton>
             </div>
@@ -295,8 +295,8 @@ export default function ThePortfolio() {
                   <div className={`${exStyles.commentForm} ${exStyles.commentFormSticky}`}>
                     <div className={exStyles.commentRow}>
                       {loggedAvatar ? <img className={exStyles.commentAvatar} src={loggedAvatar} alt="" /> : null}
-                      <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={exStyles.commentInput} placeholder="Escreve um comentário…"/>
-                      <GlowButton variant="icon" onClick={post} aria-label="Publicar"><UIIcon.arrowRight/></GlowButton>
+                      <textarea ref={el => (textareaRef.current = el)} value={text} onInput={(e)=>onTextInput(e)} onChange={(e)=>onTextInput(e)} rows={2} className={exStyles.commentInput} placeholder={t('portfolio.comments.placeholder')}/>
+                      <GlowButton variant="icon" onClick={post} aria-label={t('portfolio.comments.publish')}><UIIcon.arrowRight/></GlowButton>
                     </div>
                   </div>
                   <div className={exStyles.comments}>
