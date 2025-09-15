@@ -2,7 +2,18 @@ import React, { createContext, useContext, useMemo, useState, useEffect } from '
 
 const dict = {
   pt: {
-    nav: { pages: 'Páginas', help: 'Ajuda', settings: 'Definições', notifications: 'Notificações' },
+    nav: {
+      pages: 'Páginas',
+      help: 'Ajuda',
+      settings: 'Definições',
+      notifications: 'Notificações',
+      about: 'Sobre‑nós',
+      join: 'Juntar‑se',
+      home: 'Início',
+      aboutWho: 'Quem somos',
+      aboutMission: 'Missão',
+      aboutContact: 'Contato',
+    },
     settings: {
       title: 'Definições',
       language: 'Idioma',
@@ -21,7 +32,18 @@ const dict = {
     }
   },
   en: {
-    nav: { pages: 'Pages', help: 'Help', settings: 'Settings', notifications: 'Notifications' },
+    nav: {
+      pages: 'Pages',
+      help: 'Help',
+      settings: 'Settings',
+      notifications: 'Notifications',
+      about: 'About',
+      join: 'Join',
+      home: 'Home',
+      aboutWho: 'Who we are',
+      aboutMission: 'Mission',
+      aboutContact: 'Contact',
+    },
     settings: {
       title: 'Settings',
       language: 'Language',
