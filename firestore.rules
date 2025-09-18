@@ -33,14 +33,14 @@ service cloud.firestore {
                     && request.resource.data.ownerId == request.auth.uid
                     && ownerUnchanged();
 
-      // Atualização: dono pode atualizar. Permitir também increments seguros de likes/views por outros.
+      // Atualização: dono pode atualizar. Permitir increments controlados de likes/views por terceiros.
       allow update: if (
           // Dono atualiza livremente (exceto trocar ownerId)
           (isOwner() && ownerUnchanged())
           || (
+            // Terceiros autenticados: podem mexer apenas em likes/views/updatedAt
             request.auth != null
             && resource != null
-            // Apenas permitir mudanças em likes/views/updatedAt por terceiros
             && request.resource.data.diff(resource.data).changedKeys().hasOnly(['likes','views','updatedAt'])
             && (
               // like pode ficar igual ou variar em +/-1
@@ -53,6 +53,18 @@ service cloud.firestore {
               request.resource.data.views == resource.data.views + 1 ||
               request.resource.data.views == resource.data.views
             )
+            && request.resource.data.updatedAt == request.time
+          )
+          || (
+            // Visitante anónimo: pode APENAS incrementar views em +1 (e atualizar updatedAt)
+            request.auth == null
+            && resource != null
+            && request.resource.data.diff(resource.data).changedKeys().hasOnly(['views','updatedAt'])
+            && (
+              (resource.data.views is int && request.resource.data.views == resource.data.views + 1) ||
+              (!(resource.data.views is int) && request.resource.data.views == 1)
+            )
+            && request.resource.data.updatedAt == request.time
           )
         );
 

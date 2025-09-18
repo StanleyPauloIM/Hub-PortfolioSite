@@ -16,7 +16,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import { timeAgoShort } from '../../utils/timeAgo';
 import { useI18n } from '../../i18n/I18nProvider';
 import { db } from '../../firebase/firebase';
-import { collection, getDocs, orderBy, limit, query, writeBatch, doc } from 'firebase/firestore';
+import { collection, getDocs, orderBy, limit, query, writeBatch, doc, onSnapshot } from 'firebase/firestore';
 
 const Icon = {
   home: (props) => (
@@ -136,11 +136,14 @@ export default function ThePortfolio() {
   const shareUrl = useMemo(() => {
     try {
       const u = new URL(window.location.href);
-      u.pathname = '/theportfolio';
+      const slug = (function(){ try { return localStorage.getItem('hub_portfolio_slug') || ''; } catch { return ''; }})();
+      u.pathname = slug ? `/p/${encodeURIComponent(slug)}` : '/theportfolio';
       u.search = '';
       u.hash = '';
       return u.toString();
-    } catch { return window.location.origin + '/theportfolio'; }
+    } catch {
+      try { const slug = localStorage.getItem('hub_portfolio_slug') || ''; return window.location.origin + (slug ? `/p/${encodeURIComponent(slug)}` : '/theportfolio'); } catch { return window.location.origin + '/theportfolio'; }
+    }
   }, []);
 
   const pages = [

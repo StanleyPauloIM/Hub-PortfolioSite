@@ -167,10 +167,18 @@ function useTagRotator(allTags, intervalMs = 2600) {
   return [...chosen, '__MORE__'];
 }
 
-function renderRotatingTags(tags) {
+function TagsRotator({ tags }) {
   const t = useTagRotator(tags);
-  if (Array.isArray(t)) return t;
-  return Array.isArray(tags) ? tags.slice(0, 3) : [];
+  const list = Array.isArray(t) ? t : (Array.isArray(tags) ? tags.slice(0, 3) : []);
+  return (
+    <>
+      {list.map((tag, i) => (
+        tag === '__MORE__'
+          ? <span key={`more-${(tags?.length||0)}`} className={styles.morePill}>+{Math.max(0, (tags?.length||0)-3)}</span>
+          : <span key={`${tag}-${i}`} className={`${styles.tag} ${styles.tagAnim}`}>#{tag}</span>
+      ))}
+    </>
+  );
 }
 
 export default function ChooseUrCharacter() {
@@ -567,11 +575,7 @@ export default function ChooseUrCharacter() {
                   </div>
                 </header>
                 <div className={styles.cardTags}>
-                  {renderRotatingTags(p.tags).map((tag, i) => (
-                    tag === '__MORE__'
-                      ? <span key={`more-${p.id}`} className={styles.morePill}>+{Math.max(0, (p.tags?.length||0)-3)}</span>
-                      : <span key={`${tag}-${i}`} className={`${styles.tag} ${styles.tagAnim}`}>#{tag}</span>
-                  ))}
+                  <TagsRotator tags={p.tags} />
                 </div>
                 <footer className={styles.cardFooter}>
                   <div className={styles.cardStats}>

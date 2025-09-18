@@ -59,7 +59,7 @@ function AppInner() {
   }, [location.pathname]);
 
   const currentPath = location.pathname.toLowerCase();
-  const hideGlobalNav = ['/chooseurcharacter', '/generateurportfolio', '/theportfolio'].some(p => currentPath.startsWith(p));
+  const hideGlobalNav = ['/chooseurcharacter', '/generateurportfolio', '/theportfolio', '/p/'].some(p => currentPath.startsWith(p));
 
   return (
     <>
