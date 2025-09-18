@@ -126,29 +126,23 @@ export function AuthProvider({ children }) {
       provider.setCustomParameters({ prompt: 'select_account' });
       const cred = await signInWithPopup(auth, provider);
 
-      // Garante doc do usuário e envia verificação por e‑mail se ainda não confirmado via link
+      // Contas Google: não exigimos verificação por link. Sinalizamos emailLinkVerified=true.
       try {
         const u = cred.user;
         const ref = doc(db, 'users', u.uid);
         const snap = await getDoc(ref);
-        let alreadyLinked = false;
         if (!snap.exists()) {
           await setDoc(ref, {
             uid: u.uid,
             email: u.email || '',
             displayName: u.displayName || '',
             photoURL: u.photoURL || '',
-            emailLinkVerified: false,
+            emailLinkVerified: true,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
           });
         } else {
-          const data = snap.data() || {};
-          alreadyLinked = !!data.emailLinkVerified;
-          await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
-        }
-        if (!alreadyLinked) {
-          try { await sendEmailVerificationDirect(u, buildEmailActionSettings(u.uid)); } catch {}
+          await setDoc(ref, { emailLinkVerified: true, updatedAt: serverTimestamp() }, { merge: true });
         }
       } catch {}
 

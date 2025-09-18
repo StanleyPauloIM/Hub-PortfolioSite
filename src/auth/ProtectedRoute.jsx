@@ -14,11 +14,16 @@ export default function ProtectedRoute({ children, requireVerified = false }) {
   }
 
   if (requireVerified) {
-    const hasEmailVerified = !!user.emailVerified;
-    const hasLinkVerified = !!(userDoc && userDoc.emailLinkVerified === true);
-    if (!hasEmailVerified || !hasLinkVerified) {
-      const next = encodeURIComponent(location.pathname + location.search);
-      return <Navigate to={`/signin?verify=1&next=${next}`} replace />;
+    const providerIds = (user.providerData || []).map(p => p?.providerId || '');
+    const isPassword = providerIds.some(id => id.includes('password'));
+    // Só exigimos verificação por email/link para contas de email+senha.
+    if (isPassword) {
+      const hasEmailVerified = !!user.emailVerified;
+      const hasLinkVerified = !!(userDoc && userDoc.emailLinkVerified === true);
+      if (!hasEmailVerified || !hasLinkVerified) {
+        const next = encodeURIComponent(location.pathname + location.search);
+        return <Navigate to={`/signin?verify=1&next=${next}`} replace />;
+      }
     }
   }
 
