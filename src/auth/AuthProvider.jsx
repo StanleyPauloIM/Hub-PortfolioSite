@@ -12,8 +12,8 @@ import {
   signInWithPopup,
   signInWithRedirect,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, applyAuthPersistence, db } from '../firebase/firebase';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { auth, applyAuthPersistence, db, buildEmailActionSettings } from '../firebase/firebase';
 import { sendEmailVerification as sendEmailVerificationDirect } from 'firebase/auth';
 
 const AuthContext = createContext(null);
@@ -44,11 +44,14 @@ function mapAuthError(err) {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [userDoc, setUserDoc] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let unsubUserDoc = null;
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
+      if (unsubUserDoc) { try { unsubUserDoc(); } catch {} unsubUserDoc = null; }
       // Do not block UI while ensuring the user doc exists
       (async () => {
         try {
@@ -61,25 +64,31 @@ export function AuthProvider({ children }) {
                 email: u.email || '',
                 displayName: u.displayName || '',
                 photoURL: u.photoURL || '',
+                emailLinkVerified: false,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
               });
             } else {
               await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
             }
+            unsubUserDoc = onSnapshot(ref, (docSnap) => {
+              setUserDoc(docSnap.data() || null);
+            });
+          } else {
+            setUserDoc(null);
           }
         } catch {}
       })();
       setLoading(false);
     });
-    return () => unsub();
+    return () => { if (unsubUserDoc) { try { unsubUserDoc(); } catch {} } unsub(); };
   }, []);
 
   async function signUp({ email, password, displayName }) {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName) { try { await updateProfile(cred.user, { displayName }); } catch {} }
-      try { await sendEmailVerification(cred.user); } catch {}
+      try { await sendEmailVerification(cred.user, buildEmailActionSettings(cred.user.uid)); } catch {}
       try {
         const ref = doc(db, 'users', cred.user.uid);
         await setDoc(ref, {
@@ -87,6 +96,7 @@ export function AuthProvider({ children }) {
           email: cred.user.email || email,
           displayName: cred.user.displayName || displayName || '',
           photoURL: cred.user.photoURL || '',
+          emailLinkVerified: false,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
@@ -115,6 +125,33 @@ export function AuthProvider({ children }) {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       const cred = await signInWithPopup(auth, provider);
+
+      // Garante doc do usuário e envia verificação por e‑mail se ainda não confirmado via link
+      try {
+        const u = cred.user;
+        const ref = doc(db, 'users', u.uid);
+        const snap = await getDoc(ref);
+        let alreadyLinked = false;
+        if (!snap.exists()) {
+          await setDoc(ref, {
+            uid: u.uid,
+            email: u.email || '',
+            displayName: u.displayName || '',
+            photoURL: u.photoURL || '',
+            emailLinkVerified: false,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        } else {
+          const data = snap.data() || {};
+          alreadyLinked = !!data.emailLinkVerified;
+          await setDoc(ref, { updatedAt: serverTimestamp() }, { merge: true });
+        }
+        if (!alreadyLinked) {
+          try { await sendEmailVerificationDirect(u, buildEmailActionSettings(u.uid)); } catch {}
+        }
+      } catch {}
+
       return { ok: true, user: cred.user };
     } catch (err) {
       if (err?.code === 'auth/popup-blocked' || err?.code === 'auth/cancelled-popup-request') {
@@ -139,14 +176,14 @@ export function AuthProvider({ children }) {
   async function resendVerification() {
     try {
       if (!auth.currentUser) return { ok: false, error: 'Sessão expirada. Faça login novamente.' };
-      await sendEmailVerificationDirect(auth.currentUser);
+      await sendEmailVerificationDirect(auth.currentUser, buildEmailActionSettings(auth.currentUser.uid));
       return { ok: true };
     } catch (err) {
       return { ok: false, error: mapAuthError(err) };
     }
   }
 
-  const value = useMemo(() => ({ user, loading, signIn, signUp, signOut, resetPassword, resendVerification, signInWithGoogle }), [user, loading]);
+  const value = useMemo(() => ({ user, userDoc, loading, signIn, signUp, signOut, resetPassword, resendVerification, signInWithGoogle }), [user, userDoc, loading]);
 
   return (
     <AuthContext.Provider value={value}>

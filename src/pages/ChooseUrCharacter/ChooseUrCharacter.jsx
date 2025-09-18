@@ -12,6 +12,9 @@ import { useI18n } from '../../i18n/I18nProvider';
 import exStyles from '../TemplateExample/TemplateExample.module.css';
 import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import { JOB_TITLES } from '../../data/jobTitles';
+import { COUNTRIES } from '../../data/countries';
+import { db } from '../../firebase/firebase';
+import { collection, getDocs, getCountFromServer, limit, orderBy, query, startAfter, where } from 'firebase/firestore';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -83,7 +86,7 @@ const Icon = {
   ),
 };
 
-// BACKEND: exemplo de dados de perfis; substituir por dados vindos da API
+// BACKEND: exemplo inicial (mantido como fallback visual)
 const mockProfiles = [
   // Exemplo com mais de 3 skills para demonstrar a rotação e o +N
   { id: '1', name: 'Ana Silva', title: 'Product Designer', city: 'Lisboa', area: 'design', exp: 'senior', gender: 'female', avatar: accountIcon, tags: ['SQL', 'Python', 'PowerBI', 'React', 'TensorFlow'], likes: 1540, views: 23890 },
@@ -126,6 +129,24 @@ const readPublishedAsProfile = () => {
   } catch { return null; }
 };
 
+function mapPortfolioDoc(doc) {
+  const d = doc.data();
+  return {
+    id: doc.id,
+    slug: d?.slug || '',
+    name: d?.displayName || d?.profile?.name || 'Creator',
+    title: d?.title || d?.profile?.title || '',
+    city: d?.city || d?.profile?.location || 'Remoto',
+    area: d?.area || d?.title || '',
+    exp: d?.exp || 'mid',
+    gender: d?.gender || 'other',
+    avatar: d?.avatar || d?.profile?.avatarUrl || accountIcon,
+    tags: Array.isArray(d?.skills) ? d.skills : [],
+    likes: Number(d?.likes ?? d?.stats?.likes ?? 0),
+    views: Number(d?.views ?? d?.stats?.views ?? 0),
+  };
+}
+
 // Rotating tags: show up to 3, and a +N pill if there are more.
 // The words rotate every few seconds with a smooth fade.
 function useTagRotator(allTags, intervalMs = 2600) {
@@ -166,10 +187,118 @@ export default function ChooseUrCharacter() {
     try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
   };
   // BACKEND: estado dos perfis – substituir por dados de resposta do servidor
-  const [allProfiles, setAllProfiles] = useState(() => {
-    const pub = readPublishedAsProfile();
-    return pub ? [...mockProfiles, pub] : [...mockProfiles];
-  });
+  const [allProfiles, setAllProfiles] = useState(() => []);
+  const [profiles, setProfiles] = useState(() => []);
+  const [loading, setLoading] = useState(false);
+  const pageSize = 30;
+  const [cursorStack, setCursorStack] = useState([null]); // startAfter cursor por página
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
+  const [filters, setFilters] = useState({ q: '', area: 'all', city: 'all', exp: 'all', gender: 'all' });
+  const [totalCount, setTotalCount] = useState(null);
+
+  async function loadPage(index) {
+    setLoading(true);
+    try {
+      const constraints = [where('visibility', '==', 'public')];
+      // Server-side filters (igualdade) para indexáveis
+      if (filters.city && filters.city !== 'all') constraints.push(where('city', '==', String(filters.city)));
+      if (filters.area && filters.area !== 'all') constraints.push(where('title', '==', String(filters.area)));
+      if (filters.exp && filters.exp !== 'all') constraints.push(where('exp', '==', String(filters.exp)));
+      if (filters.gender && filters.gender !== 'all') constraints.push(where('gender', '==', String(filters.gender)));
+
+      // Conta total (sem orderBy/limit/startAfter)
+      try {
+        const countFilters = constraints.filter((c) => String(c?.type || '').toLowerCase() === 'where');
+        const countSnap = await getCountFromServer(query(collection(db, 'portfolios'), ...countFilters));
+        setTotalCount(Number(countSnap.data().count) || 0);
+      } catch (e) {
+        // fallback: desconhecido
+        setTotalCount(null);
+      }
+
+      constraints.push(orderBy('publishedAt', 'desc'));
+      constraints.push(limit(pageSize));
+      const after = cursorStack[index];
+      let qRef = query(collection(db, 'portfolios'), ...constraints);
+      if (after) {
+        let constraintsAfter = [where('visibility', '==', 'public')];
+        if (filters.city && filters.city !== 'all') constraintsAfter.push(where('city', '==', String(filters.city)));
+        if (filters.area && filters.area !== 'all') constraintsAfter.push(where('title', '==', String(filters.area)));
+        if (filters.exp && filters.exp !== 'all') constraintsAfter.push(where('exp', '==', String(filters.exp)));
+        if (filters.gender && filters.gender !== 'all') constraintsAfter.push(where('gender', '==', String(filters.gender)));
+        constraintsAfter.push(orderBy('publishedAt', 'desc'));
+        constraintsAfter.push(startAfter(after));
+        constraintsAfter.push(limit(pageSize));
+        qRef = query(collection(db, 'portfolios'), ...constraintsAfter);
+      }
+      const snap = await getDocs(qRef);
+      const docs = snap.docs;
+      const items = docs.map(mapPortfolioDoc);
+
+      // Aplica filtros no cliente (temporário) e busca local publicada
+      const pubLocal = readPublishedAsProfile();
+      const base = pubLocal ? [...items, pubLocal] : items;
+      const f = filters;
+      const needle = (f.q || '').toLowerCase();
+      const filtered = base.filter(p => {
+        const matchQ = !needle || [p.name, p.title, p.city, (p.tags||[]).join(' ')].join(' ').toLowerCase().includes(needle);
+        const matchArea = f.area === 'all' || String(p.title||'').toLowerCase() === String(f.area||'').toLowerCase();
+        const matchCity = f.city === 'all' || String(p.city||'').toLowerCase() === String(f.city||'').toLowerCase();
+        const matchExp = f.exp === 'all' || p.exp === f.exp;
+        const matchGender = f.gender === 'all' || p.gender === f.gender;
+        return matchQ && matchArea && matchCity && matchExp && matchGender;
+      });
+
+      setAllProfiles(base);
+      setProfiles(filtered);
+
+      // Atualiza navegação
+      const last = docs[docs.length - 1] || null;
+      const newStack = cursorStack.slice(0, index + 1);
+      newStack[index + 1] = last; // cursor para próxima página
+      setCursorStack(newStack);
+      setCurrentIndex(index);
+      setHasPrev(index > 0);
+      setHasNext(!!last && docs.length === pageSize);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Inicial
+  React.useEffect(() => {
+    loadPage(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Atualiza quando houver publicação/atualização no localStorage
+  React.useEffect(() => {
+    const refresh = () => {
+      // Recarrega a página atual para incluir pub local
+      loadPage(currentIndex);
+    };
+    window.addEventListener('storage', refresh);
+    return () => window.removeEventListener('storage', refresh);
+  }, [currentIndex]);
+
+  function onSubmitFilters(e) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setFilters({
+      q: String(form.get('q') || ''),
+      area: form.get('area') || 'all',
+      city: form.get('city') || 'all',
+      exp: form.get('exp') || 'all',
+      gender: form.get('gender') || 'all',
+    });
+    // reset paginação
+    setCursorStack([null]);
+    loadPage(0);
+  }
 
   // Dataset partilhado para experiência
   const EXPERIENCE_OPTIONS = [
@@ -178,20 +307,6 @@ export default function ChooseUrCharacter() {
     { value: 'senior', label: t('common.experience.senior') },
     { value: '5+', label: t('common.experience.fivePlus') },
   ];
-  const [profiles, setProfiles] = useState(() => allProfiles);
-
-  // Atualiza quando houver publicação/atualização no localStorage
-  React.useEffect(() => {
-    const refresh = () => {
-      const pub = readPublishedAsProfile();
-      const base = pub ? [...mockProfiles, pub] : [...mockProfiles];
-      setAllProfiles(base);
-      setProfiles(base);
-    };
-    window.addEventListener('storage', refresh);
-    refresh();
-    return () => window.removeEventListener('storage', refresh);
-  }, []);
 
   const NavSection = ({ title, children }) => (
     <div className={styles.section}>
@@ -301,26 +416,7 @@ export default function ChooseUrCharacter() {
           </div>
 
           {/* Barra de pesquisa + filtros */}
-          {/* BACKEND: no submit, chamar a API com os parâmetros; aqui filtramos os mocks */}
-          <form className={styles.filtersForm} onSubmit={(e)=>{
-            e.preventDefault();
-            const form = new FormData(e.currentTarget);
-            const q = String(form.get('q') || '').toLowerCase();
-            const area = form.get('area');
-            const city = form.get('city');
-            const exp = form.get('exp');
-            const gender = form.get('gender');
-            const filtered = allProfiles.filter(p => {
-              const matchQ = !q || [p.name, p.title, p.city, p.tags.join(' ')].join(' ').toLowerCase().includes(q);
-              // Agora "Área" usa o dataset JOB_TITLES; comparamos com o título do perfil
-              const matchArea = area === 'all' || String(p.title||'').toLowerCase() === String(area||'').toLowerCase();
-              const matchCity = city === 'all' || p.city.toLowerCase() === String(city).toLowerCase();
-              const matchExp = exp === 'all' || p.exp === exp;
-              const matchGender = gender === 'all' || p.gender === gender;
-              return matchQ && matchArea && matchCity && matchExp && matchGender;
-            });
-            setProfiles(filtered);
-          }}>
+          <form className={styles.filtersForm} onSubmit={onSubmitFilters}>
             {/* Linha 1: barra de pesquisa */}
             <div className={styles.searchBar}>
               <label className={styles.srOnly} htmlFor="q">{t('choose.search.label')}</label>
@@ -347,17 +443,15 @@ export default function ChooseUrCharacter() {
                   </select>
                 </div>
               </div>
-              {/* Cidade */}
+              {/* Location (usa dataset de países) */}
               <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="city">{t('choose.filters.city')}</label>
+                <label className={styles.fieldLabel} htmlFor="city">Location</label>
                 <div className={styles.selectWrap}>
                   <select id="city" name="city" className={styles.select} defaultValue="all">
-                    <option value="all">{t('choose.filters.cityAll')}</option>
-                    <option value="lisboa">{t('choose.filters.cityNames.lisboa')}</option>
-                    <option value="porto">{t('choose.filters.cityNames.porto')}</option>
-                    <option value="maputo">{t('choose.filters.cityNames.maputo')}</option>
-                    <option value="luanda">{t('choose.filters.cityNames.luanda')}</option>
-                    <option value="remote">{t('choose.filters.cityNames.remote')}</option>
+                    <option value="all">All</option>
+                    {Array.isArray(COUNTRIES) && COUNTRIES.map((c, i) => (
+                      <option key={String(c)+i} value={String(c)}>{String(c)}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -402,9 +496,25 @@ export default function ChooseUrCharacter() {
         <div className={styles.resultsHeader}>
           <h3 className={styles.resultsTitle}>{t('choose.results.title')}</h3>
           <span className={styles.resultsCount}>{profiles.length}</span>
+          <div className={styles.resultsActions}>
+            <span className={styles.resultsPageInfo}>
+              {totalCount != null ? `Página ${currentIndex + 1} de ${Math.max(1, Math.ceil(totalCount / pageSize))}` : `Página ${currentIndex + 1}`}
+            </span>
+            <button type="button" className={styles.pagerBtn} onClick={() => hasPrev && !loading && loadPage(currentIndex - 1)} disabled={loading || !hasPrev} aria-label="Previous page">
+              <Icon.arrow />
+            </button>
+            <button type="button" className={`${styles.pagerBtn} ${styles.pagerRight}`} onClick={() => hasNext && !loading && loadPage(currentIndex + 1)} disabled={loading || !hasNext} aria-label="Next page">
+              <Icon.arrow />
+            </button>
+          </div>
         </div>
 
-        {profiles.length === 0 ? (
+        {loading ? (
+          <section className={styles.resultsLoading}>
+            <div className={styles.spinner} aria-label="A carregar" />
+            <p style={{marginTop:8, opacity:0.9}}>A carregar…</p>
+          </section>
+        ) : profiles.length === 0 ? (
           <section className={styles.resultsEmpty}>
             <Icon.person />
             <p>{t('choose.results.empty')}</p>
@@ -432,8 +542,8 @@ export default function ChooseUrCharacter() {
                     <span className={styles.stat}><Icon.heart />{formatCount(p.likes)}</span>
                     <span className={styles.stat}><Icon.eye />{formatCount(p.views)}</span>
                   </div>
-                  {/* BACKEND: ligar ao portfólio do utilizador */}
-                  <a className={`btn ${styles.viewBtn}`} href={`/theportfolio?user=${encodeURIComponent(p.name)}`}>{t('choose.card.viewPortfolio')}</a>
+                  {/* Link à página pública do portfólio */}
+                  <a className={`btn ${styles.viewBtn}`} href={p.slug ? `/p/${encodeURIComponent(p.slug)}` : `/theportfolio?user=${encodeURIComponent(p.name)}`}>{t('choose.card.viewPortfolio')}</a>
                 </footer>
               </article>
             ))}

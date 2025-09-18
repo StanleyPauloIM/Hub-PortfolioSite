@@ -183,6 +183,17 @@
 .resultsHeader { margin-top: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
 .resultsTitle { margin: 0; font-size: 1.1rem; }
 .resultsCount { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+.resultsActions { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.resultsPageInfo { color: var(--secondary); font-size: 12px; margin-right: 6px; white-space: nowrap; }
+.pagerBtn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.pagerBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.pagerBtn svg { width: 16px; height: 16px; color: var(--icon); }
+.pagerRight svg { transform: rotate(180deg); }
+
+/* Loading block */
+.resultsLoading { display: grid; place-items: center; gap: 8px; padding: 24px; min-height: 30vh; color: var(--secondary); }
+.spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: transparent; border-right-color: transparent; border-radius: 50%; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Cards de resultados */
 .resultsGrid { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }

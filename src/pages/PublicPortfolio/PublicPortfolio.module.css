@@ -1,0 +1,4 @@
+/* Minimal styles for public portfolio view */
+.wrap { padding: 24px; }
+.center { min-height: 60vh; display: grid; place-items: center; gap: 8px; }
+

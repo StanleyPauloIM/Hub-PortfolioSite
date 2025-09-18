@@ -7,7 +7,7 @@ import LinkedInButton from './components/LinkedInButton';
 import { useAuth } from '../../auth/AuthProvider';
 import bgImage from '../../assets/Hub_Background2.jpg';
 import HubGlobe from '../../assets/HubGlobe.png';
-import app from '../../firebase/firebase';
+import app, { buildEmailActionSettings } from '../../firebase/firebase';
 import { useI18n } from '../../i18n/I18nProvider';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 
@@ -15,8 +15,13 @@ const SignInUp = () => {
   const [params] = useSearchParams();
   const initial = params.get('mode') === 'signup' ? 'signup' : 'signin';
   const [mode, setMode] = useState(initial);
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, resendVerification } = useAuth();
   const { t } = useI18n();
+
+  const nextAfter = useMemo(() => params.get('next') || '/generateurportfolio', [params]);
+  const needVerify = params.get('verify') === '1';
+  const [resendBusy, setResendBusy] = useState(false);
+  const [resendMsg, setResendMsg] = useState('');
 
   const isSignup = mode === 'signup';
 
@@ -44,9 +49,8 @@ const SignInUp = () => {
       await setPersistence(auth, data.remember ? browserLocalPersistence : browserSessionPersistence);
       await signInWithEmailAndPassword(auth, data.email, data.password);
       setSignInBusy(false);
-      // Navegar para uma página que já existe e sabemos que renderiza
-      // Pode ajustar para onde fará sentido no seu fluxo
-      window.location.assign('/generateurportfolio');
+      // Redirecionar para o destino original, se existir
+      window.location.assign(nextAfter);
     } catch (err) {
       const code = err?.code || '';
       const map = {
@@ -81,7 +85,7 @@ const SignInUp = () => {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
       const displayName = [data.firstName || '', data.lastName || ''].filter(Boolean).join(' ').trim();
       if (displayName) { try { await updateProfile(cred.user, { displayName }); } catch {} }
-      try { await sendEmailVerification(cred.user); } catch {}
+      try { await sendEmailVerification(cred.user, buildEmailActionSettings(cred.user.uid)); } catch {}
       setSignUpBusy(false);
       setSignUpInfo('Conta criada! Verifique o seu e‑mail para ativar a conta.');
       // Opcional: limpar formulário
@@ -116,6 +120,18 @@ const SignInUp = () => {
           </header>
 
           <form className={styles.form} onSubmit={handleSignIn} autoComplete="on">
+            {needVerify && (
+              <div style={{background:'rgba(255,200,0,0.15)', border:'1px solid rgba(255,200,0,0.45)', color:'var(--text)', padding:'8px 10px', borderRadius:8, marginBottom:8}} role="status">
+                <div style={{display:'flex', alignItems:'center', gap:8, justifyContent:'space-between'}}>
+                  <span>Confirme o seu email clicando no link que enviámos. Esta confirmação é necessária mesmo quando entra com Google.</span>
+                  <button type="button" className="btn" disabled={resendBusy} onClick={async()=>{
+                    try { setResendMsg(''); setResendBusy(true); const r = await resendVerification(); setResendBusy(false); setResendMsg(r.ok ? 'Email de verificação reenviado.' : (r.error||'Falha ao reenviar.')); } catch { setResendBusy(false); setResendMsg('Falha ao reenviar.'); }
+                  }}>Reenviar</button>
+                </div>
+                {resendMsg && <div style={{marginTop:6, fontSize:12, opacity:0.9}}>{resendMsg}</div>}
+              </div>
+            )}
+
             {signInError && (
               <div style={{background:'rgba(255,75,75,0.12)', border:'1px solid rgba(255,75,75,0.4)', color:'#ff4b4b', padding:'8px 10px', borderRadius:8, marginBottom:8}} role="alert">
                 {signInError}
@@ -163,7 +179,7 @@ const SignInUp = () => {
                     setSignInError(res.error || 'Falha ao entrar com Google.');
                     return;
                   }
-                  window.location.assign('/generateurportfolio');
+                  window.location.assign(nextAfter);
                 } catch {
                   setSignInBusy(false);
                   setSignInError('Falha ao entrar com Google.');

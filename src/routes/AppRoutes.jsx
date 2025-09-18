@@ -13,6 +13,8 @@ const TemplatesGallery = lazy(() => import('../pages/TemplatesGallery/TemplatesG
 const TemplateExample = lazy (() => import('../pages/TemplateExample/TemplateExample'));
 const AccountLazy = lazy(() => import('../pages/Account/Account'));
 const SettingsLazy = lazy(() => import('../pages/Settings/Settings'));
+const VerifyEmail = lazy(() => import('../pages/VerifyEmail/VerifyEmail'));
+const PublicPortfolio = lazy(() => import('../pages/PublicPortfolio/PublicPortfolio'));
 
 import ProtectedRoute from '../auth/ProtectedRoute';
 
@@ -21,11 +23,13 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/signin" element={<SignInUp />} />
+      <Route path="/verify-email" element={<React.Suspense fallback={null}><VerifyEmail /></React.Suspense>} />
       <Route path="/chooseurcharacter" element={<ProtectedRoute><ChooseUrCharacter /></ProtectedRoute>} />
       <Route path="/generateurportfolio" element={<ProtectedRoute requireVerified><GenerateUrPortfolio /></ProtectedRoute>} />
       <Route path="/theportfolio" element={<ProtectedRoute><ThePortfolio /></ProtectedRoute>} />
       <Route path="/templates" element={<TemplatesGallery />} />
       <Route path="/templates/:slug" element={<TemplateExample />} />
+      <Route path="/p/:slug" element={<React.Suspense fallback={null}><PublicPortfolio /></React.Suspense>} />
       <Route path="/account" element={<ProtectedRoute><React.Suspense fallback={null}><AccountLazy /></React.Suspense></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><React.Suspense fallback={null}><SettingsLazy /></React.Suspense></ProtectedRoute>} />
       <Route path="/terms" element={<Terms />} />

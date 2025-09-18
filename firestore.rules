@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Documento do próprio usuário
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.data.uid == uid;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Portfólios
+    match /portfolios/{portfolioId} {
+      function isOwner() {
+        return request.auth != null && resource != null && resource.data.ownerId == request.auth.uid;
+      }
+      function ownerUnchanged() {
+        return resource == null || resource.data.ownerId == request.resource.data.ownerId;
+      }
+      function isPublic() {
+        return (resource != null && resource.data.visibility == 'public') ||
+               (request.resource != null && request.resource.data.visibility == 'public');
+      }
+
+      // Leitura
+      allow get, list, read: if isPublic() || isOwner();
+
+      // Criação: apenas dono (ownerId == auth.uid)
+      allow create: if request.auth != null
+                    && request.resource.data.ownerId == request.auth.uid
+                    && ownerUnchanged();
+
+      // Atualização: apenas dono e não trocar ownerId
+      allow update: if isOwner() && ownerUnchanged();
+
+      // Exclusão: apenas dono
+      allow delete: if isOwner();
+    }
+
+    // Templates e exemplos: leitura pública, escrita só por admin
+    match /templates/{id} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+    match /examples/{id} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}
+

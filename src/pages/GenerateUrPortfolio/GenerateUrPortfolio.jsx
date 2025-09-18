@@ -24,6 +24,8 @@ import INSTITUTION_SUGGESTIONS from '../../data/institutions';
 import DEGREE_OPTIONS from '../../data/degrees';
 import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
+import { db } from '../../firebase/firebase';
+import { addDoc, collection, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
 const Icon = {
@@ -139,6 +141,28 @@ const defaultData = {
 
 const STORAGE_DRAFT = 'hub_portfolio_draft';
 const STORAGE_PUBLISHED = 'hub_portfolio_published';
+
+function slugify(input) {
+  const base = String(input || '')
+    .normalize('NFKD')
+    .replace(/\p{Diacritic}+/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '')
+    .slice(0, 60);
+  const suffix = Math.random().toString(36).slice(2, 7);
+  return base ? `${base}-${suffix}` : `portfolio-${suffix}`;
+}
+
+async function ensureUniqueSlug(baseSlug) {
+  let candidate = baseSlug;
+  for (let i = 0; i < 3; i++) {
+    const snap = await getDocs(query(collection(db, 'portfolios'), where('slug', '==', candidate)));
+    if (snap.empty) return candidate;
+    candidate = `${baseSlug}-${Math.random().toString(36).slice(2,5)}`;
+  }
+  return `${baseSlug}-${Date.now().toString(36)}`;
+}
 
 export default function GenerateUrPortfolio() {
   const { user } = useAuth();
@@ -336,18 +360,59 @@ export default function GenerateUrPortfolio() {
     } catch {}
   };
 
-  const onPublish = () => {
+  async function onPublish() {
     try {
-      // Guardar exatamente o que está no estado para testes (permite blob: em navegação imediata)
+      // 1) Salva local (mantém comportamento atual)
       const serialized = JSON.stringify(data);
       localStorage.setItem(STORAGE_PUBLISHED, serialized);
-      // dispara evento manual para outras abas/componentes (fallback em single‑page)
       try { window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_PUBLISHED, newValue: serialized })); } catch {}
+
+      // 2) Salva um snapshot público no Firestore para aparecer no ChooseUrCharacter
+      if (!user?.uid) throw new Error('Sessão expirada. Faça login novamente.');
+      // Gera slug público único
+      const baseSlug = slugify(data?.profile?.name || user.displayName || 'portfolio');
+      const slug = await ensureUniqueSlug(baseSlug);
+
+      const snapshot = {
+        ownerId: user.uid,
+        slug,
+        displayName: data?.profile?.name || user.displayName || '',
+        title: data?.profile?.title || '',
+        city: data?.profile?.location || 'Remoto',
+        area: data?.profile?.title || '',
+        exp: data?.profile?.experience || 'mid',
+        gender: data?.profile?.gender || 'other',
+        avatar: user?.photoURL || data?.profile?.avatarUrl || '',
+        skills: Array.isArray(data?.skills) ? data.skills.slice(0, 12) : [],
+        likes: Number(data?.stats?.likes) || 0,
+        views: Number(data?.stats?.views) || 0,
+        visibility: 'public',
+        status: 'published',
+        publishedAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        // opcional: manter parte do profile para futuro
+        profile: {
+          name: data?.profile?.name || '',
+          title: data?.profile?.title || '',
+          location: data?.profile?.location || '',
+          gender: data?.profile?.gender || '',
+          experience: data?.profile?.experience || '',
+          avatarUrl: data?.profile?.avatarUrl || '',
+        },
+      };
+      await addDoc(collection(db, 'portfolios'), snapshot);
+      try { localStorage.setItem('hub_portfolio_slug', slug); } catch {}
+
       setMessage(t('generate.msg.published'));
       setTimeout(() => setMessage(''), 800);
       navigate('/theportfolio');
-    } catch {}
-  };
+    } catch (e) {
+      console.error(e);
+      setMessage('Não foi possível publicar. Tente novamente.');
+      setTimeout(() => setMessage(''), 2000);
+    }
+  }
 
   // Outside click/Escape for dropdowns
   const notifRef = React.useRef(null);

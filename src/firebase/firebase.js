@@ -60,5 +60,16 @@ async function applyAuthPersistence(remember) {
   } catch {}
 }
 
-export { analytics, auth, db, storage, appCheck, applyAuthPersistence };
+// Constrói as opções do link de verificação de e‑mail com continue URL para nossa rota /verify-email
+function buildEmailActionSettings(uid) {
+  try {
+    const base = (typeof window !== 'undefined' && window?.location?.origin) ? window.location.origin : 'http://localhost:5173';
+    const url = `${base}/verify-email?uid=${encodeURIComponent(uid)}`;
+    return { url, handleCodeInApp: true };
+  } catch {
+    return { url: 'http://localhost:5173/verify-email', handleCodeInApp: true };
+  }
+}
+
+export { analytics, auth, db, storage, appCheck, applyAuthPersistence, buildEmailActionSettings };
 export default app;
