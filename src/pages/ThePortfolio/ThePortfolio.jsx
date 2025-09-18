@@ -240,6 +240,12 @@ export default function ThePortfolio() {
               {hasUnread && <span className={layoutStyles.bellDot} />}
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
+                  {/* Dica fixa desta página */}
+                  <div className={layoutStyles.notifItem} role="menuitem">
+                    <div className={layoutStyles.notifTitle}>{t('portfolio.notif.title')}</div>
+                    <div className={layoutStyles.notifMeta}>{t('portfolio.notif.meta')}</div>
+                  </div>
+
                   {notifItems.length === 0 ? (
                     <div className={layoutStyles.notifItem}>Sem notificações</div>
                   ) : notifItems.map(n => (

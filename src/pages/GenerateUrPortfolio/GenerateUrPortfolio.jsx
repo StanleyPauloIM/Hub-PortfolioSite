@@ -569,6 +569,12 @@ export default function GenerateUrPortfolio() {
               {hasUnread && <span className={layoutStyles.bellDot} />}
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
+                  {/* Tip fixa para deixar o dropdown interessante */}
+                  <div className={layoutStyles.notifItem} role="menuitem">
+                    <div className={layoutStyles.notifTitle}>{t('generate.tip')}</div>
+                    <div className={layoutStyles.notifMeta}>{t('generate.tipMeta')}</div>
+                  </div>
+
                   {notifItems.length === 0 ? (
                     <div className={layoutStyles.notifItem}>Sem notificações</div>
                   ) : notifItems.map(n => (

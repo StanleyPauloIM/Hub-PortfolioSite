@@ -388,6 +388,12 @@ export default function ChooseUrCharacter() {
               {hasUnread && <span className={styles.bellDot} />}
               {notifOpen && (
                 <div className={styles.notifDropdown} role="menu">
+                  {/* Dica fixa para esta página */}
+                  <div className={styles.notifItem} role="menuitem">
+                    <div className={styles.notifTitle}>{t('choose.notif.sampleTitle')}</div>
+                    <div className={styles.notifMeta}>{t('choose.notif.sampleMeta',{user:'@ana.silva', time:'2h'})}</div>
+                  </div>
+
                   {notifItems.length === 0 ? (
                     <div className={styles.notifItem}>Sem notificações</div>
                   ) : notifItems.map(n => (
