@@ -19,6 +19,12 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
 
 ## 🧩 Funcionalidades Principais
 
+- Página pública por slug
+  - Layout idêntico ao ThePortfolio (top bar unificada, partilha, notificações, tema)
+  - Comentários e likes em tempo real
+  - SEO dinâmico (title/description/og/twitter/canonical)
+  - Botão eliminar com ícone e texto responsivo (apenas para o dono)
+
 - Templates Gallery
   - Cards com pré‑visualização (Classic, Minimalist – em breve), likes, contagem de uso e ações Ver/Escolher.
   - Layout responsivo com respiro para a navbar.
@@ -48,7 +54,7 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
 - Componentes reutilizáveis
   - GlowButton, Icons, FileInput, ChipsInput, ColorSwatches, YearSelect, PdfThumb.
 
-## 🔁 CI/CD – Build e Deploy no Firebase
+## 🔁 CI/CD – Deploy no Firebase
 
 - **Estrutura criada**: `/.github/workflows/firebase-deploy.yml`
 - **Disparo**: em `push` para a branch `main`.
@@ -63,10 +69,30 @@ Outros utilizadores poderão visualizar esses conteúdos, criando uma comunidade
 - URL principal: https://hub-theportfoliowebsite.web.app/
 - URL alternativa: https://hub-theportfoliowebsite.firebaseapp.com/
 
+Após alterar o código:
+1) `npm run build`
+2) `firebase deploy --only hosting`
+
+Para atualizar apenas regras:
+- `firebase deploy --only firestore:rules,storage:rules`
+
 ### ⚙️ Configuração necessária
-- **Secret `FIREBASE_TOKEN`**: adicionar em Settings → Secrets and variables → Actions.
-  - Gerar com `firebase login:ci` e colar o token.
-- Se a tua branch principal não for `main`, altera em `on.push.branches` no arquivo do workflow.
+- Firebase CLI instalado: `npm i -g firebase-tools`
+- Login no Firebase: `firebase login`
+- Selecionar projeto (ou usar alias): `firebase use hub-theportfoliowebsite`
+
+### 🚀 Comandos de deploy
+- Regras: `firebase deploy --only firestore:rules,storage:rules`
+- Build SPA: `npm run build`
+- Hosting: `firebase deploy --only hosting`
+
+### 🔐 Regras atualmente aplicadas (resumo)
+- Portfólios públicos: leitura aberta
+- Dono pode criar/editar/excluir
+- Likes: terceiros autenticados podem ±1 (com updatedAt = server time)
+- Views: visitantes anónimos podem +1 (com updatedAt = server time)
+- Comentários: criar autenticado; apagar autor ou dono; leitura pública
+- Storage: leitura pública só quando metadata.public == "true" em portfolio-assets
 
 ### 🧭 Estado do repositório
 - Branch principal: `main`
@@ -98,11 +124,13 @@ VITE_FIREBASE_MEASUREMENT_ID=...
 ```
 
 ## Rotas
+- `/` – Landing
 - `/templates` – Galeria de templates
 - `/templates/:slug` – Pré‑visualização do template (TemplateExample)
-- `/generateurportfolio` – Gerador de portfólio
-- `/theportfolio` – Visualização read‑only
-- `/chooseurcharacter` – Exploração de perfis (mock)
+- `/generateurportfolio` – Gerador de portfólio (protegida)
+- `/theportfolio` – Visualização do próprio portfólio (protegida)
+- `/chooseurcharacter` – Exploração de perfis (protegida)
+- `/p/:slug` – Portfólio público por slug
 
 ## 📌 Futuras implementações (sem garantia)
 
