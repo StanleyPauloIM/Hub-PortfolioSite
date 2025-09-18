@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { db } from '../../firebase/firebase';
-import { collection, getDocs, getDoc, addDoc, setDoc, deleteDoc, doc, limit, query, where, orderBy, serverTimestamp, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, getDoc, addDoc, setDoc, deleteDoc, doc, limit, query, where, orderBy, serverTimestamp, updateDoc, increment, onSnapshot } from 'firebase/firestore';
 import ClassicPortfolio from '../ThePortfolio/templates/classic/ClassicPortfolio';
 import styles from './PublicPortfolio.module.css';
 
@@ -180,18 +180,16 @@ export default function PublicPortfolio() {
       // Reload comments
       await loadComments();
     } catch { setPosting(false); }
-  }
-
-  async function loadComments() {
-    try {
-      const qRef = query(collection(db, 'portfolios', ownerId, 'comments'), orderBy('createdAt', 'desc'), limit(50));
-      const snap = await getDocs(qRef);
+  // Live comments
+  useEffect(() => {
+    if (!ownerId) return;
+    const qRef = query(collection(db, 'portfolios', ownerId, 'comments'), orderBy('createdAt', 'desc'), limit(50));
+    const unsub = onSnapshot(qRef, (snap) => {
       const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       setComments(list);
-    } catch {}
-  }
-
-  useEffect(() => { if (ownerId) { loadComments(); } }, [ownerId]);
+    });
+    return () => { try { unsub(); } catch {} };
+  }, [ownerId]);
 
   async function deletePortfolio() {
     try {
@@ -201,6 +199,17 @@ export default function PublicPortfolio() {
       window.location.assign('/chooseurcharacter');
     } catch {}
   }
+
+  // Live likes/views from portfolio doc
+  useEffect(() => {
+    if (!ownerId) return;
+    const ref = doc(db, 'portfolios', ownerId);
+    const unsub = onSnapshot(ref, (snap) => {
+      const d = snap.data();
+      if (d) setLikes(Number(d.likes||0));
+    });
+    return () => { try { unsub(); } catch {} };
+  }, [ownerId]);
 
   return (
     <div className={styles.wrap} style={cssPreviewVars}>

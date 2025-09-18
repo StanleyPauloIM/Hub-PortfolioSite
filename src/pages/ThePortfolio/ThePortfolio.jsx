@@ -89,22 +89,25 @@ export default function ThePortfolio() {
 
   // Carrega top 5 notificações quando abre dropdown
   useEffect(() => {
+    let unsub = null;
     (async () => {
       try {
         if (!notifOpen || !user?.uid) return;
         const qRef = query(collection(db, 'users', user.uid, 'notifications'), orderBy('createdAt','desc'), limit(5));
-        const snap = await getDocs(qRef);
-        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        setNotifItems(list);
-        const has = list.some(n => n.read === false);
-        setHasUnread(has);
-        if (has) {
-          const batch = writeBatch(db);
-          list.forEach(n => { if (n.read === false) batch.update(doc(db, 'users', user.uid, 'notifications', n.id), { read: true }); });
-          await batch.commit();
-        }
+        unsub = onSnapshot(qRef, async (snap) => {
+          const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          setNotifItems(list);
+          const has = list.some(n => n.read === false);
+          setHasUnread(has);
+          if (has) {
+            const batch = writeBatch(db);
+            list.forEach(n => { if (n.read === false) batch.update(doc(db, 'users', user.uid, 'notifications', n.id), { read: true }); });
+            try { await batch.commit(); } catch {}
+          }
+        });
       } catch {}
     })();
+    return () => { try { if (unsub) unsub(); } catch {} };
   }, [notifOpen, user?.uid]);
 
   const setTheme = (t) => {
