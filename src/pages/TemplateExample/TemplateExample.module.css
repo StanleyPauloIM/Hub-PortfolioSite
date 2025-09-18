@@ -15,6 +15,7 @@
 .titleBadge { background: linear-gradient(90deg, var(--primary), #7b68ee); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; line-height: 1; box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
 .canvas { border: 1px solid var(--border, #e5e7eb); border-radius: 12px; padding: 16px; background: var(--surface-2, #0b0b0b); box-sizing: border-box; overflow: hidden; }
 .actionsBar { display:flex; gap:12px; align-items:center; flex-wrap: wrap; justify-self: end; }
+@media (max-width: 720px){ .actionsBar .actionText, .actionsBar .shareText { display:none; } }
 /* Botão compacto de like */
 .actionBtn { display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background: var(--surface-1); color: var(--text); cursor:pointer; }
 .actionBtn:hover { background: var(--surface-2); }
@@ -26,6 +27,7 @@
 /* Botão de voltar normal (sem glow) */
 .backBtn { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; border:1px solid var(--border); background: var(--surface-1); color: var(--text); cursor:pointer; justify-self: start; }
 .backBtn:hover { background: var(--surface-2); }
+@media (max-width: 720px){ .backBtn { padding:8px; } .backBtn .backText { display:none; } }
 .tabBtn { background:transparent; border:none; color:var(--secondary); padding:10px 12px; border-bottom:2px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:8px; border-radius: 6px 6px 0 0; }
 .tabBtnActive { color:var(--text); border-color: var(--primary, #1e90ff); }
 .tabDot { width:8px; height:8px; border-radius:50%; background: var(--border); display:inline-block; }

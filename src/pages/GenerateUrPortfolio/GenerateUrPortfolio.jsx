@@ -556,7 +556,7 @@ export default function GenerateUrPortfolio() {
           <div className={layoutStyles.pageTitleRow}>
             <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              {t('common.back')}
+              <span className={exStyles.backText}>{t('common.back')}</span>
             </button>
             <h1 className={layoutStyles.title}>{t('generate.title')}</h1>
             <div className={layoutStyles.badge}>classic</div>

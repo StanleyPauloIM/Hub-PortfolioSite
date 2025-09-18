@@ -374,7 +374,7 @@ export default function ChooseUrCharacter() {
           <div className={styles.pageTitleRow}>
             <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              {t('common.back')}
+              <span className={exStyles.backText}>{t('common.back')}</span>
             </button>
             <h1 className={styles.title}>{t('choose.title')}</h1>
             <div className={styles.badge}>beta</div>

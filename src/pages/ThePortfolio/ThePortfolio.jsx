@@ -213,7 +213,7 @@ export default function ThePortfolio() {
           <div className={layoutStyles.pageTitleRow}>
             <button type="button" className={exStyles.backBtn} onClick={() => navigate(-1)} aria-label={t('common.back')}>
               <span className={exStyles.backIcon}><UIIcon.arrowRight/></span>
-              {t('common.back')}
+              <span className={exStyles.backText}>{t('common.back')}</span>
             </button>
             <h1 className={layoutStyles.title}>{t('portfolio.title')}</h1>
             <div className={layoutStyles.badge}>{t('portfolio.readOnly')}</div>
@@ -221,7 +221,7 @@ export default function ThePortfolio() {
           <div className={layoutStyles.topActions}>
             {/* Partilhar */}
             <div className={layoutStyles.shareWrap} ref={shareRef}>
-              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label={t('common.share')}><UIIcon.share/> {t('common.share')}</GlowButton>
+              <GlowButton onClick={() => setShareOpen(v => !v)} aria-haspopup="menu" aria-expanded={shareOpen} aria-label={t('common.share')}><UIIcon.share/> <span className={layoutStyles.shareText}>{t('common.share')}</span></GlowButton>
               {shareOpen && (
                 <div className={layoutStyles.shareDropdown} role="menu">
                   <a className={layoutStyles.shareLink} role="menuitem" href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">{t('portfolio.share.whatsapp')}</a>
