@@ -14,7 +14,7 @@ import { Icon as UIIcon } from '../../components/ui/Icons/Icons';
 import { JOB_TITLES } from '../../data/jobTitles';
 import { COUNTRIES } from '../../data/countries';
 import { db } from '../../firebase/firebase';
-import { collection, getDocs, getCountFromServer, limit, orderBy, query, startAfter, where } from 'firebase/firestore';
+import { collection, getDocs, getCountFromServer, limit, orderBy, query, startAfter, where, onSnapshot, writeBatch, doc } from 'firebase/firestore';
 
 // Ícones inline (SVG) – leves e consistentes com o tema
 const Icon = {
@@ -199,6 +199,7 @@ export default function ChooseUrCharacter() {
   const [hasPrev, setHasPrev] = useState(false);
   const [filters, setFilters] = useState({ q: '', area: 'all', city: 'all', exp: 'all', gender: 'all' });
   const [totalCount, setTotalCount] = useState(null);
+  const unsubRef = React.useRef(null);
 
   async function loadPage(index) {
     setLoading(true);
@@ -235,39 +236,42 @@ export default function ChooseUrCharacter() {
         constraintsAfter.push(limit(pageSize));
         qRef = query(collection(db, 'portfolios'), ...constraintsAfter);
       }
-      const snap = await getDocs(qRef);
-      const docs = snap.docs;
-      const items = docs.map(mapPortfolioDoc);
-
-      // Aplica filtros no cliente (temporário) e busca local publicada
-      const pubLocal = readPublishedAsProfile();
-      const base = pubLocal ? [...items, pubLocal] : items;
-      const f = filters;
-      const needle = (f.q || '').toLowerCase();
-      const filtered = base.filter(p => {
-        const matchQ = !needle || [p.name, p.title, p.city, (p.tags||[]).join(' ')].join(' ').toLowerCase().includes(needle);
-        const matchArea = f.area === 'all' || String(p.title||'').toLowerCase() === String(f.area||'').toLowerCase();
-        const matchCity = f.city === 'all' || String(p.city||'').toLowerCase() === String(f.city||'').toLowerCase();
-        const matchExp = f.exp === 'all' || p.exp === f.exp;
-        const matchGender = f.gender === 'all' || p.gender === f.gender;
-        return matchQ && matchArea && matchCity && matchExp && matchGender;
+      // Cancela subs anterior e cria um novo listener em tempo real para a página atual
+      try { if (unsubRef.current) { unsubRef.current(); } } catch {}
+      let first = true;
+      unsubRef.current = onSnapshot(qRef, (snap) => {
+        const docs = snap.docs;
+        const items = docs.map(mapPortfolioDoc);
+        // Aplica filtros no cliente (temporário) e busca local publicada
+        const pubLocal = readPublishedAsProfile();
+        const base = pubLocal ? [...items, pubLocal] : items;
+        const f = filters;
+        const needle = (f.q || '').toLowerCase();
+        const filtered = base.filter(p => {
+          const matchQ = !needle || [p.name, p.title, p.city, (p.tags||[]).join(' ')].join(' ').toLowerCase().includes(needle);
+          const matchArea = f.area === 'all' || String(p.title||'').toLowerCase() === String(f.area||'').toLowerCase();
+          const matchCity = f.city === 'all' || String(p.city||'').toLowerCase() === String(f.city||'').toLowerCase();
+          const matchExp = f.exp === 'all' || p.exp === f.exp;
+          const matchGender = f.gender === 'all' || p.gender === f.gender;
+          return matchQ && matchArea && matchCity && matchExp && matchGender;
+        });
+        setAllProfiles(base);
+        setProfiles(filtered);
+        // Atualiza navegação
+        const last = docs[docs.length - 1] || null;
+        const newStack = cursorStack.slice(0, index + 1);
+        newStack[index + 1] = last;
+        setCursorStack(newStack);
+        setCurrentIndex(index);
+        setHasPrev(index > 0);
+        setHasNext(!!last && docs.length === pageSize);
+        if (first) { setLoading(false); first = false; }
+      }, (err) => {
+        console.error(err);
+        setLoading(false);
       });
-
-      setAllProfiles(base);
-      setProfiles(filtered);
-
-      // Atualiza navegação
-      const last = docs[docs.length - 1] || null;
-      const newStack = cursorStack.slice(0, index + 1);
-      newStack[index + 1] = last; // cursor para próxima página
-      setCursorStack(newStack);
-      setCurrentIndex(index);
-      setHasPrev(index > 0);
-      setHasNext(!!last && docs.length === pageSize);
     } catch (e) {
       console.error(e);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -356,7 +360,14 @@ export default function ChooseUrCharacter() {
         const snap = await getDocs(qRef);
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         setNotifItems(list);
-        setHasUnread(list.some(n => n.read === false));
+        const has = list.some(n => n.read === false);
+        setHasUnread(has);
+        // Marcar como lidas
+        if (has) {
+          const batch = writeBatch(db);
+          list.forEach(n => { if (n.read === false) batch.update(doc(db, 'users', user.uid, 'notifications', n.id), { read: true }); });
+          await batch.commit();
+        }
       } catch {}
     })();
   }, [notifOpen, user?.uid]);

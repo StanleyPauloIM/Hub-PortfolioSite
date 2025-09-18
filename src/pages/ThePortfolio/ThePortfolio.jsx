@@ -16,7 +16,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import { timeAgoShort } from '../../utils/timeAgo';
 import { useI18n } from '../../i18n/I18nProvider';
 import { db } from '../../firebase/firebase';
-import { collection, getDocs, orderBy, limit, query } from 'firebase/firestore';
+import { collection, getDocs, orderBy, limit, query, writeBatch, doc } from 'firebase/firestore';
 
 const Icon = {
   home: (props) => (
@@ -96,7 +96,13 @@ export default function ThePortfolio() {
         const snap = await getDocs(qRef);
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         setNotifItems(list);
-        setHasUnread(list.some(n => n.read === false));
+        const has = list.some(n => n.read === false);
+        setHasUnread(has);
+        if (has) {
+          const batch = writeBatch(db);
+          list.forEach(n => { if (n.read === false) batch.update(doc(db, 'users', user.uid, 'notifications', n.id), { read: true }); });
+          await batch.commit();
+        }
       } catch {}
     })();
   }, [notifOpen, user?.uid]);

@@ -25,7 +25,7 @@ import DEGREE_OPTIONS from '../../data/degrees';
 import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
 import { db, storage } from '../../firebase/firebase';
-import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where, orderBy, limit } from 'firebase/firestore';
+import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where, orderBy, limit, writeBatch } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -539,7 +539,13 @@ export default function GenerateUrPortfolio() {
         const snap = await getDocs(qRef);
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         setNotifItems(list);
-        setHasUnread(list.some(n => n.read === false));
+        const has = list.some(n => n.read === false);
+        setHasUnread(has);
+        if (has) {
+          const batch = writeBatch(db);
+          list.forEach(n => { if (n.read === false) batch.update(doc(db, 'users', user.uid, 'notifications', n.id), { read: true }); });
+          await batch.commit();
+        }
       } catch {}
     })();
   }, [notifOpen, user?.uid]);
