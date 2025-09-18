@@ -3,7 +3,6 @@ import layoutStyles from '../../../pages/ChooseUrCharacter/ChooseUrCharacter.mod
 import SideNav from '../SideNav/SideNav';
 import { useAuth } from '../../../auth/AuthProvider';
 import stylesBanner from './VerifyBanner.module.css';
-import NotificationsDropdown from './NotificationsDropdown';
 
 const SidebarLayoutContext = createContext({
   collapsed: true,
@@ -58,9 +57,6 @@ export default function SidebarLayout({ initialCollapsed = true, children }) {
               <button type="button" className={stylesBanner.link} onClick={onResend}>Reenviar verificação</button>
             </div>
           )}
-
-          {/* Notificações (top 5) */}
-          <NotificationsDropdown />
 
           {typeof children === 'function' ? children(ctx) : children}
         </main>

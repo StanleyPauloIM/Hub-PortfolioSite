@@ -15,6 +15,8 @@ import useOnClickOutside, { useOnEscape } from '../../hooks/useOnClickOutside';
 import { useAuth } from '../../auth/AuthProvider';
 import { timeAgoShort } from '../../utils/timeAgo';
 import { useI18n } from '../../i18n/I18nProvider';
+import { db } from '../../firebase/firebase';
+import { collection, getDocs, orderBy, limit, query } from 'firebase/firestore';
 
 const Icon = {
   home: (props) => (
@@ -70,6 +72,8 @@ export default function ThePortfolio() {
   const [shareOpen, setShareOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [notifItems, setNotifItems] = useState([]);
+  const [hasUnread, setHasUnread] = useState(false);
 
   // Controls for view interactions (like/comments)
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -82,6 +86,20 @@ export default function ThePortfolio() {
   useOnClickOutside(notifRef, () => setNotifOpen(false), { enabled: notifOpen });
   useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
   useOnEscape(() => { setShareOpen(false); setNotifOpen(false); setAccountOpen(false); }, shareOpen || notifOpen || accountOpen);
+
+  // Carrega top 5 notificações quando abre dropdown
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!notifOpen || !user?.uid) return;
+        const qRef = query(collection(db, 'users', user.uid, 'notifications'), orderBy('createdAt','desc'), limit(5));
+        const snap = await getDocs(qRef);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setNotifItems(list);
+        setHasUnread(list.some(n => n.read === false));
+      } catch {}
+    })();
+  }, [notifOpen, user?.uid]);
 
   const setTheme = (t) => {
     try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
@@ -219,14 +237,18 @@ export default function ThePortfolio() {
               <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
-              <span className={layoutStyles.bellDot} />
+              {hasUnread && <span className={layoutStyles.bellDot} />}
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
-                  <div className={layoutStyles.notifItem} role="menuitem">
-                    <div className={layoutStyles.notifTitle}>{t('portfolio.notif.title')}</div>
-                    <div className={layoutStyles.notifMeta}>{t('portfolio.notif.meta')}</div>
-                  </div>
-                  <div className={layoutStyles.notifFooter}>{t('common.viewAll')}</div>
+                  {notifItems.length === 0 ? (
+                    <div className={layoutStyles.notifItem}>Sem notificações</div>
+                  ) : notifItems.map(n => (
+                    <div key={n.id} className={layoutStyles.notifItem} role="menuitem">
+                      <div className={layoutStyles.notifTitle}>{n.title || n.type}</div>
+                      {n.slug ? <a className={layoutStyles.notifMeta} href={`/p/${encodeURIComponent(n.slug)}`}>Ver portfólio</a> : null}
+                    </div>
+                  ))}
+                  <a className={layoutStyles.notifFooter} href="/notifications">{t('common.viewAll')}</a>
                 </div>
               )}
             </div>

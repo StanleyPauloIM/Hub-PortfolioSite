@@ -25,7 +25,7 @@ import DEGREE_OPTIONS from '../../data/degrees';
 import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
 import { db, storage } from '../../firebase/firebase';
-import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where } from 'firebase/firestore';
+import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where, orderBy, limit } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
@@ -174,6 +174,8 @@ export default function GenerateUrPortfolio() {
   const Layout = SidebarLayout;
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [notifItems, setNotifItems] = useState([]);
+  const [hasUnread, setHasUnread] = useState(false);
   const setTheme = (t) => { try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {} };
   const [data, setData] = useState(() => {
     try {
@@ -528,6 +530,20 @@ export default function GenerateUrPortfolio() {
   useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
   useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
 
+  // Carrega top 5 notificações quando abre o dropdown
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!notifOpen || !user?.uid) return;
+        const qRef = query(collection(db, 'users', user.uid, 'notifications'), orderBy('createdAt','desc'), limit(5));
+        const snap = await getDocs(qRef);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setNotifItems(list);
+        setHasUnread(list.some(n => n.read === false));
+      } catch {}
+    })();
+  }, [notifOpen, user?.uid]);
+
   return (
     <Layout>
       {({ styles: lay, mobileOpen, setMobileOpen }) => (
@@ -550,14 +566,18 @@ export default function GenerateUrPortfolio() {
               <button type="button" className={layoutStyles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
-              <span className={layoutStyles.bellDot} />
+              {hasUnread && <span className={layoutStyles.bellDot} />}
               {notifOpen && (
                 <div className={layoutStyles.notifDropdown} role="menu">
-                  <div className={layoutStyles.notifItem} role="menuitem">
-                    <div className={layoutStyles.notifTitle}>{t('generate.tip')}</div>
-                    <div className={layoutStyles.notifMeta}>{t('generate.tipMeta')}</div>
-                  </div>
-                  <div className={layoutStyles.notifFooter}>{t('common.viewAll')}</div>
+                  {notifItems.length === 0 ? (
+                    <div className={layoutStyles.notifItem}>Sem notificações</div>
+                  ) : notifItems.map(n => (
+                    <div key={n.id} className={layoutStyles.notifItem} role="menuitem">
+                      <div className={layoutStyles.notifTitle}>{n.title || n.type}</div>
+                      {n.slug ? <a className={layoutStyles.notifMeta} href={`/p/${encodeURIComponent(n.slug)}`}>Ver portfólio</a> : null}
+                    </div>
+                  ))}
+                  <a className={layoutStyles.notifFooter} href="/notifications">{t('common.viewAll')}</a>
                 </div>
               )}
             </div>

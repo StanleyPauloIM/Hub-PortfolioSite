@@ -182,6 +182,8 @@ export default function ChooseUrCharacter() {
   const Layout = SidebarLayout;
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [notifItems, setNotifItems] = useState([]);
+  const [hasUnread, setHasUnread] = useState(false);
 
   const setTheme = (t) => {
     try { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); } catch {}
@@ -345,6 +347,20 @@ export default function ChooseUrCharacter() {
   useOnClickOutside(accountRef, () => setAccountOpen(false), { enabled: accountOpen });
   useOnEscape(() => { setNotifOpen(false); setAccountOpen(false); }, notifOpen || accountOpen);
 
+  // Carrega top 5 notificações ao abrir dropdown
+  React.useEffect(() => {
+    (async () => {
+      try {
+        if (!notifOpen || !user?.uid) return;
+        const qRef = query(collection(db, 'users', user.uid, 'notifications'), orderBy('createdAt','desc'), limit(5));
+        const snap = await getDocs(qRef);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setNotifItems(list);
+        setHasUnread(list.some(n => n.read === false));
+      } catch {}
+    })();
+  }, [notifOpen, user?.uid]);
+
   return (
     <Layout>
       {({ styles, mobileOpen, setMobileOpen }) => (
@@ -369,15 +385,18 @@ export default function ChooseUrCharacter() {
               <button type="button" className={styles.iconBtn} onClick={() => setNotifOpen(v => !v)} aria-haspopup="menu" aria-expanded={notifOpen} aria-label={t('nav.notifications')}>
                 <Icon.bell />
               </button>
-              <span className={styles.bellDot} />
+              {hasUnread && <span className={styles.bellDot} />}
               {notifOpen && (
                 <div className={styles.notifDropdown} role="menu">
-                  {/* BACKEND: mapear lista de notificações; exemplo abaixo */}
-                  <div className={styles.notifItem} role="menuitem">
-                    <div className={styles.notifTitle}>{t('choose.notif.sampleTitle')}</div>
-                    <div className={styles.notifMeta}>{t('choose.notif.sampleMeta',{user:'@ana.silva', time:'2h'})}</div>
-                  </div>
-                  <div className={styles.notifFooter}>{t('common.viewAll')}</div>
+                  {notifItems.length === 0 ? (
+                    <div className={styles.notifItem}>Sem notificações</div>
+                  ) : notifItems.map(n => (
+                    <div key={n.id} className={styles.notifItem} role="menuitem">
+                      <div className={styles.notifTitle}>{n.title || n.type}</div>
+                      {n.slug ? <a className={styles.notifMeta} href={`/p/${encodeURIComponent(n.slug)}`}>Ver portfólio</a> : null}
+                    </div>
+                  ))}
+                  <a className={styles.notifFooter} href="/notifications">{t('common.viewAll')}</a>
                 </div>
               )}
             </div>
