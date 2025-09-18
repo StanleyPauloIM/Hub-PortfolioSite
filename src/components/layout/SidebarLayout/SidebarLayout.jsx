@@ -3,6 +3,7 @@ import layoutStyles from '../../../pages/ChooseUrCharacter/ChooseUrCharacter.mod
 import SideNav from '../SideNav/SideNav';
 import { useAuth } from '../../../auth/AuthProvider';
 import stylesBanner from './VerifyBanner.module.css';
+import NotificationsDropdown from './NotificationsDropdown';
 
 const SidebarLayoutContext = createContext({
   collapsed: true,
