@@ -127,20 +127,20 @@ export default function PublicPortfolio() {
         await setDoc(likeRef, { userId: user.uid, createdAt: serverTimestamp() });
         await updateDoc(portRef, { likes: increment(1), updatedAt: serverTimestamp() });
         setLiked(true); setLikes(v => v + 1);
-        // Notificação ao dono
-        try {
-          if (user.uid !== ownerId) {
-            await addDoc(collection(db, 'users', ownerId, 'notifications'), {
-              receiverUid: ownerId,
-              actorUid: user.uid,
-              type: 'portfolio.like',
-              title: 'Alguém gostou do seu portfólio',
-              slug,
-              createdAt: serverTimestamp(),
-              read: false,
-            });
-          }
-        } catch {}
+      // Notificação ao dono (ignorar erros de permissão)
+      try {
+        if (user.uid !== ownerId) {
+          await addDoc(collection(db, 'users', ownerId, 'notifications'), {
+            receiverUid: ownerId,
+            actorUid: user.uid,
+            type: 'portfolio.like',
+            title: 'Alguém gostou do seu portfólio',
+            slug,
+            createdAt: serverTimestamp(),
+            read: false,
+          });
+        }
+      } catch (e) { console.debug('notif like ignored', e?.message); }
       } else {
         await deleteDoc(likeRef);
         await updateDoc(portRef, { likes: increment(-1), updatedAt: serverTimestamp() });
@@ -163,7 +163,7 @@ export default function PublicPortfolio() {
         actorPhotoURL: user.photoURL || '',
       });
       setText(''); setPosting(false);
-      // Notificação ao dono
+      // Notificação ao dono (ignorar erros de permissão)
       try {
         if (user.uid !== ownerId) {
           await addDoc(collection(db, 'users', ownerId, 'notifications'), {
@@ -176,10 +176,9 @@ export default function PublicPortfolio() {
             read: false,
           });
         }
-      } catch {}
-      // Reload comments
-      await loadComments();
+      } catch (e) { console.debug('notif comment ignored', e?.message); }
     } catch { setPosting(false); }
+  }
   // Live comments
   useEffect(() => {
     if (!ownerId) return;

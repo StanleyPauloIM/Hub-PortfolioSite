@@ -40,24 +40,19 @@ service cloud.firestore {
           || (
             request.auth != null
             && resource != null
-            && ownerUnchanged()
-            // Permite apenas ajustes de contadores por terceiros
-            && request.resource.data.ownerId == resource.data.ownerId
-            && request.resource.data.slug == resource.data.slug
-            && request.resource.data.likes >= 0
-            && request.resource.data.views >= 0
+            // Apenas permitir mudanças em likes/views/updatedAt por terceiros
+            && request.resource.data.diff(resource.data).changedKeys().hasOnly(['likes','views','updatedAt'])
             && (
-              // like +/- 1
+              // like pode ficar igual ou variar em +/-1
               request.resource.data.likes == resource.data.likes + 1 ||
               request.resource.data.likes == resource.data.likes - 1 ||
               request.resource.data.likes == resource.data.likes
             )
             && (
-              // views + 1 (ou igual)
+              // views pode ficar igual ou aumentar em 1
               request.resource.data.views == resource.data.views + 1 ||
               request.resource.data.views == resource.data.views
             )
-            // não permitir mudar campos sensíveis neste caminho
           )
         );
 
