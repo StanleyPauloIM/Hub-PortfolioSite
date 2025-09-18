@@ -439,6 +439,34 @@ export default function GenerateUrPortfolio() {
     return clone;
   }
 
+  // Sugestões de skills por área/título
+  const SKILLS_BY_AREA = {
+    'engenheiro informático': ['C','C++','C#','.NET','Java','Spring','Kotlin','Swift','Go','Rust','Python','Django','Flask','JavaScript','TypeScript','React','Next.js','Node.js','Express','HTML','CSS','SASS','Tailwind','SQL','PostgreSQL','MySQL','MongoDB','Git','GitHub','CI/CD','Docker','Kubernetes','AWS','GCP','Azure','Linux','Bash'],
+    'frontend': ['HTML','CSS','SASS','JavaScript','TypeScript','React','Next.js','Vite','Redux','Zustand','Tailwind','Styled-Components','Figma','UI','UX','Design Systems','Accessibility','SEO','PWAs'],
+    'backend': ['Node.js','Express','NestJS','Java','Spring','Kotlin','Go','Rust','Python','Django','Flask','SQL','PostgreSQL','MySQL','MongoDB','Redis','CI/CD','Docker','Kubernetes','AWS','GCP','Azure'],
+    'data': ['Python','Pandas','NumPy','TensorFlow','PyTorch','Scikit-Learn','Data Analysis','ETL','SQL','BigQuery','PowerBI','Tableau','Airflow'],
+    'mobile': ['React Native','Flutter','Kotlin','Swift','Android','iOS','Gradle','Xcode'],
+    'design': ['Figma','UI','UX','Wireframes','Prototyping','Design Systems','Accessibility','Branding'],
+    'devops': ['CI/CD','Docker','Kubernetes','Terraform','AWS','GCP','Azure','Linux','Bash','Monitoring'],
+    'marketing': ['SEO','Content','Ads','Analytics','Email Marketing','Social Media'],
+  };
+  function getSkillSuggestions(title=''){
+    const t = String(title || '').toLowerCase();
+    let base = [];
+    if (t.includes('engenheiro') && t.includes('inform')) base = SKILLS_BY_AREA['engenheiro informático'];
+    else if (t.includes('front')) base = SKILLS_BY_AREA['frontend'];
+    else if (t.includes('back')) base = SKILLS_BY_AREA['backend'];
+    else if (t.includes('data') || t.includes('anal') || t.includes('cient')) base = SKILLS_BY_AREA['data'];
+    else if (t.includes('mobile')) base = SKILLS_BY_AREA['mobile'];
+    else if (t.includes('design')) base = SKILLS_BY_AREA['design'];
+    else if (t.includes('devops') || t.includes('sre')) base = SKILLS_BY_AREA['devops'];
+    else if (t.includes('market')) base = SKILLS_BY_AREA['marketing'];
+    // fallback mistura geral
+    const fallback = ['React','TypeScript','JavaScript','Node.js','HTML','CSS','Figma','Git','CI/CD','Docker','AWS','Firebase'];
+    const uniq = Array.from(new Set([...(base||[]), ...fallback]));
+    return uniq.slice(0, 60);
+  }
+
   async function onPublish() {
     try {
       // 1) Salva local (mantém comportamento atual)
@@ -797,9 +825,7 @@ renderLeadingIcon={() => null}
                   onChange={(skills)=> setData(d=>({ ...d, skills }))}
                   placeholder={t('generate.skills.placeholder')}
                   minInputWidth={320}
-                  suggestions={[
-                    'React','TypeScript','JavaScript','Vite','Next.js','Node.js','Express','HTML','CSS','SASS','Tailwind','Figma','UX','UI','Design Systems','Git','GitHub','CI/CD','Docker','Kubernetes','AWS','GCP','Azure','Firebase','Firestore','Storage','MongoDB','PostgreSQL','MySQL','Python','Django','Flask','TensorFlow','PyTorch','Data Analysis','PowerBI','Tableau','Go','Rust','Java','Spring','Kotlin','Swift','C#','.NET','PHP','Laravel','SEO','Marketing','Scrum','Agile'
-                  ]}
+                  suggestions={getSkillSuggestions(data.profile.title)}
                 />
                 <small className={styles.helper}>{t('generate.skills.helper')}</small>
               </div>
