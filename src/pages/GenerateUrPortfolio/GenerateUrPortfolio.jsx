@@ -543,7 +543,7 @@ export default function GenerateUrPortfolio() {
 
       setMessage(t('generate.msg.published'));
       setTimeout(() => setMessage(''), 800);
-      navigate('/theportfolio');
+      navigate(`/p/${encodeURIComponent(slug)}`);
     } catch (e) {
       console.error(e);
       setMessage('Não foi possível publicar. Tente novamente.');
