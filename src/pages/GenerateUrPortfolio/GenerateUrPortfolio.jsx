@@ -24,8 +24,9 @@ import INSTITUTION_SUGGESTIONS from '../../data/institutions';
 import DEGREE_OPTIONS from '../../data/degrees';
 import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
-import { db } from '../../firebase/firebase';
+import { db, storage } from '../../firebase/firebase';
 import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
 const Icon = {
@@ -360,6 +361,82 @@ export default function GenerateUrPortfolio() {
     } catch {}
   };
 
+  function isBlobUrl(url) { return typeof url === 'string' && url.startsWith('blob:'); }
+  async function blobFromUrl(url) { const res = await fetch(url); return await res.blob(); }
+  function extFromType(type) {
+    if (!type) return 'bin';
+    if (type.includes('jpeg')) return 'jpg';
+    const m = type.split('/')[1] || 'bin';
+    return m.split(';')[0];
+  }
+  async function uploadPublic(uid, path, blob, contentType) {
+    const ts = Date.now();
+    const folder = `portfolio-assets/${uid}/${path}`;
+    const r = storageRef(storage, `${folder}-${ts}`);
+    const metadata = { contentType: contentType || blob.type, customMetadata: { public: 'true' } };
+    await uploadBytes(r, blob, metadata);
+    return await getDownloadURL(r);
+  }
+  async function normalizeDataForPublish(uid, data) {
+    const clone = typeof structuredClone === 'function' ? structuredClone(data) : JSON.parse(JSON.stringify(data));
+    // Avatar
+    if (isBlobUrl(clone?.profile?.avatarUrl)) {
+      const b = await blobFromUrl(clone.profile.avatarUrl);
+      clone.profile.avatarUrl = await uploadPublic(uid, 'profile/avatar.' + extFromType(b.type), b, b.type);
+    }
+    // Projects images/videos
+    if (Array.isArray(clone.projects)) {
+      for (let i = 0; i < clone.projects.length; i++) {
+        const p = clone.projects[i] || {};
+        if (isBlobUrl(p.imageUrl)) {
+          const b = await blobFromUrl(p.imageUrl);
+          p.imageUrl = await uploadPublic(uid, `projects/${i}/image.${extFromType(b.type)}`, b, b.type);
+        }
+        if (isBlobUrl(p.videoUrl)) {
+          const b = await blobFromUrl(p.videoUrl);
+          p.videoUrl = await uploadPublic(uid, `projects/${i}/video.${extFromType(b.type)}`, b, b.type);
+        }
+        clone.projects[i] = p;
+      }
+    }
+    // Media gallery
+    if (Array.isArray(clone.media)) {
+      for (let i = 0; i < clone.media.length; i++) {
+        const m = clone.media[i] || {};
+        if (isBlobUrl(m.url)) {
+          const b = await blobFromUrl(m.url);
+          m.url = await uploadPublic(uid, `media/${i}/file.${extFromType(b.type)}`, b, b.type);
+        }
+        clone.media[i] = m;
+      }
+    }
+    // Certificates
+    if (Array.isArray(clone.certificates)) {
+      for (let i = 0; i < clone.certificates.length; i++) {
+        const c = clone.certificates[i] || {};
+        if (isBlobUrl(c.fileUrl)) {
+          const b = await blobFromUrl(c.fileUrl);
+          c.fileUrl = await uploadPublic(uid, `certificates/${i}/file.${extFromType(b.type)}`, b, b.type);
+          c.fileType = b.type.includes('pdf') ? 'pdf' : 'image';
+        }
+        clone.certificates[i] = c;
+      }
+    }
+    // Diplomas
+    if (Array.isArray(clone.diplomas)) {
+      for (let i = 0; i < clone.diplomas.length; i++) {
+        const d = clone.diplomas[i] || {};
+        if (isBlobUrl(d.fileUrl)) {
+          const b = await blobFromUrl(d.fileUrl);
+          d.fileUrl = await uploadPublic(uid, `diplomas/${i}/file.${extFromType(b.type)}`, b, b.type);
+          d.fileType = b.type.includes('pdf') ? 'pdf' : 'image';
+        }
+        clone.diplomas[i] = d;
+      }
+    }
+    return clone;
+  }
+
   async function onPublish() {
     try {
       // 1) Salva local (mantém comportamento atual)
@@ -372,21 +449,24 @@ export default function GenerateUrPortfolio() {
       const existingRef = doc(db, 'portfolios', user.uid);
       const existing = await getDoc(existingRef);
 
+      // Normaliza dados e faz upload de ficheiros blob -> Storage (públicos)
+      const normalized = await normalizeDataForPublish(user.uid, data);
+
       // Gera slug público único
-      const baseSlug = slugify(data?.profile?.name || user.displayName || 'portfolio');
+      const baseSlug = slugify(normalized?.profile?.name || user.displayName || 'portfolio');
       const slug = await ensureUniqueSlug(baseSlug);
 
       const snapshot = {
         ownerId: user.uid,
         slug,
-        displayName: data?.profile?.name || user.displayName || '',
-        title: data?.profile?.title || '',
-        city: data?.profile?.location || 'Remoto',
-        area: data?.profile?.title || '',
-        exp: data?.profile?.experience || 'mid',
-        gender: data?.profile?.gender || 'other',
-        avatar: user?.photoURL || data?.profile?.avatarUrl || '',
-        skills: Array.isArray(data?.skills) ? data.skills.slice(0, 12) : [],
+        displayName: normalized?.profile?.name || user.displayName || '',
+        title: normalized?.profile?.title || '',
+        city: normalized?.profile?.location || 'Remoto',
+        area: normalized?.profile?.title || '',
+        exp: normalized?.profile?.experience || 'mid',
+        gender: normalized?.profile?.gender || 'other',
+        avatar: normalized?.profile?.avatarUrl || user?.photoURL || '',
+        skills: Array.isArray(normalized?.skills) ? normalized.skills.slice(0, 12) : [],
         likes: Number(data?.stats?.likes) || 0,
         views: Number(data?.stats?.views) || 0,
         visibility: 'public',
@@ -395,13 +475,24 @@ export default function GenerateUrPortfolio() {
         updatedAt: serverTimestamp(),
         createdAt: serverTimestamp(),
         profile: {
-          name: data?.profile?.name || '',
-          title: data?.profile?.title || '',
-          location: data?.profile?.location || '',
-          gender: data?.profile?.gender || '',
-          experience: data?.profile?.experience || '',
-          avatarUrl: data?.profile?.avatarUrl || '',
+          name: normalized?.profile?.name || '',
+          title: normalized?.profile?.title || '',
+          location: normalized?.profile?.location || '',
+          gender: normalized?.profile?.gender || '',
+          experience: normalized?.profile?.experience || '',
+          avatarUrl: normalized?.profile?.avatarUrl || '',
         },
+        template: normalized?.template || 'classic',
+        theme: normalized?.theme || {},
+        about: normalized?.about || {},
+        contact: normalized?.contact || {},
+        socials: normalized?.socials || {},
+        projects: Array.isArray(normalized?.projects) ? normalized.projects : [],
+        media: Array.isArray(normalized?.media) ? normalized.media : [],
+        certificates: Array.isArray(normalized?.certificates) ? normalized.certificates : [],
+        diplomas: Array.isArray(normalized?.diplomas) ? normalized.diplomas : [],
+        links: Array.isArray(normalized?.links) ? normalized.links : [],
+        languages: Array.isArray(normalized?.languages) ? normalized.languages : [],
       };
       await setDoc(existingRef, snapshot, { merge: !!existing.exists() });
       try { localStorage.setItem('hub_portfolio_slug', slug); } catch {}

@@ -46,8 +46,8 @@ export default function PublicPortfolio() {
 
           // Reusa o shape do ClassicPortfolio (usa data semelhante ao GenerateUrPortfolio)
           const shaped = {
-            template: 'classic',
-            theme: { primary: '#1e90ff', secondary: '#b0b8c1', background: '#0b0b0b', text: '#ffffff' },
+            template: d.template || 'classic',
+            theme: d.theme || { primary: '#1e90ff', secondary: '#b0b8c1', background: '#0b0b0b', text: '#ffffff' },
             profile: {
               name: d.displayName || d.profile?.name || '',
               title: d.title || d.profile?.title || '',
@@ -57,16 +57,16 @@ export default function PublicPortfolio() {
               avatarUrl: d.avatar || d.profile?.avatarUrl || '',
             },
             stats: { likes: d.likes || 0, views: d.views || 0 },
-            about: { summary: '' },
-            contact: { email: '', phone: '', website: '' },
-            socials: { github: '', linkedin: '', twitter: '', instagram: '' },
+            about: d.about || { summary: '' },
+            contact: d.contact || { email: '', phone: '', website: '' },
+            socials: d.socials || { github: '', linkedin: '', twitter: '', instagram: '' },
             skills: Array.isArray(d.skills) ? d.skills : [],
-            projects: [],
-            certificates: [],
-            diplomas: [],
-            links: [],
-            media: [],
-            languages: [],
+            projects: Array.isArray(d.projects) ? d.projects : [],
+            certificates: Array.isArray(d.certificates) ? d.certificates : [],
+            diplomas: Array.isArray(d.diplomas) ? d.diplomas : [],
+            links: Array.isArray(d.links) ? d.links : [],
+            media: Array.isArray(d.media) ? d.media : [],
+            languages: Array.isArray(d.languages) ? d.languages : [],
           };
           if (!cancelled) { setData(shaped); setError(''); }
         }
