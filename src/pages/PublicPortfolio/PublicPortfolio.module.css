@@ -1,4 +1,12 @@
 /* Minimal styles for public portfolio view */
 .wrap { padding: 24px; }
 .center { min-height: 60vh; display: grid; place-items: center; gap: 8px; }
+.actionsRow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.btnLiked { background: #1e90ff22; }
+.commentsBox { margin-top: 18px; display: grid; gap: 10px; }
+.commentForm { display: grid; gap: 8px; }
+.commentForm textarea { min-height: 80px; resize: vertical; }
+.commentList { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.commentItem { display: grid; grid-template-columns: 32px 1fr; gap: 10px; }
+.commentAvatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 

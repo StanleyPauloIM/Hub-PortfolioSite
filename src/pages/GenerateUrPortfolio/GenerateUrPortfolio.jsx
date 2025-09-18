@@ -25,7 +25,7 @@ import DEGREE_OPTIONS from '../../data/degrees';
 import { LANGUAGES, FLUENCY_OPTIONS } from '../../data/languages';
 import { CALLING_CODES } from '../../data/callingCodes';
 import { db } from '../../firebase/firebase';
-import { addDoc, collection, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, setDoc, doc, collection, serverTimestamp, getDocs, getDoc, query, where } from 'firebase/firestore';
 
 // Ícones inline reutilizados (iguais aos do ChooseUrCharacter)
 const Icon = {
@@ -367,8 +367,11 @@ export default function GenerateUrPortfolio() {
       localStorage.setItem(STORAGE_PUBLISHED, serialized);
       try { window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_PUBLISHED, newValue: serialized })); } catch {}
 
-      // 2) Salva um snapshot público no Firestore para aparecer no ChooseUrCharacter
+      // 2) Salva/Atualiza snapshot público único por usuário (docId = uid)
       if (!user?.uid) throw new Error('Sessão expirada. Faça login novamente.');
+      const existingRef = doc(db, 'portfolios', user.uid);
+      const existing = await getDoc(existingRef);
+
       // Gera slug público único
       const baseSlug = slugify(data?.profile?.name || user.displayName || 'portfolio');
       const slug = await ensureUniqueSlug(baseSlug);
@@ -391,7 +394,6 @@ export default function GenerateUrPortfolio() {
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         createdAt: serverTimestamp(),
-        // opcional: manter parte do profile para futuro
         profile: {
           name: data?.profile?.name || '',
           title: data?.profile?.title || '',
@@ -399,6 +401,24 @@ export default function GenerateUrPortfolio() {
           gender: data?.profile?.gender || '',
           experience: data?.profile?.experience || '',
           avatarUrl: data?.profile?.avatarUrl || '',
+        },
+      };
+      await setDoc(existingRef, snapshot, { merge: !!existing.exists() });
+      try { localStorage.setItem('hub_portfolio_slug', slug); } catch {}
+
+      // 3) Notificação de criação/atualização para o próprio usuário
+      try {
+        const notif = {
+          receiverUid: user.uid,
+          actorUid: user.uid,
+          type: existing.exists() ? 'portfolio.updated' : 'portfolio.created',
+          title: existing.exists() ? 'Portfólio atualizado' : 'Portfólio publicado',
+          slug,
+          createdAt: serverTimestamp(),
+          read: false,
+        };
+        await addDoc(collection(db, 'users', user.uid, 'notifications'), notif);
+      } catch {}
         },
       };
       await addDoc(collection(db, 'portfolios'), snapshot);

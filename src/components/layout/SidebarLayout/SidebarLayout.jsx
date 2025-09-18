@@ -57,6 +57,10 @@ export default function SidebarLayout({ initialCollapsed = true, children }) {
               <button type="button" className={stylesBanner.link} onClick={onResend}>Reenviar verificação</button>
             </div>
           )}
+
+          {/* Notificações (top 5) */}
+          <NotificationsDropdown />
+
           {typeof children === 'function' ? children(ctx) : children}
         </main>
         {mobileOpen && <div className={layoutStyles.backdrop} onClick={() => setMobileOpen(false)} />}

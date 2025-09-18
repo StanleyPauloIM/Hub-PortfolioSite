@@ -15,6 +15,7 @@ const AccountLazy = lazy(() => import('../pages/Account/Account'));
 const SettingsLazy = lazy(() => import('../pages/Settings/Settings'));
 const VerifyEmail = lazy(() => import('../pages/VerifyEmail/VerifyEmail'));
 const PublicPortfolio = lazy(() => import('../pages/PublicPortfolio/PublicPortfolio'));
+const NotificationsPage = lazy(() => import('../pages/Notifications/Notifications'));
 
 import ProtectedRoute from '../auth/ProtectedRoute';
 
@@ -32,6 +33,7 @@ const AppRoutes = () => {
       <Route path="/p/:slug" element={<React.Suspense fallback={null}><PublicPortfolio /></React.Suspense>} />
       <Route path="/account" element={<ProtectedRoute><React.Suspense fallback={null}><AccountLazy /></React.Suspense></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><React.Suspense fallback={null}><SettingsLazy /></React.Suspense></ProtectedRoute>} />
+      <Route path="/notifications" element={<ProtectedRoute><React.Suspense fallback={null}><NotificationsPage /></React.Suspense></ProtectedRoute>} />
       <Route path="/terms" element={<Terms />} />
     </Routes>
   );
