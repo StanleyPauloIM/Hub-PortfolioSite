@@ -510,10 +510,6 @@ export default function GenerateUrPortfolio() {
         };
         await addDoc(collection(db, 'users', user.uid, 'notifications'), notif);
       } catch {}
-        },
-      };
-      await addDoc(collection(db, 'portfolios'), snapshot);
-      try { localStorage.setItem('hub_portfolio_slug', slug); } catch {}
 
       setMessage(t('generate.msg.published'));
       setTimeout(() => setMessage(''), 800);
